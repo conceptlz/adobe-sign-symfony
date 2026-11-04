@@ -41,6 +41,6 @@ tests, which later 7.4 patches fix.
 
 ## Dependency on the core
 
-Requires `conceptlz/adobe-sign` `^0.4`, resolved locally to `../adobe-sign` through a path repository
-pinned to `0.4.x-dev`. Bump both, and `branch-alias`, on every minor release (see Releasing in the root
+Requires `conceptlz/adobe-sign` `^0.5`, resolved locally to `../adobe-sign` through a path repository
+pinned to `0.5.x-dev`. Bump both, and `branch-alias`, on every minor release (see Releasing in the root
 `CLAUDE.md`).

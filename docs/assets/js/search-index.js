@@ -40,7 +40,7 @@ window.DOCS_INDEX = [
         "page": "E-signatures, wired the Symfony way.",
         "url": "index.html#relation-to-core",
         "level": 2,
-        "text": "Installing this bundle pulls in conceptlz/adobe-sign. All three packages (core, Laravel bridge, Symfony bundle) share one version number and are released together; the bundle requires the core at ^0.4 and first ships in the release after 0.4.0. All builders (AgreementInfo, ParticipantSetInfo, FileInfo, WebhookInfo, Ver…"
+        "text": "Installing this bundle pulls in conceptlz/adobe-sign. All three packages (core, Laravel bridge, Symfony bundle) share one version number and are released together; the bundle requires the core at ^0.5 and first shipped in 0.5.0. All builders (AgreementInfo, ParticipantSetInfo, FileInfo, WebhookInfo, Verification), reso…"
     },
     {
         "title": "Requirements",
@@ -152,7 +152,7 @@ window.DOCS_INDEX = [
         "page": "Installation",
         "url": "installation.html#upgrading",
         "level": 2,
-        "text": "Before 1.0, a minor version (0.4 → 0.5) may contain breaking changes; patch versions don't. Update the bundle and the core together, read the changelog, clear the cache and restart workers: composer update conceptlz/adobe-sign-symfony conceptlz/adobe-sign --with-dependencies php bin/console cache:clear php bin/console…"
+        "text": "Before 1.0, a minor version (0.5 → 0.6) may contain breaking changes; patch versions don't. Update the bundle and the core together, read the changelog, clear the cache and restart workers: composer update conceptlz/adobe-sign-symfony conceptlz/adobe-sign --with-dependencies php bin/console cache:clear php bin/console…"
     },
     {
         "title": "Common questions",
@@ -2021,7 +2021,7 @@ window.DOCS_INDEX = [
         "page": "FAQ · FAQ",
         "url": "faq.html#faq-version-numbers",
         "level": 3,
-        "text": "The core, the Laravel bridge and the Symfony bundle share one version number and are released together. The current release is 0.4.0; the Symfony bundle first ships in the next release, and requires the core at ^0.4. Before 1.0 a minor bump may break things, so update the bundle and the core together and read the chang…"
+        "text": "The core, the Laravel bridge and the Symfony bundle share one version number and are released together. The current release is 0.5.0, the first to include the Symfony bundle; it requires the core at ^0.5. Before 1.0 a minor bump may break things, so update the bundle and the core together and read the changelog. See Up…"
     },
     {
         "title": "Is this an official Adobe package?",
