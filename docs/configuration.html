@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Configuration · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Every key of the adobe_sign configuration tree in the Symfony bundle: authentication, OAuth, token storage, signature level, cache pools, HTTP client, retries and webhooks, with defaults, %env()% usage and per-environment overrides.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html" aria-current="page">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Start here</p>
+    <h1>Configuration</h1>
+    <p class="lede">Everything the bundle does is driven by the <code>adobe_sign</code> configuration tree. This page lists every key with its default and what it changes, shows how to feed secrets through <code>%env()%</code>, and gives complete examples for local development, a multi-server production setup and a SaaS where customers connect their own accounts.</p>
+  </header>
+
+  <h2 id="how-config-is-read">How configuration is read</h2>
+  <p>
+    The bundle is an <code>AbstractBundle</code> whose extension alias is <code>adobe_sign</code>. Symfony reads
+    your YAML (or PHP) files, merges them per environment, validates them against the tree the bundle
+    declares, and the bundle turns the result into service definitions when the container is compiled. Three
+    consequences follow:
+  </p>
+  <ul>
+    <li><strong>Types are checked at build time.</strong> A string where an integer belongs (<code>base_uri_ttl</code>, <code>dedupe_ttl</code>, <code>retries.max</code>) fails <code>cache:clear</code> with a clear message. With an environment variable, cast it: <code>'%env(int:ADOBE_SIGN_DEDUPE_TTL)%'</code>.</li>
+    <li><strong>Values are checked when used.</strong> <code>auth</code> and <code>signature_level</code> are plain strings in the tree. The manager validates them the first time it builds a client and throws <code>MisconfiguredException</code> naming the key, so a typo can't silently fall back to a default.</li>
+    <li><strong>Services are referenced by id.</strong> <code>cache_pool</code>, <code>oauth.token_cache_pool</code>, <code>http_client</code>, <code>oauth.token_store</code>, <code>oauth.user_key_resolver</code> and <code>webhooks.messenger.bus</code> take service ids. A missing id fails the container build, except <code>http_client</code>, which falls back to discovery (see <a href="installation.html#http-client">the HTTP client</a>).</li>
+  </ul>
+  <p>Two console commands show what Symfony actually resolved:</p>
+  <pre><code class="language-bash">php bin/console config:dump-reference adobe_sign   # the tree with defaults and help texts
+php bin/console debug:config adobe_sign            # your merged values for the current env</code></pre>
+
+  <h2 id="full-tree">The full tree with defaults</h2>
+  <p>
+    Every value below is the default. You only write the keys you change; for an Integration Key setup that
+    is usually just <code>integration_key</code>.
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml (all keys, default values)</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    auth: integration_key            # "integration_key" or "oauth"
+    integration_key: ~               # usually '%env(ADOBE_SIGN_INTEGRATION_KEY)%'
+
+    oauth:
+        client_id: ~
+        client_secret: ~
+        redirect_uri: ~              # default: absolute URL of route adobe_sign_oauth_callback
+        scopes:
+            - 'user_login:self'
+            - 'agreement_read:self'
+            - 'agreement_write:self'
+            - 'agreement_send:self'
+            - 'webhook_read:self'
+            - 'webhook_write:self'
+        redirect_after: /
+        user_key_resolver: ~         # service id; default keys tokens by getUserIdentifier()
+        token_store: cache           # "cache", "doctrine" or a TokenStore service id
+        token_cache_pool: cache.app
+        encryption_key: '%kernel.secret%'
+        doctrine:
+            connection: default
+            table: adobe_sign_tokens
+
+    signature_level: ses             # ses, aes or qes (any case)
+    qualified_issuers: []
+
+    bootstrap_url: 'https://api.adobesign.com'
+    base_uri_ttl: 86400              # seconds
+    retries:
+        max: 3
+        max_delay_seconds: 60.0
+    cache_pool: cache.app
+    http_client: ~                   # PSR-18 service id
+
+    webhooks:
+        client_ids: []               # empty: [oauth.client_id]
+        dedupe_ttl: 259200           # 72 hours
+        messenger:
+            enabled: false
+            bus: messenger.default_bus</code></pre>
+  </figure>
+
+  <h2 id="auth-keys">Authentication</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>auth</code></td><td><code>integration_key</code></td><td>What the default client (<code>AdobeSign</code> service, <code>$manager-&gt;client()</code>) uses. <code>integration_key</code>: the key below. <code>oauth</code>: the OAuth tokens of the user currently signed in. Case and surrounding spaces are ignored; any other word throws <code>MisconfiguredException</code>.</td></tr>
+        <tr><td><code>integration_key</code></td><td><code>null</code></td><td>The Integration Key. Required when <code>auth</code> is <code>integration_key</code> and you use the default client. Empty or null throws <code>MisconfiguredException</code> on first use, not at boot, so commands that never touch Acrobat Sign keep working.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <code>auth: oauth</code> changes only what the <em>default</em> client is. <code>$manager-&gt;forUser($user)</code>
+    works in either mode, as long as the <code>oauth</code> section is filled in. A common mix: keep
+    <code>auth: integration_key</code> for system jobs and call <code>forUser()</code> where a user sends from
+    their own account. See <a href="usage.html#injecting-the-manager">injecting the manager</a>.
+  </p>
+
+  <h2 id="oauth-keys">OAuth application and routes</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>oauth.client_id</code></td><td><code>null</code></td><td>Your Acrobat Sign API application's client id. Also the default webhook allow-list, because Adobe sends it in <code>X-AdobeSign-ClientId</code>.</td></tr>
+        <tr><td><code>oauth.client_secret</code></td><td><code>null</code></td><td>The application's secret. Both id and secret are needed for anything OAuth; otherwise <code>MisconfiguredException</code>.</td></tr>
+        <tr><td><code>oauth.redirect_uri</code></td><td><code>null</code></td><td>Where Adobe sends users back. When null, the manager generates the absolute URL of <code>adobe_sign_oauth_callback</code> with the router, from the current request's scheme and host. Set it explicitly when the app sits behind a proxy or is reached under several hosts. Must match the URI registered at Adobe exactly.</td></tr>
+        <tr><td><code>oauth.scopes</code></td><td>six <code>:self</code> scopes</td><td>The scopes requested on the consent screen. A list replaces the default entirely. See <a href="oauth.html#scopes">choosing scopes</a>.</td></tr>
+        <tr><td><code>oauth.redirect_after</code></td><td><code>/</code></td><td>Path or URL the callback redirects to after storing the tokens. An empty string also means <code>/</code>.</td></tr>
+        <tr><td><code>oauth.user_key_resolver</code></td><td><code>null</code></td><td>Service id of a <code>UserKeyResolver</code>. The default resolver keys tokens by <code>UserInterface::getUserIdentifier()</code>. Use your own to share one connection per team. See <a href="oauth.html#user-key-resolver">user keys</a>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="token-storage-keys">Token storage</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>oauth.token_store</code></td><td><code>cache</code></td><td><code>cache</code>: <code>CacheTokenStore</code> in a PSR-6 pool. <code>doctrine</code>: <code>DoctrineDbalTokenStore</code> in a table (needs <code>doctrine/dbal</code>). Anything else is taken as the id of your own service implementing <code>Conceptlz\AdobeSign\Auth\TokenStore</code>.</td></tr>
+        <tr><td><code>oauth.token_cache_pool</code></td><td><code>cache.app</code></td><td>Pool for <code>token_store: cache</code>. Use a persistent, shared pool (Redis, database) without a default lifetime. Never an array pool.</td></tr>
+        <tr><td><code>oauth.encryption_key</code></td><td><code>%kernel.secret%</code></td><td>Secret the stored tokens are encrypted with (a libsodium key is derived from it). Changing it makes every stored token unreadable; users then reconnect. Empty throws <code>MisconfiguredException</code> on first use.</td></tr>
+        <tr><td><code>oauth.doctrine.connection</code></td><td><code>default</code></td><td>DBAL connection name for <code>token_store: doctrine</code>; the bundle uses service <code>doctrine.dbal.&lt;name&gt;_connection</code>.</td></tr>
+        <tr><td><code>oauth.doctrine.table</code></td><td><code>adobe_sign_tokens</code></td><td>Table name for <code>token_store: doctrine</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The trade-offs between the stores, and key rotation, are covered in <a href="token-storage.html">Token storage &amp; Doctrine</a>.</p>
+
+  <h2 id="signature-keys">Signature level</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>signature_level</code></td><td><code>ses</code></td><td>Default level for every agreement the bundle's clients create from an <code>AgreementInfo</code> builder: <code>ses</code>, <code>aes</code> or <code>qes</code>, any case. AES and QES make Adobe require a certificate-based digital signature from each signer that doesn't choose its own level. Any other value throws <code>MisconfiguredException</code> when a client is built.</td></tr>
+        <tr><td><code>qualified_issuers</code></td><td><code>[]</code></td><td>Certificate issuer names you accept as qualified. Used by <code>$manager-&gt;signatureShortfalls()</code> to tell a QES from an AES. Empty means no signature can be confirmed as QES.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>See <a href="signature-levels.html">Signature levels</a> for overrides per agreement and per signer.</p>
+
+  <h2 id="http-and-cache-keys">Data centres, cache, HTTP and retries</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>cache_pool</code></td><td><code>cache.app</code></td><td>PSR-6 pool for the data-centre lookup (wrapped as PSR-16, service <code>adobe_sign.cache</code>) and for webhook de-duplication. Share it between servers in production.</td></tr>
+        <tr><td><code>bootstrap_url</code></td><td><code>https://api.adobesign.com</code></td><td>Where the SDK asks <span class="endpoint"><b>GET</b> /baseUris</span> which data centre the account lives on. Change it only for accounts in a separate Adobe environment.</td></tr>
+        <tr><td><code>base_uri_ttl</code></td><td><code>86400</code></td><td>Seconds to cache that answer. A <code>403 INVALID_API_ACCESS_POINT</code> triggers rediscovery anyway.</td></tr>
+        <tr><td><code>http_client</code></td><td><code>null</code></td><td>Service id of a PSR-18 client. Null: <code>psr18.http_client</code> if registered, otherwise discovery.</td></tr>
+        <tr><td><code>retries.max</code></td><td><code>3</code></td><td>How many times the SDK retries a 429 or 503 before throwing. <code>0</code> disables retries.</td></tr>
+        <tr><td><code>retries.max_delay_seconds</code></td><td><code>60.0</code></td><td>The longest single wait the SDK accepts, from <code>Retry-After</code> or its own backoff. A longer <code>Retry-After</code> surfaces as <code>RateLimitException</code> so a worker can reschedule instead of blocking.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-warning">
+    <p class="callout-title">cache.app is per machine by default</p>
+    <p>Out of the box <code>cache.app</code> is a filesystem pool under <code>var/cache</code>. That's fine on one server. Behind a load balancer each server keeps its own copy, so a webhook retry that lands on another server is not recognised as a duplicate, and OAuth tokens stored on one server are invisible to the others. Point <code>cache_pool</code> (and <code>oauth.token_cache_pool</code>, if you store tokens in a cache) at a shared pool.</p>
+  </div>
+  <figure class="code">
+    <figcaption>config/packages/cache.yaml: dedicated pools for the bundle</figcaption>
+    <pre><code class="language-text">framework:
+    cache:
+        pools:
+            adobe_sign.pool:              # data centres + webhook dedupe
+                adapter: cache.adapter.redis
+                provider: '%env(REDIS_URL)%'
+            adobe_sign.tokens:            # OAuth tokens: no default_lifetime!
+                adapter: cache.adapter.redis
+                provider: '%env(REDIS_URL)%'</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    cache_pool: adobe_sign.pool
+    oauth:
+        token_cache_pool: adobe_sign.tokens</code></pre>
+  </figure>
+
+  <h2 id="logging">Logging</h2>
+  <p>
+    There is no logging key. The manager and the webhook controller are tagged with the Monolog channel
+    <code>adobe_sign</code>, so with MonologBundle their logs go to <code>monolog.logger.adobe_sign</code>, which
+    you route like any channel. The SDK logs each request at <code>debug</code>, throttling retries at
+    <code>warning</code> and requests that could not be sent at all at <code>error</code>; it never logs headers or bodies. The webhook
+    controller logs rejected client ids (<code>warning</code>) and unreadable bodies (<code>error</code>). See
+    <a href="usage.html#logging">Logging</a>.
+  </p>
+
+  <h2 id="webhook-keys">Webhooks</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>webhooks.client_ids</code></td><td><code>[]</code></td><td>Client ids allowed in <code>X-AdobeSign-ClientId</code>. Empty: <code>[oauth.client_id]</code>. Neither set: the webhook route answers 500 with <code>MisconfiguredException</code>. A non-empty list replaces the OAuth client id; include it yourself if you need both.</td></tr>
+        <tr><td><code>webhooks.dedupe_ttl</code></td><td><code>259200</code></td><td>Seconds to remember a notification id, stored in <code>cache_pool</code>. Adobe retries failed deliveries for up to 72 hours, hence the default.</td></tr>
+        <tr><td><code>webhooks.messenger.enabled</code></td><td><code>false</code></td><td>Also dispatch an <code>AdobeSignWebhookMessage</code> per new notification. <code>webhooks: { messenger: true }</code> is shorthand for enabling it.</td></tr>
+        <tr><td><code>webhooks.messenger.bus</code></td><td><code>messenger.default_bus</code></td><td>Service id of the bus to dispatch to. Setting a bus enables Messenger dispatch too.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="env-and-secrets">Environment variables and secrets</h2>
+  <p>
+    Any scalar value can come from the environment. The bundle doesn't read environment variables itself; it
+    receives whatever your config resolves to. The usual set:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%'
+    signature_level: '%env(default:adobe_sign_default_level:ADOBE_SIGN_SIGNATURE_LEVEL)%'
+    oauth:
+        client_id: '%env(ADOBE_SIGN_CLIENT_ID)%'
+        client_secret: '%env(ADOBE_SIGN_CLIENT_SECRET)%'
+        encryption_key: '%env(ADOBE_SIGN_TOKEN_KEY)%'
+    webhooks:
+        client_ids: ['%env(ADOBE_SIGN_CLIENT_ID)%']   # one variable per list item
+        dedupe_ttl: '%env(int:ADOBE_SIGN_DEDUPE_TTL)%'
+
+parameters:
+    adobe_sign_default_level: ses</code></pre>
+  </figure>
+  <ul>
+    <li>List keys (<code>client_ids</code>, <code>qualified_issuers</code>, <code>scopes</code>) can't take one variable for the whole list: Symfony rejects "a dynamic value" on array nodes, so <code>'%env(csv:VAR)%'</code> fails the build. Put one <code>%env()%</code> per item instead.</li>
+    <li><code>int:</code> is needed for integer keys, because environment variables are strings.</li>
+    <li><code>default:param:VAR</code> falls back to a parameter when the variable isn't set.</li>
+    <li>Secrets (<code>php bin/console secrets:set NAME</code>) are read through the same <code>%env()%</code> syntax, so production can use the vault without changing the config.</li>
+  </ul>
+
+  <h2 id="per-environment">Examples per environment</h2>
+  <p>
+    Symfony merges <code>config/packages/adobe_sign.yaml</code> with
+    <code>config/packages/&lt;env&gt;/adobe_sign.yaml</code>, or with a <code>when@&lt;env&gt;:</code> block in the
+    same file. Use whichever your project already uses.
+  </p>
+
+  <h3 id="example-local">Local development</h3>
+  <figure class="code">
+    <figcaption>config/packages/dev/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    # A developer account: agreements get "[DEMO USE ONLY]" and aren't legally meant.
+    integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%'
+    oauth:
+        # The tunnel's host, so Adobe's redirect matches what you registered.
+        redirect_uri: 'https://my-tunnel.example.com/adobe-sign/oauth/callback'</code></pre>
+  </figure>
+
+  <h3 id="example-test">The test environment</h3>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml (when@test block)</figcaption>
+    <pre><code class="language-text">when@test:
+    adobe_sign:
+        integration_key: 'test-key'
+        http_client: test.adobe_sign_http     # a mock PSR-18 client, see Testing
+        webhooks:
+            client_ids: ['test-client-id']
+
+    services:
+        test.adobe_sign_http:
+            class: Http\Mock\Client
+            public: true</code></pre>
+  </figure>
+  <p>The <a href="testing.html">Testing</a> page explains why the mock is public and how to keep it alive between requests.</p>
+
+  <h3 id="example-production">Production on several servers</h3>
+  <figure class="code">
+    <figcaption>config/packages/prod/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%'
+    signature_level: aes
+    cache_pool: adobe_sign.pool              # Redis, shared by every web server and worker
+    retries:
+        max: 5
+        max_delay_seconds: 30                # longer waits become RateLimitException
+    webhooks:
+        client_ids: ['%env(ADOBE_SIGN_CLIENT_ID)%']
+        messenger: true                      # route the message to an async transport</code></pre>
+  </figure>
+
+  <h3 id="example-saas">A SaaS where customers connect their own accounts</h3>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    auth: oauth                              # AdobeSign service = the signed-in user's account
+    oauth:
+        client_id: '%env(ADOBE_SIGN_CLIENT_ID)%'
+        client_secret: '%env(ADOBE_SIGN_CLIENT_SECRET)%'
+        redirect_uri: 'https://app.example.com/adobe-sign/oauth/callback'
+        redirect_after: /settings/integrations
+        token_store: doctrine
+        encryption_key: '%env(ADOBE_SIGN_TOKEN_KEY)%'   # rotate APP_SECRET without disconnecting users
+        user_key_resolver: App\AdobeSign\TeamKeyResolver
+        scopes:
+            - 'user_login:self'
+            - 'agreement_read:account'
+            - 'agreement_write:account'
+            - 'agreement_send:account'
+            - 'webhook_read:account'
+            - 'webhook_write:account'
+    webhooks:
+        messenger: true</code></pre>
+  </figure>
+
+  <h2 id="runtime-changes">Changing values at runtime</h2>
+  <p>
+    You can't. The configuration is compiled into the container, and the manager receives it as a constructor
+    argument. That is deliberate: credentials in one place, validated once. If different tenants need different
+    Integration Keys, build a core client per tenant with the core's named constructor and pass the bundle's
+    services in, rather than mutating configuration:
+  </p>
+  <pre><code class="language-php">use Conceptlz\AdobeSign\AdobeSign;
+
+$client = AdobeSign::withIntegrationKey($tenant-&gt;adobeSignKey(), cache: $psr16Cache, logger: $logger);</code></pre>
+  <p>
+    Inject <code>$psr16Cache</code> as the service <code>adobe_sign.cache</code> (for example with
+    <code>#[Autowire(service: 'adobe_sign.cache')]</code>) so the data-centre lookup is shared.
+  </p>
+
+  <h2 id="configuration-questions">Common questions</h2>
+  <div class="faq">
+    <details id="configuration-where-file">
+      <summary>Does the file have to be called adobe_sign.yaml?</summary>
+      <div class="faq-answer"><p>No. Symfony reads every file in <code>config/packages/</code>; what matters is the root key <code>adobe_sign:</code>. Naming the file after the key is just the convention.</p></div>
+    </details>
+    <details id="configuration-php-format">
+      <summary>Can I write the configuration in PHP instead of YAML?</summary>
+      <div class="faq-answer"><p>Yes. In <code>config/packages/adobe_sign.php</code>, return a closure that receives a <code>ContainerConfigurator</code> and call <code>$container-&gt;extension('adobe_sign', [...])</code> with the same keys. The bundle's own test kernel configures itself this way.</p></div>
+    </details>
+    <details id="configuration-env-cache">
+      <summary>I changed .env.local but nothing changed. Why?</summary>
+      <div class="faq-answer"><p>In <code>prod</code>, values may be dumped into <code>.env.local.php</code> (<code>composer dump-env prod</code>), and long-running processes keep what they read at start. Re-dump the env file, clear the cache, and restart PHP-FPM workers, FrankenPHP workers and Messenger consumers.</p></div>
+    </details>
+    <details id="configuration-both-auth">
+      <summary>Can one app use both an Integration Key and OAuth?</summary>
+      <div class="faq-answer"><p>Yes. Set <code>integration_key</code> and the <code>oauth</code> section, keep <code>auth: integration_key</code>, and call <code>$manager-&gt;forUser($user)</code> where a user's own account should send. The default client stays the key.</p></div>
+    </details>
+    <details id="configuration-validate">
+      <summary>How do I catch configuration mistakes before production?</summary>
+      <div class="faq-answer"><p>Run <code>php bin/console lint:container</code> and <code>cache:clear</code> in CI for type and service-id errors, and <code>adobe-sign:verify</code> after deploy for credentials and the <code>auth</code>/<code>signature_level</code> values, which are checked when the first client is built.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="usage.html"><strong>Using the client</strong><span>Autowiring, the manager's methods and core builders in Symfony code.</span></a></li>
+    <li><a href="token-storage.html"><strong>Token storage &amp; Doctrine</strong><span>Choose where OAuth tokens live and how they are encrypted.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="installation.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Installation</span></a>
+  <a class="pager-next" href="usage.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Using the client</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

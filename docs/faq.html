@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>FAQ · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Short answers about using Acrobat Sign from Symfony: versions, configuration, Integration Key vs OAuth, webhooks and Messenger, token storage, signature levels, testing, multiple servers, FrankenPHP worker mode and platform deployments.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html" aria-current="page">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Help</p>
+    <h1>FAQ</h1>
+    <p class="lede">The questions Symfony developers ask most, answered in a sentence first and in detail after, with a link to the page that covers each topic in depth. Every answer can be linked to directly.</p>
+  </header>
+
+  <h2 class="faq-group-title" id="installation-and-versions">Installation &amp; versions</h2>
+  <div class="faq">
+    <details id="faq-supported-versions">
+      <summary>Which Symfony and PHP versions are supported?</summary>
+      <div class="faq-answer">
+        <p>Symfony 7.4 and 8.x, on PHP 8.2 or newer.</p>
+        <p>The bundle requires <code>symfony/*</code> <code>^7.4 || ^8.0</code>. CI runs Symfony 7.4 on PHP 8.2–8.4 and Symfony 8 on PHP 8.4–8.5. Symfony 8 itself needs PHP 8.4. Older Symfony versions can use the framework-agnostic core directly. See <a href="installation.html#requirements">Requirements</a>.</p>
+      </div>
+    </details>
+    <details id="faq-install-core-separately">
+      <summary>Do I need to install conceptlz/adobe-sign separately?</summary>
+      <div class="faq-answer">
+        <p>No. Requiring the bundle installs the core at a compatible version.</p>
+        <p>You use the core's builders, resources and exceptions directly in your code (<code>Conceptlz\AdobeSign\…</code>), so importing from it is expected; you just don't need a second <code>composer require</code>.</p>
+      </div>
+    </details>
+    <details id="faq-version-numbers">
+      <summary>How do the packages' versions relate?</summary>
+      <div class="faq-answer">
+        <p>The core, the Laravel bridge and the Symfony bundle share one version number and are released together.</p>
+        <p>The current release is 0.4.0; the Symfony bundle first ships in the next release, and requires the core at <code>^0.4</code>. Before 1.0 a minor bump may break things, so update the bundle and the core together and read the changelog. See <a href="installation.html#upgrading">Upgrading</a>.</p>
+      </div>
+    </details>
+    <details id="faq-official">
+      <summary>Is this an official Adobe package?</summary>
+      <div class="faq-answer">
+        <p>No. It is developed independently by Conceptualize and is not affiliated with or endorsed by Adobe.</p>
+        <p>It talks to Adobe's public Acrobat Sign REST API v6 with your own account and credentials. Adobe and Acrobat Sign are trademarks of Adobe Inc.</p>
+      </div>
+    </details>
+    <details id="faq-flex">
+      <summary>Is there a Flex recipe?</summary>
+      <div class="faq-answer">
+        <p>Not yet. Flex still registers the bundle in <code>config/bundles.php</code>, because the package type is <code>symfony-bundle</code>.</p>
+        <p>You create <code>config/packages/adobe_sign.yaml</code> and <code>config/routes/adobe_sign.yaml</code> yourself; both are a few lines. See <a href="installation.html#install-steps">Install in six steps</a>.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="configuration">Configuration</h2>
+  <div class="faq">
+    <details id="faq-minimal-config">
+      <summary>What is the smallest working configuration?</summary>
+      <div class="faq-answer">
+        <p>One key: <code>adobe_sign: { integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%' }</code>.</p>
+        <p>That is enough to send agreements. Webhooks additionally need the route import and a client id; OAuth needs the <code>oauth</code> section, the routes and a firewall. See <a href="configuration.html">Configuration</a>.</p>
+      </div>
+    </details>
+    <details id="faq-env-list">
+      <summary>Can I put a list of webhook client ids in one environment variable?</summary>
+      <div class="faq-answer">
+        <p>No. Symfony doesn't accept one <code>%env()%</code> for a whole list node, so <code>'%env(csv:IDS)%'</code> fails the build.</p>
+        <p>Use one variable per item: <code>client_ids: ['%env(ADOBE_SIGN_CLIENT_ID)%', '%env(ADOBE_SIGN_CLIENT_ID_STAGING)%']</code>. Integer keys need a cast, for example <code>'%env(int:ADOBE_SIGN_DEDUPE_TTL)%'</code>. See <a href="configuration.html#env-and-secrets">Environment variables and secrets</a>.</p>
+      </div>
+    </details>
+    <details id="faq-multi-tenant-keys">
+      <summary>Can each tenant use its own Integration Key?</summary>
+      <div class="faq-answer">
+        <p>Yes, by building a core client per tenant instead of using the configured default.</p>
+        <p><code>AdobeSign::withIntegrationKey($tenant-&gt;key(), cache: $psr16, logger: $logger)</code> with the bundle's <code>adobe_sign.cache</code> service gives you a client that shares the data-centre cache. Configuration is compiled, so it can't be switched per request. See <a href="configuration.html#runtime-changes">Changing values at runtime</a>.</p>
+      </div>
+    </details>
+    <details id="faq-cache-pool-default">
+      <summary>Is the default cache.app pool good enough?</summary>
+      <div class="faq-answer">
+        <p>On one server, yes. On several servers, or for OAuth tokens, no.</p>
+        <p><code>cache.app</code> is a filesystem pool on each machine. Duplicate detection and stored tokens then aren't shared and don't survive a fresh container. Use Redis or another shared pool for <code>cache_pool</code>, and Doctrine or a persistent pool for tokens. See <a href="configuration.html#http-and-cache-keys">cache configuration</a>.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="auth-and-oauth">Auth &amp; OAuth</h2>
+  <div class="faq">
+    <details id="faq-integration-key-or-oauth">
+      <summary>Should I use an Integration Key or OAuth?</summary>
+      <div class="faq-answer">
+        <p>Integration Key if everything is sent from one account you control; OAuth if your users send from their own Acrobat Sign accounts.</p>
+        <p>The key is one secret and never expires. OAuth needs an API application, a redirect URI, token storage and a firewall, but agreements then live in each user's account. You can mix them: the key as the default client, <code>forUser()</code> for connected users. See <a href="installation.html#choose-auth">Integration Key or OAuth?</a></p>
+      </div>
+    </details>
+    <details id="faq-oauth-in-worker">
+      <summary>How do I act as a user in a Messenger handler or command?</summary>
+      <div class="faq-answer">
+        <p>Call <code>$manager-&gt;forUser($key)</code> with the user's token key, which you stored when they sent the agreement.</p>
+        <p>There is no signed-in user in a worker, so <code>client()</code> in OAuth mode throws. Store <code>$manager-&gt;userKey($user)</code> on your record when sending. See <a href="messenger.html#oauth-in-handlers">OAuth in handlers</a>.</p>
+      </div>
+    </details>
+    <details id="faq-oauth-api-platform">
+      <summary>My app is a stateless API with JWT auth. Can I use the OAuth routes?</summary>
+      <div class="faq-answer">
+        <p>Not as they are: they keep the OAuth state in the session, and the browser must carry the user's authentication through Adobe's redirect.</p>
+        <p>Either serve the two routes from a small session-based firewall the front end opens in a browser window, or build the flow with <code>$manager-&gt;oauth()</code> (<code>authorizationUrl()</code>, <code>handleCallback()</code>) and store tokens with <code>$manager-&gt;tokens()-&gt;put()</code>. See <a href="troubleshooting.html#oauth-no-session">SessionNotFoundException</a>.</p>
+      </div>
+    </details>
+    <details id="faq-team-connection">
+      <summary>Can a whole team share one connected account?</summary>
+      <div class="faq-answer">
+        <p>Yes: implement <code>UserKeyResolver</code> to return a team key and set <code>oauth.user_key_resolver</code>.</p>
+        <p>Every member then uses the same tokens. Restrict the connect routes to team admins, because the last person to connect replaces the team's tokens. See <a href="oauth.html#user-key-resolver">One connection per team</a>.</p>
+      </div>
+    </details>
+    <details id="faq-disconnect">
+      <summary>How does a user disconnect?</summary>
+      <div class="faq-answer">
+        <p>Revoke the token at Adobe with <code>$manager-&gt;oauth()-&gt;revoke($token)</code>, then <code>forget()</code> it in the store.</p>
+        <p>The bundle has no disconnect route, because what "disconnect" means (and which confirmation it needs) is app-specific. A ten-line controller is in <a href="oauth.html#disconnecting">Disconnecting</a>.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="webhooks-and-messenger">Webhooks &amp; Messenger</h2>
+  <div class="faq">
+    <details id="faq-webhook-firewall">
+      <summary>Why does Adobe get a redirect to my login page?</summary>
+      <div class="faq-answer">
+        <p>Because a firewall or <code>access_control</code> rule requires a user for <code>/adobe-sign/webhook</code>.</p>
+        <p>Give the path its own <code>security: false</code> firewall before <code>main</code>, or a <code>PUBLIC_ACCESS</code> rule above any catch-all. See <a href="webhooks.html#firewall-and-access-control">Firewalls and access_control</a>.</p>
+      </div>
+    </details>
+    <details id="faq-listener-or-handler">
+      <summary>Should I use the event listener or a Messenger handler?</summary>
+      <div class="faq-answer">
+        <p>A Messenger handler for anything that calls Adobe, touches files or sends email; a listener only for tiny, local updates.</p>
+        <p>Listeners run inside Adobe's 5-second window and a failure there can't be retried. Handlers run in a worker with retries and a failure transport. See <a href="messenger.html#why-messenger">Why a message</a>.</p>
+      </div>
+    </details>
+    <details id="faq-webhook-local">
+      <summary>How do I receive webhooks on my laptop?</summary>
+      <div class="faq-answer">
+        <p>Through an HTTPS tunnel that forwards a public address to your local server.</p>
+        <p>Make Symfony generate the tunnel's URL (open the app through it, or set <code>framework.router.default_uri</code>), allow your client id, and delete webhooks pointing at old tunnel addresses afterwards. See <a href="webhooks.html#local-development">Local development</a>.</p>
+      </div>
+    </details>
+    <details id="faq-webhook-lost">
+      <summary>Can a notification get lost?</summary>
+      <div class="faq-answer">
+        <p>Rarely, and you should plan for it with a periodic status check.</p>
+        <p>If a listener or the bus fails, the bundle answers 500 without recording the notification, so Adobe's retry is processed normally (<a href="webhooks.html#failures-after-dedupe">If a listener or the bus throws</a>). The real risk is a long outage: Adobe gives up after 72 hours of failures and disables the webhook. A scheduled task that re-checks open agreements covers that.</p>
+      </div>
+    </details>
+    <details id="faq-message-payload">
+      <summary>Why does the Messenger message carry an array instead of the event object?</summary>
+      <div class="faq-answer">
+        <p>So that any transport and serializer can carry it, and SDK upgrades between dispatch and handling can't break it.</p>
+        <p>Call <code>$message-&gt;event()</code> in the handler to get the typed <code>AgreementEvent</code> back. See <a href="messenger.html#the-message">The message</a>.</p>
+      </div>
+    </details>
+    <details id="faq-webhook-trust">
+      <summary>Can I trust the webhook payload?</summary>
+      <div class="faq-answer">
+        <p>Treat it as a hint. Adobe doesn't sign payloads; the client-id check is the only authenticity control.</p>
+        <p>Before acting on anything important, such as marking a contract signed or releasing goods, read the agreement's status through the API, as the <a href="walkthrough.html#handler-explained">walkthrough's handler</a> does.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="token-storage">Token storage</h2>
+  <div class="faq">
+    <details id="faq-which-store">
+      <summary>Which token store should I use in production?</summary>
+      <div class="faq-answer">
+        <p><code>token_store: doctrine</code>, if you use Doctrine.</p>
+        <p>Tokens then live next to your users, are backed up with them, and no cache clear can lose them. The cache store is fine with a durable, shared Redis pool. See <a href="token-storage.html#choosing-a-store">Choosing a store</a>.</p>
+      </div>
+    </details>
+    <details id="faq-migration">
+      <summary>Do I have to write a migration for the token table?</summary>
+      <div class="faq-answer">
+        <p>Not with Doctrine ORM: <code>doctrine:migrations:diff</code> includes it automatically.</p>
+        <p>The bundle adds the table to the ORM schema through a <code>postGenerateSchema</code> listener. With DBAL only, run <code>adobe-sign:create-token-table</code>. See <a href="token-storage.html#doctrine-orm-migrations">Migrations</a>.</p>
+      </div>
+    </details>
+    <details id="faq-app-secret-rotation">
+      <summary>What happens to connected users if I rotate APP_SECRET?</summary>
+      <div class="faq-answer">
+        <p>They all appear disconnected and must connect again, unless you set a dedicated <code>oauth.encryption_key</code>.</p>
+        <p>Tokens are encrypted with a key derived from <code>kernel.secret</code> by default; values from another key decrypt to nothing. See <a href="token-storage.html#rotating-the-secret">Rotating APP_SECRET</a>.</p>
+      </div>
+    </details>
+    <details id="faq-token-encryption">
+      <summary>Are tokens encrypted in the database?</summary>
+      <div class="faq-answer">
+        <p>Yes, with libsodium secretbox (encrypted and authenticated) in both shipped stores.</p>
+        <p>A database dump alone doesn't reveal them; the user key column is plain text. Your own store is encrypted only if it uses <code>TokenEncryptor</code>. See <a href="token-storage.html#encryption">Encryption</a>.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="signature-levels">Signature levels</h2>
+  <div class="faq">
+    <details id="faq-require-aes">
+      <summary>How do I require AES for every agreement?</summary>
+      <div class="faq-answer">
+        <p>Set <code>signature_level: aes</code>.</p>
+        <p>Every agreement built with <code>AgreementInfo</code> then asks each signer for a certificate-based digital signature, unless the agreement or the signer sets its own level. The account needs digital signatures enabled. See <a href="signature-levels.html#project-default">the project's default level</a>.</p>
+      </div>
+    </details>
+    <details id="faq-qes-proof">
+      <summary>How do I know a signature really is qualified?</summary>
+      <div class="faq-answer">
+        <p>List the certificate issuers you accept in <code>qualified_issuers</code> and check with <code>$manager-&gt;signatureShortfalls($id)</code>.</p>
+        <p>The API request for QES is the same as for AES; only the issuer tells them apart. For a formal check, validate the PDF against the relevant trusted list. See <a href="signature-levels.html#qualified-issuers">qualified_issuers</a>.</p>
+      </div>
+    </details>
+    <details id="faq-which-level-legally">
+      <summary>Which level does my contract legally need?</summary>
+      <div class="faq-answer">
+        <p>That is a question for your counsel; it depends on the document and the jurisdiction.</p>
+        <p>The core's <a href="https://conceptlz.github.io/adobe-sign/signature-levels.html">signature levels page</a> explains the EU's tiers and how other jurisdictions approach electronic signatures, as background for that conversation.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="faq-group-title" id="testing-and-deployment">Testing &amp; deployment</h2>
+  <div class="faq">
+    <details id="faq-test-without-adobe">
+      <summary>How do I test without calling Adobe?</summary>
+      <div class="faq-answer">
+        <p>Point <code>adobe_sign.http_client</code> at a mock PSR-18 client in the test environment and queue responses.</p>
+        <p>Everything above the HTTP layer, including the bundle's routes, runs for real. Keep the mock public and call <code>disableReboot()</code> in multi-request tests. See <a href="testing.html#mock-client-setup">Setting up the mock client</a>.</p>
+      </div>
+    </details>
+    <details id="faq-multiple-servers">
+      <summary>What changes when I run several web servers?</summary>
+      <div class="faq-answer">
+        <p>Share the cache pool and the token storage; nothing else.</p>
+        <p>Set <code>cache_pool</code> to a shared pool so duplicate deliveries are recognised on any server, and use <code>token_store: doctrine</code> (or a shared Redis pool) so every server and worker sees the same tokens. Use the same <code>APP_SECRET</code> or <code>encryption_key</code> everywhere. See <a href="configuration.html#example-production">Production on several servers</a>.</p>
+      </div>
+    </details>
+    <details id="faq-frankenphp-worker">
+      <summary>Does it work with FrankenPHP worker mode or other long-running runtimes?</summary>
+      <div class="faq-answer">
+        <p>Yes. The manager is tagged <code>kernel.reset</code>, so its cached clients are dropped between requests.</p>
+        <p>What you must avoid is keeping a client yourself: a shared service that took <code>AdobeSign</code> in its constructor keeps it for the worker's life, and with <code>auth: oauth</code> it would even belong to the first request's user. Inject <code>AdobeSignManager</code> and call <code>client()</code> or <code>forUser()</code> per request. See <a href="usage.html#long-running-workers">Long-running workers</a>.</p>
+      </div>
+    </details>
+    <details id="faq-platform-deployments">
+      <summary>Anything special on Platform.sh, Symfony Cloud or similar platforms?</summary>
+      <div class="faq-answer">
+        <p>Plan for an ephemeral, read-only application directory, and keep state in platform services.</p>
+        <p>On such platforms <code>var/cache</code> is rebuilt on every deploy and usually not shared between instances, so <code>cache.app</code> is the wrong home for tokens and duplicate detection: attach a Redis or database service and point <code>cache_pool</code> and the token store at it. Configuration is resolved from <code>%env()%</code> at runtime, so building the cache during the build step without secrets is fine. Run Messenger consumers as the platform's worker processes, store signed PDFs in a mount or object storage rather than <code>var/</code>, and run <code>adobe-sign:verify</code> in a post-deploy hook. These follow from how the bundle works; check your platform's documentation for the exact service and mount syntax.</p>
+      </div>
+    </details>
+    <details id="faq-docker-sodium">
+      <summary>The Docker build fails on ext-sodium. What do I add?</summary>
+      <div class="faq-answer">
+        <p>Install the extension in your image, for example <code>docker-php-ext-install sodium</code> on the official PHP images.</p>
+        <p>It is required even with an Integration Key, because the token encryptor is part of the bundle. Most distributions' PHP packages already include it.</p>
+      </div>
+    </details>
+    <details id="faq-deploy-downtime">
+      <summary>Do I lose webhooks during a deploy?</summary>
+      <div class="faq-answer">
+        <p>No. Adobe retries failed deliveries for up to 72 hours.</p>
+        <p>Keep downtime short, restart workers with <code>messenger:stop-workers</code>, and make sure a deploy never leaves the webhook path behind a login. See <a href="webhooks.html#deploys">Deploys and downtime</a>.</p>
+      </div>
+    </details>
+  </div>
+
+  <ul class="next-links">
+    <li><a href="troubleshooting.html"><strong>Troubleshooting</strong><span>Symptoms, causes and fixes for specific errors.</span></a></li>
+    <li><a href="walkthrough.html"><strong>Walkthrough: send &amp; store</strong><span>The whole loop in working code.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="troubleshooting.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Troubleshooting</span></a>
+  <a class="pager-next" href="credits.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Credits</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

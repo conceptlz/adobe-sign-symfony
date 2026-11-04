@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>OAuth: connect user accounts · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Let users of a Symfony app connect their own Acrobat Sign accounts with OAuth: the bundle's connect routes, access_control, session state, OAuthConnectedEvent, forUser and isConnected, per-team keys with UserKeyResolver, disconnecting, scopes and redirect URIs.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html" aria-current="page">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>OAuth: connect user accounts</h1>
+    <p class="lede">When your users have their own Acrobat Sign accounts, OAuth lets them connect those accounts to your app so agreements go out in their name. The bundle provides the two routes, keeps the state in the session, stores the tokens encrypted and refreshes them; you protect the routes, add a "Connect" button and call <code>forUser()</code>.</p>
+  </header>
+
+  <h2 id="when-to-use-oauth">When to use OAuth</h2>
+  <p>
+    Use OAuth when the agreements belong to your users rather than to you: a CRM where each salesperson sends
+    from their own Acrobat Sign account, a SaaS whose customers already pay for Acrobat Sign, an agency tool
+    acting for several client companies. The agreements then appear in each user's own Acrobat Sign
+    dashboard, under their name, with their branding and their account's settings.
+  </p>
+  <p>
+    If everything is sent by your company from one account, an Integration Key is simpler: one secret, no
+    redirects, no token storage. Both can live in one app; see <a href="configuration.html#auth-keys">Authentication</a>.
+  </p>
+
+  <h2 id="set-up-adobe-app">Set up the Adobe application</h2>
+  <ol class="steps">
+    <li><span class="step-title">Create an API application</span><p>In Acrobat Sign, go to <em>Account → Acrobat Sign API → API Applications</em> and create one. Note the <strong>client id</strong> and <strong>client secret</strong>.</p></li>
+    <li><span class="step-title">Configure OAuth for it</span><p>Under <em>Configure OAuth for Application</em>, enter the redirect URI, for example <code>https://app.example.com/adobe-sign/oauth/callback</code>, and enable every scope you will request, with the modifier (<code>self</code>, <code>group</code>, <code>account</code>) you need. A requested scope that isn't enabled here makes Adobe refuse the consent.</p></li>
+    <li><span class="step-title">Put the credentials in the environment</span>
+      <figure class="code">
+        <figcaption>.env.local</figcaption>
+        <pre><code class="language-dotenv">ADOBE_SIGN_CLIENT_ID=CBJCHBCAABAA...
+ADOBE_SIGN_CLIENT_SECRET=...</code></pre>
+      </figure>
+    </li>
+  </ol>
+
+  <h2 id="configure">Configure the bundle</h2>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    auth: oauth                          # optional: makes the AdobeSign service the signed-in user's client
+    oauth:
+        client_id: '%env(ADOBE_SIGN_CLIENT_ID)%'
+        client_secret: '%env(ADOBE_SIGN_CLIENT_SECRET)%'
+        redirect_after: /settings/integrations
+        token_store: doctrine            # see Token storage &amp; Doctrine</code></pre>
+  </figure>
+  <p>
+    <code>auth: oauth</code> is optional. Without it, the default client stays the Integration Key and you call
+    <code>forUser()</code> wherever a user's own account should be used.
+  </p>
+
+  <h2 id="routes">The routes</h2>
+  <figure class="code">
+    <figcaption>config/routes/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign_oauth:
+    resource: '@AdobeSignBundle/config/routes/oauth.php'</code></pre>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Method and path</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>adobe_sign_oauth_redirect</code></td><td><code>GET /adobe-sign/oauth/redirect</code></td><td>Generates a 64-character random state, stores it in the session and redirects to Adobe's consent page with your client id, redirect URI and scopes.</td></tr>
+        <tr><td><code>adobe_sign_oauth_callback</code></td><td><code>GET /adobe-sign/oauth/callback</code></td><td>Takes the state out of the session (single-use), requires a signed-in user, exchanges the code for tokens on the account's data centre, stores them under the user's key, dispatches <code>OAuthConnectedEvent</code> and redirects to <code>redirect_after</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="protect-routes">Protecting the routes</h3>
+  <p>
+    The routes don't check roles themselves; the callback only insists that <em>someone</em> is signed in (401
+    otherwise). Protect both with <code>access_control</code> so a signed-out visitor is sent to your login page
+    before they ever reach Adobe:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/security.yaml</figcaption>
+    <pre><code class="language-text">security:
+    firewalls:
+        main:
+            lazy: true
+            # ... form_login, login_link, OIDC, whatever you use
+    access_control:
+        - { path: ^/adobe-sign/oauth, roles: ROLE_USER }</code></pre>
+  </figure>
+  <ul>
+    <li><strong>The paths must be under a firewall that authenticates users</strong>, usually <code>main</code>. Outside any firewall, <code>security.token_storage</code> is always empty and the callback answers 401.</li>
+    <li><strong>Match <code>^/adobe-sign/oauth</code>, not <code>^/adobe-sign</code>.</strong> A broader rule would also catch the webhook, and Adobe can't log in. See <a href="webhooks.html#firewall-and-access-control">Webhooks</a>.</li>
+    <li><strong>Sessions must be enabled</strong> (<code>framework.session</code>, on by default in the Symfony skeleton). The state lives there.</li>
+    <li>Use a stricter role (<code>ROLE_ADMIN</code>, or a voter) when connecting has consequences beyond the user, for example with a <a href="#user-key-resolver">per-team key</a>.</li>
+  </ul>
+
+  <h2 id="connect-flow">The connect flow, step by step</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 440" role="img" aria-label="Sequence diagram. The signed-in user's browser requests the redirect route; your app stores a random state in the session and redirects the browser to Adobe's consent page. The user signs in to Acrobat Sign and consents; Adobe redirects the browser to the callback with a code, the state and the account's api_access_point. Your app removes the state from the session and compares it, checks that a user is signed in, posts the code and client secret to the token endpoint on the account's data centre, receives an access and refresh token, stores them encrypted under the user's key, dispatches OAuthConnectedEvent and redirects the browser to redirect_after.">
+      <defs>
+        <marker id="arrow-oa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead" d="M0 0 10 5 0 10z"/></marker>
+        <marker id="arrow-oa-brand" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead-brand" d="M0 0 10 5 0 10z"/></marker>
+      </defs>
+      <rect class="d-box" x="10" y="8" width="120" height="40" rx="8"/>
+      <text class="d-text-strong" x="70" y="33" text-anchor="middle">Browser</text>
+      <rect class="d-box-brand" x="190" y="8" width="120" height="40" rx="8"/>
+      <text class="d-text-strong" x="250" y="33" text-anchor="middle">Symfony app</text>
+      <rect class="d-box-stamp" x="430" y="8" width="140" height="40" rx="8"/>
+      <text class="d-text-strong" x="500" y="33" text-anchor="middle">Adobe consent</text>
+      <rect class="d-box-stamp" x="590" y="8" width="120" height="40" rx="8"/>
+      <text class="d-text-strong" x="650" y="33" text-anchor="middle">Adobe API</text>
+
+      <path class="d-line-dashed" d="M70 48V430"/>
+      <path class="d-line-dashed" d="M250 48V430"/>
+      <path class="d-line-dashed" d="M500 48V430"/>
+      <path class="d-line-dashed" d="M650 48V430"/>
+
+      <text class="d-text-mono" x="160" y="74" text-anchor="middle">GET …/oauth/redirect</text>
+      <path class="d-line" d="M70 80H248" marker-end="url(#arrow-oa)"/>
+
+      <rect class="d-box-muted" x="258" y="92" width="220" height="24" rx="6"/>
+      <text class="d-text-soft" x="268" y="108">state → session (single-use)</text>
+
+      <text class="d-text-mono" x="160" y="136" text-anchor="middle">302 → Adobe (state)</text>
+      <path class="d-line-dashed" d="M250 142H72" marker-end="url(#arrow-oa)"/>
+
+      <text class="d-text-mono" x="285" y="168" text-anchor="middle">user signs in, consents</text>
+      <path class="d-line" d="M70 174H498" marker-end="url(#arrow-oa)"/>
+
+      <text class="d-text-mono" x="285" y="202" text-anchor="middle">302 → callback?code&amp;state&amp;api_access_point</text>
+      <path class="d-line-dashed" d="M500 208H72" marker-end="url(#arrow-oa)"/>
+
+      <text class="d-text-mono" x="160" y="236" text-anchor="middle">GET …/oauth/callback</text>
+      <path class="d-line" d="M70 242H248" marker-end="url(#arrow-oa)"/>
+
+      <rect class="d-box-muted" x="258" y="254" width="230" height="24" rx="6"/>
+      <text class="d-text-soft" x="268" y="270">state removed + compared · user?</text>
+
+      <text class="d-text-mono" x="450" y="298" text-anchor="middle">POST /oauth/v2/token (code, secret)</text>
+      <path class="d-line-brand" d="M250 304H648" marker-end="url(#arrow-oa-brand)"/>
+
+      <text class="d-text-mono" x="450" y="328" text-anchor="middle">access + refresh token</text>
+      <path class="d-line-dashed" d="M650 334H252" marker-end="url(#arrow-oa)"/>
+
+      <rect class="d-box-ok" x="258" y="346" width="260" height="24" rx="6"/>
+      <text class="d-text-soft" x="268" y="362">TokenStore::put() · OAuthConnectedEvent</text>
+
+      <text class="d-text-mono" x="160" y="396" text-anchor="middle">302 → redirect_after</text>
+      <path class="d-line-dashed" d="M250 402H72" marker-end="url(#arrow-oa)"/>
+    </svg>
+    <figcaption>The state ties the callback to the session that started it; the code is exchanged server-to-server on the account's own data centre, so the client secret never reaches the browser.</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><span class="step-title">The user clicks "Connect"</span><p>A plain link to the redirect route: <code>&lt;a href="{{ path('adobe_sign_oauth_redirect') }}"&gt;Connect Acrobat Sign&lt;/a&gt;</code>. It must be a top-level navigation, not an XHR, because the response is a redirect to Adobe's page.</p></li>
+    <li><span class="step-title">The bundle stores a state and redirects</span><p><code>OAuthClient::generateState()</code> makes 32 random bytes (64 hex characters), stored in the session under <code>adobe_sign_oauth_state</code>. The redirect carries <code>response_type=code</code>, your client id, the redirect URI, the scopes and the state.</p></li>
+    <li><span class="step-title">The user consents at Adobe</span><p>They sign in to Acrobat Sign (if they aren't already) and approve the scopes. Adobe sends them back to the redirect URI with <code>code</code>, <code>state</code> and <code>api_access_point</code>, the API host of their account's data centre.</p></li>
+    <li><span class="step-title">The callback validates</span><p>The state is removed from the session first, so a callback URL can be used once. Then: a user must be signed in; Adobe must not report an error; the state must match (constant-time compare); a code must be present; the access point must be on one of Adobe's domains.</p></li>
+    <li><span class="step-title">The code is exchanged</span><p>The bundle posts the code, client id, secret and redirect URI to <code>/oauth/v2/token</code> on the user's data centre. Codes are valid for five minutes.</p></li>
+    <li><span class="step-title">Tokens are stored and announced</span><p>The token pair (with its expiry and access point) is encrypted and stored under <code>userKey($user)</code>, <code>OAuthConnectedEvent</code> is dispatched, and the browser is redirected to <code>redirect_after</code>.</p></li>
+  </ol>
+
+  <h3 id="session-state">Why the state lives in the session</h3>
+  <p>
+    The state is OAuth's CSRF protection. Without it, an attacker could make a victim's browser complete a flow
+    the attacker started, connecting the <em>attacker's</em> Acrobat Sign account to the victim's user, so the
+    victim's agreements would go out through the attacker's account. Storing a random value in the victim's own
+    session and requiring it back proves the callback belongs to a flow this browser started. Because the session
+    is the anchor, the user must come back to the same host (same session cookie) they started from.
+  </p>
+
+  <h3 id="callback-errors">What the callback answers when something goes wrong</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Status</th><th>Cause</th><th>What the user should do</th></tr></thead>
+      <tbody>
+        <tr><td>401</td><td>Nobody is signed in when the callback runs (route outside the firewall, session lost, signed out meanwhile). The state has already been consumed.</td><td>Sign in and click "Connect" again.</td></tr>
+        <tr><td>400</td><td><code>STATE_MISMATCH</code>: no state in the session, or a different one (another tab, a replayed URL, a different host). <code>MISSING_CODE</code>: no code in the URL. Or an <code>api_access_point</code> outside Adobe's domains.</td><td>Start again from your app, in one tab. See <a href="troubleshooting.html#oauth-state-mismatch">Troubleshooting</a>.</td></tr>
+        <tr><td>403</td><td>Adobe reported an error (the user clicked "Cancel", a scope isn't enabled for the application, the redirect URI isn't registered) or refused the code.</td><td>Read the message; fix the application's settings at Adobe if needed.</td></tr>
+        <tr><td>502</td><td>Adobe's token endpoint could not be reached.</td><td>Try again.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    These are ordinary Symfony HTTP exceptions, so your error pages render them. To show a friendlier page,
+    handle <code>kernel.exception</code> for requests whose <code>_route</code> attribute is
+    <code>adobe_sign_oauth_callback</code>.
+  </p>
+
+  <h2 id="oauth-connected-event">The OAuthConnectedEvent</h2>
+  <p>
+    Dispatched once per successful connection, after the tokens are stored and before the redirect. Its three
+    readonly properties:
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>$user</code></td><td><code>UserInterface</code></td><td>The signed-in user who connected.</td></tr>
+        <tr><td><code>$key</code></td><td><code>string</code></td><td>The token-store key, from <code>AdobeSignManager::userKey()</code>.</td></tr>
+        <tr><td><code>$apiAccessPoint</code></td><td><code>?string</code></td><td>The account's API host, for example <code>https://api.eu1.adobesign.com/</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="code">
+    <figcaption>src/EventListener/RecordAdobeSignConnection.php</figcaption>
+    <pre><code class="language-php">use App\Entity\User;
+use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Conceptlz\AdobeSign\Symfony\Event\OAuthConnectedEvent;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+#[AsEventListener]
+final class RecordAdobeSignConnection
+{
+    public function __construct(
+        private readonly AdobeSignManager $adobeSign,
+        private readonly EntityManagerInterface $em,
+    ) {
+    }
+
+    public function __invoke(OAuthConnectedEvent $event): void
+    {
+        // Which Acrobat Sign user did they connect? Useful to show "Connected as ...".
+        $me = $this-&gt;adobeSign-&gt;forUser($event-&gt;key)-&gt;users()-&gt;me();
+
+        if ($event-&gt;user instanceof User) {
+            $event-&gt;user-&gt;setAdobeSignEmail($me-&gt;getEmail());
+            $this-&gt;em-&gt;flush();
+        }
+    }
+}</code></pre>
+  </figure>
+  <p>
+    The listener runs inside the callback request, so keep it short; an exception here turns the redirect into an
+    error page, although the tokens are already stored.
+  </p>
+
+  <h2 id="acting-as-the-user">Acting as a connected user</h2>
+  <pre><code class="language-php">// In a controller: the signed-in user
+if (!$adobeSign-&gt;isConnected($this-&gt;getUser())) {
+    return $this-&gt;redirectToRoute('adobe_sign_oauth_redirect');
+}
+$client = $adobeSign-&gt;forUser($this-&gt;getUser());
+$client-&gt;agreements()-&gt;create($agreementInfo);
+
+// In a worker or command: by the stored key
+$client = $adobeSign-&gt;forUser($contract-&gt;getSenderKey());     // e.g. "jane@example.com"</code></pre>
+  <p>
+    <code>forUser()</code> accepts a <code>UserInterface</code> (resolved through the key resolver) or the key
+    itself. Keys survive serialisation, so store <code>$adobeSign-&gt;userKey($user)</code> on records that a worker
+    will process later. The client talks straight to the user's data centre (the stored
+    <code>api_access_point</code>), so OAuth clients don't need the <span class="endpoint"><b>GET</b> /baseUris</span>
+    lookup.
+  </p>
+  <h3 id="refresh-handling">Refreshing tokens</h3>
+  <p>
+    Access tokens last about an hour. The core's token provider refreshes them 60 seconds before they expire, or
+    after the API rejects one, and writes the new pair back through the token store. Adobe doesn't rotate refresh
+    tokens, so two processes refreshing at the same moment both end up with valid tokens; no lock is needed. If a
+    refresh token stops working (the user revoked access, or it was unused for too long), the call throws
+    <code>OAuthException</code>; send the user through "Connect" again.
+  </p>
+
+  <h3 id="default-client-oauth-mode">The default client with auth: oauth</h3>
+  <p>
+    With <code>auth: oauth</code>, <code>$manager-&gt;client()</code> and the autowired <code>AdobeSign</code> service are
+    <code>forUser()</code> for whoever is signed in. That is convenient in controllers. Anywhere without a signed-in
+    user (console, workers, listeners for unauthenticated requests) they throw
+    <code>MisconfiguredException</code> with a message pointing you to <code>forUser()</code>. Also note that
+    <code>adobe-sign:verify</code> without <code>--user</code> fails in this mode, for the same reason.
+  </p>
+
+  <h2 id="user-key-resolver">One connection per team: UserKeyResolver</h2>
+  <p>
+    By default tokens are keyed by <code>UserInterface::getUserIdentifier()</code> (often the email). To share one
+    Acrobat Sign connection across a team, implement the resolver and point the configuration at it:
+  </p>
+  <figure class="code">
+    <figcaption>src/AdobeSign/TeamKeyResolver.php</figcaption>
+    <pre><code class="language-php">namespace App\AdobeSign;
+
+use App\Entity\User;
+use Conceptlz\AdobeSign\Symfony\UserKeyResolver;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+final class TeamKeyResolver implements UserKeyResolver
+{
+    public function keyFor(UserInterface $user): string
+    {
+        if (!$user instanceof User) {
+            throw new \LogicException('Only app users can connect Acrobat Sign.');
+        }
+
+        return 'team:'.$user-&gt;getTeam()-&gt;getId();
+    }
+}</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    oauth:
+        user_key_resolver: App\AdobeSign\TeamKeyResolver</code></pre>
+  </figure>
+  <p>
+    The resolver is used everywhere a <code>UserInterface</code> is passed: the callback,
+    <code>OAuthConnectedEvent::$key</code>, <code>forUser()</code>, <code>isConnected()</code> and <code>userKey()</code>.
+    Strings and ints bypass it. Two consequences to plan for: the last team member who connects replaces the
+    team's tokens, so restrict the routes to team admins; and changing the resolver changes every key, so
+    existing connections are no longer found.
+  </p>
+
+  <h2 id="disconnecting">Disconnecting</h2>
+  <p>
+    The <code>TokenStore</code> interface only has <code>get()</code> and <code>put()</code>. Both shipped stores add
+    <code>forget()</code>. A complete disconnect revokes the token at Adobe (so it stops working everywhere) and then
+    forgets it locally:
+  </p>
+  <figure class="code">
+    <figcaption>src/Controller/IntegrationController.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Exception\AdobeSignException;
+use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Conceptlz\AdobeSign\Symfony\TokenStore\{CacheTokenStore, DoctrineDbalTokenStore};
+
+#[Route('/settings/integrations/adobe-sign', methods: ['DELETE'])]
+public function disconnect(AdobeSignManager $adobeSign): Response
+{
+    $key = $adobeSign-&gt;userKey($this-&gt;getUser());
+    $store = $adobeSign-&gt;tokens();
+
+    if (($token = $store-&gt;get($key)) !== null) {
+        try {
+            $adobeSign-&gt;oauth()-&gt;revoke($token);      // POST /oauth/v2/revoke: kills the pair
+        } catch (AdobeSignException) {
+            // Already revoked by the user, or Adobe unreachable: forget it locally anyway.
+        }
+    }
+    if ($store instanceof CacheTokenStore || $store instanceof DoctrineDbalTokenStore) {
+        $store-&gt;forget($key);
+    }
+
+    return $this-&gt;redirectToRoute('settings_integrations');
+}</code></pre>
+  </figure>
+  <p>
+    Users can also revoke access from Acrobat Sign's own settings. Your app finds out on the next call
+    (<code>OAuthException</code>) while <code>isConnected()</code> still says true, because it only looks at the store.
+    Catch the exception, forget the token and ask the user to reconnect.
+  </p>
+
+  <h2 id="scopes">Choosing scopes</h2>
+  <p>The default, <code>AdobeSignBundle::DEFAULT_SCOPES</code>, covers sending and tracking your own agreements and webhooks:</p>
+  <pre><code class="language-text">user_login:self  agreement_read:self  agreement_write:self  agreement_send:self  webhook_read:self  webhook_write:self</code></pre>
+  <ul>
+    <li><strong>Modifiers.</strong> <code>:self</code> covers the user's own resources, <code>:group</code> their group's, <code>:account</code> the whole account's. Wider modifiers need an administrator to consent.</li>
+    <li><strong>Add what you use.</strong> Library templates need <code>library_read</code>; web forms need <code>widget_read</code>/<code>widget_write</code>. Ask for the minimum; consent screens with many scopes put users off.</li>
+    <li><strong>A list replaces the default.</strong> Setting <code>oauth.scopes</code> sends exactly your list.</li>
+    <li><strong>Enable them at Adobe first.</strong> Every scope must be enabled on the API application; otherwise the consent fails and the callback answers 403.</li>
+    <li><strong>Changes need a reconnect.</strong> Existing tokens keep the scopes they were granted.</li>
+  </ul>
+
+  <h2 id="redirect-after">After connecting: redirect_after</h2>
+  <p>
+    <code>oauth.redirect_after</code> (default <code>/</code>) is a path or URL. It is fixed in configuration, not taken
+    from the request, so it can't be abused as an open redirect. To return users to where they started, store that
+    path in the session before linking to the connect route, and redirect from a small controller at
+    <code>redirect_after</code>.
+  </p>
+
+  <h2 id="redirect-uri">The redirect URI</h2>
+  <p>
+    When <code>oauth.redirect_uri</code> is null, the manager generates the absolute URL of
+    <code>adobe_sign_oauth_callback</code> using the router's current context: the scheme and host of the request,
+    plus any route prefix. Adobe compares it character for character with the URI registered on the API
+    application, and the same value is sent again in the token exchange. Set it explicitly when:
+  </p>
+  <ul>
+    <li>the app runs behind a load balancer or proxy that terminates TLS and you haven't configured <code>framework.trusted_proxies</code> (the URL would start with <code>http://</code>);</li>
+    <li>users reach the app under several hosts (<code>www.</code> and the apex, customer subdomains); register one and set it;</li>
+    <li>you build OAuth URLs outside a request (console), where the router falls back to <code>framework.router.default_uri</code>.</li>
+  </ul>
+
+  <h2 id="oauth-questions">Common questions</h2>
+  <div class="faq">
+    <details id="oauth-without-security">
+      <summary>Can I use the OAuth routes without SecurityBundle?</summary>
+      <div class="faq-answer"><p>No. The callback stores tokens under the signed-in user and answers 401 without one. If your app identifies users differently, build your own connect flow with <code>$manager-&gt;oauth()</code> (<code>authorizationUrl()</code>, <code>handleCallback()</code>) and <code>$manager-&gt;tokens()-&gt;put($key, $token)</code>.</p></div>
+    </details>
+    <details id="oauth-check-connected-twig">
+      <summary>How do I show "Connected" or "Connect" in a template?</summary>
+      <div class="faq-answer"><p>Pass <code>$adobeSign-&gt;isConnected($this-&gt;getUser())</code> from the controller. It reads the token store and doesn't call Adobe. If you want the account email too, record it in an <code>OAuthConnectedEvent</code> listener.</p></div>
+    </details>
+    <details id="oauth-multiple-accounts">
+      <summary>Can one user connect several Acrobat Sign accounts?</summary>
+      <div class="faq-answer"><p>Not through the bundle's routes, which store one token per key. Build a custom flow with <code>$manager-&gt;oauth()</code> and your own keys (for example <code>"jane@example.com#2"</code>), then call <code>forUser()</code> with those keys.</p></div>
+    </details>
+    <details id="oauth-admin-consent">
+      <summary>Users get an error at Adobe when consenting. Why?</summary>
+      <div class="faq-answer"><p>Usually a scope or modifier that isn't enabled on the API application, or an <code>:account</code> scope requested by a user who is not an account administrator. Adobe redirects back with an error and the callback answers 403 with Adobe's message.</p></div>
+    </details>
+    <details id="oauth-tokens-secure">
+      <summary>How are the tokens protected at rest?</summary>
+      <div class="faq-answer"><p>Encrypted with libsodium secretbox using a key derived from <code>oauth.encryption_key</code> (<code>kernel.secret</code> by default), in whichever store you configured. A database dump or cache snapshot alone doesn't expose them. See <a href="token-storage.html#encryption">Encryption</a>.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="token-storage.html"><strong>Token storage &amp; Doctrine</strong><span>Where tokens live, how they are encrypted, and how to rotate keys.</span></a></li>
+    <li><a href="testing.html#testing-oauth"><strong>Testing OAuth</strong><span>Drive the connect flow from a WebTestCase.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="walkthrough.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Walkthrough: send &amp; store</span></a>
+  <a class="pager-next" href="token-storage.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Token storage &amp; Doctrine</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

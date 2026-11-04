@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Token storage &amp; Doctrine · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Where the Symfony bundle keeps OAuth tokens: libsodium encryption with a key derived from kernel.secret, the cache-pool store and why it needs a persistent pool, the Doctrine DBAL table with migrations or the create-token-table command, and writing your own TokenStore.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html" aria-current="page">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>Token storage &amp; Doctrine</h1>
+    <p class="lede">OAuth gives your app an access token and a refresh token for each connected user. They are as sensitive as a password and must outlive deploys and cache clears. This page explains how the bundle encrypts them, the two stores it ships (a cache pool and a Doctrine table), how to rotate the encryption key, and how to plug in your own store.</p>
+  </header>
+
+  <h2 id="choosing-a-store">Choosing a store</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th><code>token_store: cache</code> (default)</th><th><code>token_store: doctrine</code></th><th>Your own service id</th></tr></thead>
+      <tbody>
+        <tr><td>Class</td><td><code>CacheTokenStore</code></td><td><code>DoctrineDbalTokenStore</code></td><td>Anything implementing <code>TokenStore</code></td></tr>
+        <tr><td>Lives in</td><td>A PSR-6 pool (<code>oauth.token_cache_pool</code>)</td><td>A table (<code>adobe_sign_tokens</code>) on a DBAL connection</td><td>Wherever you decide</td></tr>
+        <tr><td>Needs</td><td>A persistent, shared pool</td><td><code>doctrine/dbal</code>; a migration or the create command</td><td>Your code</td></tr>
+        <tr><td>Survives <code>cache:pool:clear</code></td><td>No</td><td>Yes</td><td>Up to you</td></tr>
+        <tr><td>In backups</td><td>Only if the pool is backed up</td><td>With your database</td><td>Up to you</td></tr>
+        <tr><td>Encrypted</td><td>Yes</td><td>Yes</td><td>Only if you use <code>TokenEncryptor</code></td></tr>
+        <tr><td>Good for</td><td>Prototypes; apps with a durable Redis</td><td>Most production apps</td><td>Existing secret stores, per-tenant databases</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    If you already run Doctrine, choose <code>doctrine</code>: tokens then live next to the users they belong to, are
+    backed up with them, and nobody clears them by accident while debugging a cache problem.
+  </p>
+
+  <h2 id="encryption">Encryption</h2>
+  <p>
+    Both shipped stores pass tokens through <code>Conceptlz\AdobeSign\Symfony\TokenStore\TokenEncryptor</code> before
+    they are written. It uses libsodium's <code>crypto_secretbox</code> (XSalsa20-Poly1305), which encrypts
+    <em>and</em> authenticates:
+  </p>
+  <ul>
+    <li><strong>Key.</strong> A 32-byte key derived with <code>sodium_crypto_generichash</code> from a domain-separation label plus <code>oauth.encryption_key</code>, which defaults to <code>%kernel.secret%</code> (your <code>APP_SECRET</code>). The label means the derived key differs from anything else that uses the same secret.</li>
+    <li><strong>Format.</strong> <code>v1:</code> followed by base64 of a fresh 24-byte random nonce and the ciphertext. The same token encrypts differently every time.</li>
+    <li><strong>Contents.</strong> The access token, refresh token, expiry and the account's API access point, as JSON.</li>
+    <li><strong>Failure mode.</strong> A value encrypted with another key, tampered with, truncated or not produced by the encryptor decrypts to <code>null</code>. The store then reports "no token", <code>isConnected()</code> returns false, and the user reconnects. Nothing throws, and nothing half-valid is used.</li>
+    <li><strong>No leaks in dumps.</strong> The secret is a <code>#[\SensitiveParameter]</code> and <code>__debugInfo()</code> masks it, so <code>dump()</code>, <code>print_r()</code> and stack traces don't print it.</li>
+  </ul>
+  <p>
+    An empty key (for example <code>APP_SECRET</code> unset) throws <code>MisconfiguredException</code>
+    ("adobe_sign.oauth.encryption_key is empty; set it or kernel.secret (APP_SECRET).") the first time a token is
+    encrypted or decrypted.
+  </p>
+
+  <h3 id="rotating-the-secret">Rotating APP_SECRET, and a dedicated key</h3>
+  <p>
+    Because the default key derives from <code>APP_SECRET</code>, rotating <code>APP_SECRET</code> makes every stored
+    token unreadable. Nothing crashes: each user simply appears disconnected and must click "Connect" again. That
+    may be acceptable after a security incident; it is annoying as routine hygiene. To rotate
+    <code>APP_SECRET</code> independently, give the tokens their own key:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    oauth:
+        encryption_key: '%env(ADOBE_SIGN_TOKEN_KEY)%'</code></pre>
+  </figure>
+  <pre><code class="language-bash">php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'                 # generate a value
+php bin/console secrets:set ADOBE_SIGN_TOKEN_KEY --env=prod       # store it in the vault</code></pre>
+  <div class="callout callout-warning">
+    <p class="callout-title">Switching to a dedicated key is itself a rotation</p>
+    <p>Tokens encrypted under <code>APP_SECRET</code> can't be read with the new key. Either make the switch before users connect, or re-encrypt once: read every token with an encryptor built from the old secret and <code>put()</code> it back through the store configured with the new one. The bundle has no automatic dual-key mode.</p>
+  </div>
+  <figure class="code">
+    <figcaption>A one-off re-encryption for the Doctrine store (run it once, then delete it)</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Symfony\TokenStore\TokenEncryptor;
+
+$old = new TokenEncryptor($oldAppSecret);
+$new = new TokenEncryptor($newTokenKey);
+
+foreach ($connection-&gt;fetchAllAssociative('SELECT user_key, payload FROM adobe_sign_tokens') as $row) {
+    $token = $old-&gt;decrypt($row['payload']);
+    if ($token !== null) {
+        $connection-&gt;update('adobe_sign_tokens', ['payload' =&gt; $new-&gt;encrypt($token)], ['user_key' =&gt; $row['user_key']]);
+    }
+}</code></pre>
+  </figure>
+
+  <h2 id="cache-store">The cache-pool store</h2>
+  <p>
+    <code>CacheTokenStore</code> is the default because it needs no schema. Each token is one cache item:
+  </p>
+  <ul>
+    <li><strong>Hashed keys.</strong> The item key is <code>adobe_sign.token.</code> plus the SHA-256 of the user key. User keys are often emails, and PSR-6 forbids <code>@</code> and a few other characters in keys; hashing also keeps emails out of cache key listings.</li>
+    <li><strong>No expiry set by the store.</strong> Items are saved with <code>expiresAfter(null)</code>, which means "the pool's default lifetime". A pool without <code>default_lifetime</code> keeps them forever; a pool <em>with</em> one would silently drop tokens after that time.</li>
+    <li><strong>Encrypted values.</strong> Anyone who can read the pool sees only <code>v1:…</code> strings.</li>
+  </ul>
+
+  <h3 id="persistent-pool">Use a persistent, shared pool</h3>
+  <p>
+    The default <code>token_cache_pool</code> is <code>cache.app</code>, a filesystem pool under <code>var/cache</code> on
+    each machine. Tokens there disappear when that directory is wiped (a fresh container, some deploy strategies,
+    <code>cache:pool:clear cache.app</code>) and aren't visible to your other servers or workers on other machines.
+    For anything beyond a single-server prototype, give tokens their own durable pool:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/cache.yaml</figcaption>
+    <pre><code class="language-text">framework:
+    cache:
+        pools:
+            adobe_sign.tokens:
+                adapter: cache.adapter.redis
+                provider: '%env(REDIS_URL)%'
+                # no default_lifetime: tokens must not expire from the cache</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    oauth:
+        token_store: cache
+        token_cache_pool: adobe_sign.tokens</code></pre>
+  </figure>
+  <div class="callout callout-danger">
+    <p class="callout-title">Never an array or APCu pool</p>
+    <p>An array pool lives for one request (and is reset by <code>kernel.reset</code>); APCu is per server and per PHP-FPM pool. Tokens stored there vanish, and users appear disconnected moments after connecting. For Redis, also check the server's <code>maxmemory-policy</code>: an <code>allkeys-*</code> eviction policy can evict tokens under memory pressure. Use <code>noeviction</code> or <code>volatile-*</code> for the Redis instance that holds tokens.</p>
+  </div>
+
+  <h2 id="doctrine-store">The Doctrine DBAL store</h2>
+  <pre><code class="language-bash">composer require doctrine/dbal       # already there with symfony/orm-pack</code></pre>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    oauth:
+        token_store: doctrine
+        doctrine:
+            connection: default        # service doctrine.dbal.default_connection
+            table: adobe_sign_tokens</code></pre>
+  </figure>
+  <p>
+    <code>DoctrineDbalTokenStore</code> keeps one row per user key. <code>put()</code> updates the row and inserts it if
+    there was none; if two requests insert at the same moment, the loser's unique-constraint violation is caught
+    and turned into an update, so concurrent token refreshes never fail. The store is registered under the
+    service id <code>adobe_sign.token_store.doctrine</code> and also aliased to its class, so you can autowire
+    <code>DoctrineDbalTokenStore</code> directly.
+  </p>
+
+  <h3 id="doctrine-columns">The table</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Column</th><th>DBAL type</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>user_key</code></td><td><code>string</code>, length 191, primary key</td><td>The key from <code>userKey()</code>: the user identifier by default. 191 characters keeps the index within MySQL's limit for <code>utf8mb4</code>.</td></tr>
+        <tr><td><code>payload</code></td><td><code>text</code></td><td>The encrypted token (<code>v1:…</code>).</td></tr>
+        <tr><td><code>updated_at</code></td><td><code>datetime_immutable</code></td><td>When the token was last stored (connect or refresh). Handy for spotting stale connections.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="doctrine-orm-migrations">With Doctrine ORM: migrations pick it up</h3>
+  <p>
+    When <code>doctrine/orm</code> is installed and <code>token_store</code> is <code>doctrine</code>, the bundle registers
+    <code>DoctrineSchemaListener</code> on Doctrine's <code>postGenerateSchema</code> event. Whenever the ORM computes the
+    schema it wants, the listener adds the token table (for the configured connection only, and only if it isn't
+    there already). So the usual workflow just works:
+  </p>
+  <pre><code class="language-bash">php bin/console doctrine:migrations:diff       # the migration includes CREATE TABLE adobe_sign_tokens
+php bin/console doctrine:migrations:migrate</code></pre>
+  <p>
+    The same listener keeps <code>doctrine:schema:validate</code> and <code>doctrine:schema:update</code> from wanting to
+    drop the table. If you use <code>doctrine.dbal.schema_filter</code> to hide tables from the ORM, make sure it still
+    lets <code>adobe_sign_tokens</code> through.
+  </p>
+
+  <h3 id="without-orm">Without the ORM: create-token-table</h3>
+  <p>
+    With DBAL alone there is no schema diff, so the bundle offers a command (registered only when
+    <code>token_store</code> is <code>doctrine</code>):
+  </p>
+  <pre><code class="language-bash">$ php bin/console adobe-sign:create-token-table
+
+ [OK] Created table "adobe_sign_tokens".
+
+$ php bin/console adobe-sign:create-token-table
+
+ [OK] Table "adobe_sign_tokens" already exists.</code></pre>
+  <p>
+    It is idempotent, so it can run on every deploy. It never alters an existing table. If you manage schema with
+    migrations but without the ORM, write the migration by hand with the same columns:
+  </p>
+  <figure class="code">
+    <figcaption>migrations/Version20261104120000.php</figcaption>
+    <pre><code class="language-php">use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\Migrations\AbstractMigration;
+
+final class Version20261104120000 extends AbstractMigration
+{
+    public function up(Schema $schema): void
+    {
+        $table = $schema-&gt;createTable('adobe_sign_tokens');
+        $table-&gt;addColumn('user_key', Types::STRING, ['length' =&gt; 191]);
+        $table-&gt;addColumn('payload', Types::TEXT);
+        $table-&gt;addColumn('updated_at', Types::DATETIME_IMMUTABLE);
+        $table-&gt;setPrimaryKey(['user_key']);
+    }
+
+    public function down(Schema $schema): void
+    {
+        $schema-&gt;dropTable('adobe_sign_tokens');
+    }
+}</code></pre>
+  </figure>
+
+  <h3 id="doctrine-other-connection">A separate connection</h3>
+  <p>
+    To keep secrets in a different database, define a second DBAL connection and name it:
+    <code>oauth.doctrine.connection: secrets</code> makes the store use <code>doctrine.dbal.secrets_connection</code>.
+    The schema listener only adds the table to the schema of that connection, so a diff for the default entity
+    manager won't include it; run the create command or a migration against the <code>secrets</code> connection.
+  </p>
+
+  <h2 id="forgetting-tokens">Forgetting a token</h2>
+  <p>
+    Both shipped stores have <code>forget(string $key): void</code>, which deletes the stored token. It is not part of
+    the core <code>TokenStore</code> interface and does not revoke the token at Adobe; see
+    <a href="oauth.html#disconnecting">Disconnecting</a> for the full pattern. When a user account is deleted in your
+    app, forget their token in the same place you delete their other data.
+  </p>
+
+  <h2 id="own-store">Writing your own TokenStore</h2>
+  <p>
+    Implement <code>Conceptlz\AdobeSign\Auth\TokenStore</code>, which has two methods, and register the class as a
+    service. Reuse the bundle's encryptor (autowirable by its class name) unless your storage encrypts on its own:
+  </p>
+  <figure class="code">
+    <figcaption>src/AdobeSign/UserColumnTokenStore.php</figcaption>
+    <pre><code class="language-php">namespace App\AdobeSign;
+
+use App\Repository\UserRepository;
+use Conceptlz\AdobeSign\Auth\AccessToken;
+use Conceptlz\AdobeSign\Auth\TokenStore;
+use Conceptlz\AdobeSign\Symfony\TokenStore\TokenEncryptor;
+use Doctrine\ORM\EntityManagerInterface;
+
+/** Keeps each user's token in a column on the users table. */
+final class UserColumnTokenStore implements TokenStore
+{
+    public function __construct(
+        private readonly UserRepository $users,
+        private readonly EntityManagerInterface $em,
+        private readonly TokenEncryptor $encryptor,
+    ) {
+    }
+
+    public function get(string $key): ?AccessToken
+    {
+        $sealed = $this-&gt;users-&gt;findOneBy(['email' =&gt; $key])?-&gt;getAdobeSignToken();
+
+        return $sealed !== null ? $this-&gt;encryptor-&gt;decrypt($sealed) : null;
+    }
+
+    public function put(string $key, AccessToken $token): void
+    {
+        $user = $this-&gt;users-&gt;findOneBy(['email' =&gt; $key]) ?? throw new \RuntimeException("No user $key.");
+        $user-&gt;setAdobeSignToken($this-&gt;encryptor-&gt;encrypt($token));
+        $this-&gt;em-&gt;flush();
+    }
+}</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    oauth:
+        token_store: App\AdobeSign\UserColumnTokenStore</code></pre>
+  </figure>
+  <p>Rules a store must follow, because the core relies on them:</p>
+  <ul>
+    <li><strong><code>get()</code> returns null for "nothing usable".</strong> Missing, undecryptable or corrupt all mean null; the core then reports <code>NO_TOKEN</code> and the user reconnects.</li>
+    <li><strong><code>put()</code> overwrites.</strong> It is called on connect and after every refresh, possibly from two processes at once. Last write wins is correct; both values are valid.</li>
+    <li><strong>It is called from workers.</strong> No request, no session, no signed-in user. Key off the string you are given.</li>
+    <li><strong>It survives <code>kernel.reset</code>.</strong> Don't cache tokens in a property for longer than a request or message, or implement <code>ResetInterface</code> to clear it.</li>
+  </ul>
+  <p>
+    The <code>adobe-sign:create-token-table</code> command and the schema listener only exist for
+    <code>token_store: doctrine</code>; your own store manages its own schema.
+  </p>
+
+  <h2 id="token-storage-questions">Common questions</h2>
+  <div class="faq">
+    <details id="token-storage-switch-store">
+      <summary>Can I switch from the cache store to Doctrine later?</summary>
+      <div class="faq-answer"><p>Yes, but stored tokens don't move by themselves. Either let users reconnect, or copy them once: for each known user key, <code>get()</code> from a <code>CacheTokenStore</code> on the old pool and <code>put()</code> into the <code>DoctrineDbalTokenStore</code>. Both use the same encryptor, so the key stays the same.</p></div>
+    </details>
+    <details id="token-storage-list-connected">
+      <summary>How do I list every connected user?</summary>
+      <div class="faq-answer"><p>With the Doctrine store, <code>SELECT user_key, updated_at FROM adobe_sign_tokens</code>. The cache store can't list (keys are hashed), which is one more reason to prefer Doctrine in production.</p></div>
+    </details>
+    <details id="token-storage-key-in-env">
+      <summary>Is kernel.secret a good enough encryption key?</summary>
+      <div class="faq-answer"><p>Cryptographically yes, if it is long and random (at least 32 random characters; recent Symfony skeletons leave <code>APP_SECRET</code> empty in <code>.env</code>, so set it per environment). The reason to use a dedicated <code>encryption_key</code> is operational: rotating <code>APP_SECRET</code> then doesn't disconnect your users.</p></div>
+    </details>
+    <details id="token-storage-db-dump">
+      <summary>Our staging database is a copy of production. Are tokens exposed there?</summary>
+      <div class="faq-answer"><p>Not if staging has a different <code>APP_SECRET</code> or <code>encryption_key</code>: the copied payloads won't decrypt and every user appears disconnected. If staging shares the production key, it can act as your users at Adobe; give it its own key, or empty the table when you copy.</p></div>
+    </details>
+    <details id="token-storage-gdpr">
+      <summary>What personal data does the token table hold?</summary>
+      <div class="faq-answer"><p>The user key (by default the user identifier, often an email) in plain text, and the encrypted token. Treat the row as personal data: delete it with <code>forget()</code> when you delete the user, and use a <a href="oauth.html#user-key-resolver">key resolver</a> that returns an opaque id if you'd rather not store emails.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="oauth.html"><strong>OAuth: connect user accounts</strong><span>The routes and flow that put tokens into the store.</span></a></li>
+    <li><a href="troubleshooting.html#token-problems"><strong>Troubleshooting tokens</strong><span>Lost tokens, unreadable tokens and missing tables.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="oauth.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">OAuth: connect user accounts</span></a>
+  <a class="pager-next" href="webhooks.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Webhooks</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

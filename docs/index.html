@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Adobe Sign for Symfony · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="The Symfony 7.4 and 8 bundle for the Adobe Acrobat Sign PHP SDK: an adobe_sign configuration tree, autowirable services, OAuth connect routes with encrypted token storage, a webhook endpoint that dispatches Symfony events and Messenger messages, and console commands.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html" aria-current="page">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="hero">
+    <p class="eyebrow hero-reveal">Symfony 7.4 &amp; 8 · PHP 8.2+ · Acrobat Sign REST API v6</p>
+    <h1 class="hero-title hero-reveal" style="--delay: 120ms">E-signatures, wired the Symfony way.</h1>
+    <div class="hero-sign" aria-hidden="true">
+      <svg viewBox="0 0 480 120">
+        <text class="signature-x" x="2" y="104">×</text>
+        <line class="signature-line" x1="0" y1="110" x2="480" y2="110"/>
+        <path class="signature-stroke" d="M28 92c6-10 14-40 24-56 8-13 16-10 12 6-4 17-18 40-14 46 4 6 14-10 20-22 6-12 10-22 16-20 6 2-4 20 2 22 7 3 13-16 21-16 6 0 2 12 9 12 8 0 12-14 20-14 6 0 1 13 8 13 8 0 14-18 24-24 8-5 12 0 6 10-5 9-2 14 6 10 10-5 16-16 26-16 7 0 2 11 10 11 13 0 24-18 38-19 9-1 5 12 14 12 18-1 34-12 52-14 20-2 46 2 64 4"/>
+        <path class="signature-stroke" d="M84 70c46-12 112-18 186-10"/>
+        <text class="signature-caption" x="288" y="104">Signed · SES · via Symfony</text>
+      </svg>
+    </div>
+    <p class="hero-lede hero-reveal" style="--delay: 1.4s">
+      <code>conceptlz/adobe-sign-symfony</code> is a bundle that plugs the Acrobat Sign PHP SDK into
+      Symfony. You get an <code>adobe_sign</code> configuration tree fed by <code>%env()%</code>,
+      autowirable <code>AdobeSign</code> and <code>AdobeSignManager</code> services, OAuth routes so each
+      user can connect their own Acrobat Sign account, encrypted token storage in a cache pool or a
+      Doctrine table, a webhook endpoint that dispatches Symfony events and Messenger messages, and
+      <code>bin/console adobe-sign:verify</code> to check it all works.
+    </p>
+    <div class="hero-reveal" style="--delay: 1.6s">
+      <p class="install-line"><code>composer require conceptlz/adobe-sign-symfony</code> <button class="copy-inline" type="button" data-copy="composer require conceptlz/adobe-sign-symfony">Copy</button></p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="installation.html">Install</a>
+        <a class="button" href="walkthrough.html">Walkthrough: send &amp; store</a>
+        <a class="button" href="faq.html">FAQ</a>
+      </div>
+    </div>
+  </header>
+
+  <h2 id="what-the-bundle-adds">What the bundle adds</h2>
+  <p>
+    The core package, <code>conceptlz/adobe-sign</code>, does all the Acrobat Sign work: uploading PDFs,
+    building agreements with a signing order, choosing a signature level, discovering which data centre
+    your account lives in, retrying throttled calls and parsing webhooks. It is framework-free on purpose.
+    It speaks only PSR interfaces, so it knows nothing about your service container, your cache pools,
+    your firewall or your Messenger buses.
+  </p>
+  <p>
+    This bundle connects those two worlds. It contains no Acrobat Sign API logic of its own: every request
+    still goes through the core client. What it adds is the wiring a Symfony developer would otherwise
+    write by hand, following the conventions you already use:
+  </p>
+  <ul>
+    <li><strong>Semantic configuration.</strong> One <code>adobe_sign</code> tree in <code>config/packages/adobe_sign.yaml</code>, validated by the Config component, with <code>%env()%</code> for secrets and the usual per-environment overrides.</li>
+    <li><strong>Autowirable services.</strong> Type-hint <code>Conceptlz\AdobeSign\AdobeSign</code> for the default client, or <code>Conceptlz\AdobeSign\Symfony\AdobeSignManager</code> to choose one. Both come pre-built with your cache pool, your PSR-18 client and a logger on the <code>adobe_sign</code> Monolog channel.</li>
+    <li><strong>OAuth without the plumbing.</strong> Two importable routes run the authorization-code flow with a single-use state in the session, store tokens encrypted with libsodium, and dispatch an <code>OAuthConnectedEvent</code>. <code>$manager-&gt;forUser($user)</code> then acts with that user's account and refreshes tokens as needed.</li>
+    <li><strong>Token storage you choose.</strong> A persistent cache pool by default, a Doctrine DBAL table (picked up by <code>doctrine:migrations:diff</code> when you use the ORM), or your own <code>TokenStore</code> service.</li>
+    <li><strong>A ready-made webhook endpoint.</strong> A stateless route that answers Adobe's verification handshake, rejects unknown client ids, drops retried duplicates, dispatches a <code>WebhookReceivedEvent</code> and, if you switch it on, an <code>AdobeSignWebhookMessage</code> on your Messenger bus.</li>
+    <li><strong>Worker-safe.</strong> The manager is tagged <code>kernel.reset</code>, so Messenger consumers and FrankenPHP worker mode start every message or request with fresh clients.</li>
+    <li><strong>Console commands.</strong> <code>adobe-sign:verify</code> prints who your credentials belong to; <code>adobe-sign:create-token-table</code> creates the token table for projects without the ORM.</li>
+  </ul>
+
+  <h2 id="a-first-taste">A first taste</h2>
+  <p>
+    Here is a contract going out from a controller. The injected client already knows your Integration Key,
+    your cache pool and your project's default signature level, so the code only describes the business
+    process: who signs, in which order, and which webhook tells you about it.
+  </p>
+  <figure class="code">
+    <figcaption>src/Controller/ContractController.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\AdobeSign;
+use Conceptlz\AdobeSign\Builder\{AgreementInfo, FileInfo, ParticipantSetInfo, WebhookInfo};
+use Conceptlz\AdobeSign\Webhook\EventType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\{JsonResponse, Request};
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+final class ContractController extends AbstractController
+{
+    #[Route('/contracts', methods: ['POST'])]
+    public function send(Request $request, AdobeSign $adobeSign): JsonResponse
+    {
+        $pdf = $request-&gt;files-&gt;get('contract');
+        $documentId = $adobeSign-&gt;transientDocuments()-&gt;upload($pdf, 'msa.pdf', 'application/pdf');
+
+        $agreementId = $adobeSign-&gt;agreements()-&gt;create(
+            AgreementInfo::create('Master Services Agreement')
+                -&gt;file(FileInfo::transientDocument($documentId))
+                -&gt;participantSet(ParticipantSetInfo::signer('client@example.com')-&gt;order(1))
+                -&gt;participantSet(ParticipantSetInfo::signer('ceo@example.com')-&gt;order(2)),
+        );
+
+        $adobeSign-&gt;webhooks()-&gt;create(
+            WebhookInfo::forAgreement(
+                "Agreement $agreementId",
+                $this-&gt;generateUrl('adobe_sign_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $agreementId,
+            )-&gt;events(EventType::AGREEMENT_ALL),
+        );
+
+        return $this-&gt;json(['agreement_id' =&gt; $agreementId], 201);
+    }
+}</code></pre>
+  </figure>
+  <p>
+    When everyone has signed, Adobe calls the bundle's webhook route. The bundle acknowledges Adobe straight
+    away and puts an <code>AdobeSignWebhookMessage</code> on your bus. A worker picks it up and does the slow
+    work outside Adobe's 5-second window:
+  </p>
+  <figure class="code">
+    <figcaption>src/MessageHandler/StoreSignedAgreement.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage;
+use Conceptlz\AdobeSign\Webhook\AgreementEvent;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+final class StoreSignedAgreement
+{
+    public function __construct(private readonly AdobeSignManager $adobeSign) {}
+
+    public function __invoke(AdobeSignWebhookMessage $message): void
+    {
+        $event = $message-&gt;event();
+        if (!$event instanceof AgreementEvent || !$event-&gt;isWorkflowCompleted()) {
+            return;
+        }
+
+        $client = $this-&gt;adobeSign-&gt;client();
+        if (!$client-&gt;agreements()-&gt;get($event-&gt;agreementId())-&gt;isSigned()) {
+            return; // webhook payloads aren't signed: confirm with the API first
+        }
+
+        $pdf = $client-&gt;agreements()-&gt;combinedDocument($event-&gt;agreementId(), attachAuditReport: true);
+        file_put_contents("/var/contracts/{$event-&gt;agreementId()}.pdf", $pdf-&gt;detach());
+    }
+}</code></pre>
+  </figure>
+  <p>
+    The <a href="walkthrough.html">walkthrough</a> builds the whole loop step by step, with a small storage
+    service, idempotency and tests.
+  </p>
+
+  <h2 id="features">Features</h2>
+  <ul class="ledger">
+    <li><span class="ledger-term">adobe_sign config tree</span><span class="ledger-desc">Integration Key or OAuth, signature level, qualified issuers, cache pool, PSR-18 client, retries, token storage and webhooks, all validated with defaults. See <a href="configuration.html">Configuration</a>.</span></li>
+    <li><span class="ledger-term">Autowiring</span><span class="ledger-desc"><code>AdobeSign</code> (the default client, not shared) and <code>AdobeSignManager</code> (public, resettable) can be injected into controllers, services, handlers and commands. See <a href="usage.html">Using the client</a>.</span></li>
+    <li><span class="ledger-term">OAuth connect routes</span><span class="ledger-desc"><code>adobe_sign_oauth_redirect</code> and <code>adobe_sign_oauth_callback</code>: single-use state in the session, a signed-in user required, <code>OAuthConnectedEvent</code> on success. See <a href="oauth.html">OAuth</a>.</span></li>
+    <li><span class="ledger-term">Encrypted tokens</span><span class="ledger-desc">libsodium secretbox with a key derived from <code>kernel.secret</code> (or your own key), in a cache pool, a Doctrine DBAL table or your own store. See <a href="token-storage.html">Token storage</a>.</span></li>
+    <li><span class="ledger-term">Webhook endpoint</span><span class="ledger-desc"><code>GET|POST /adobe-sign/webhook</code>, stateless: client-id allow-list, the echo Adobe requires, 72-hour duplicate suppression and a typed <code>WebhookReceivedEvent</code>. See <a href="webhooks.html">Webhooks</a>.</span></li>
+    <li><span class="ledger-term">Messenger</span><span class="ledger-desc">Opt in and every new notification is also dispatched as an <code>AdobeSignWebhookMessage</code>, a plain-array message any transport can carry. See <a href="messenger.html">Async with Messenger</a>.</span></li>
+    <li><span class="ledger-term">Signature levels</span><span class="ledger-desc">Set SES, AES or QES for the whole project, then check what each signer reached with <code>$manager-&gt;signatureShortfalls($id)</code>. See <a href="signature-levels.html">Signature levels</a>.</span></li>
+    <li><span class="ledger-term">Testable</span><span class="ledger-desc">Point <code>http_client</code> at a mock PSR-18 client in the test environment, post fake webhooks with <code>WebTestCase</code> and assert on the in-memory transport. See <a href="testing.html">Testing</a>.</span></li>
+  </ul>
+
+  <h2 id="how-it-fits">How it fits together</h2>
+  <p>
+    Your application talks to the autowired services. The bundle builds the core client from your
+    configuration and from services Symfony already has, and it owns the HTTP entry points that Adobe and
+    your users call back on. Everything that speaks to Acrobat Sign lives in the core.
+  </p>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 270" role="img" aria-label="Your Symfony app's controllers, services and message handlers use the autowired AdobeSign client or AdobeSignManager. The bundle builds them from the adobe_sign configuration and Symfony services (cache pool, PSR-18 client, logger, router, security token storage), and provides the OAuth routes with token storage, and the webhook route that dispatches a Symfony event and an optional Messenger message back into your app. Every API call goes through the core conceptlz/adobe-sign client, which talks to Acrobat Sign. Acrobat Sign calls the webhook route and redirects users to the OAuth callback.">
+      <defs>
+        <marker id="arrow-home" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead" d="M0 0 10 5 0 10z"/></marker>
+        <marker id="arrow-home-brand" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead-brand" d="M0 0 10 5 0 10z"/></marker>
+      </defs>
+      <rect class="d-box" x="8" y="70" width="130" height="100" rx="8"/>
+      <text class="d-text-strong" x="73" y="104" text-anchor="middle">Your app</text>
+      <text class="d-text-soft" x="73" y="124" text-anchor="middle">controllers,</text>
+      <text class="d-text-soft" x="73" y="140" text-anchor="middle">services, handlers</text>
+
+      <rect class="d-box-brand" x="172" y="12" width="268" height="246" rx="8"/>
+      <text class="d-text-strong" x="306" y="36" text-anchor="middle">adobe-sign-symfony</text>
+      <rect class="d-box-muted" x="188" y="50" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="67" text-anchor="middle">AdobeSign / AdobeSignManager</text>
+      <rect class="d-box-muted" x="188" y="84" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="101" text-anchor="middle">adobe_sign config tree</text>
+      <rect class="d-box-muted" x="188" y="118" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="135" text-anchor="middle">OAuth routes + TokenStore</text>
+      <rect class="d-box-muted" x="188" y="152" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="169" text-anchor="middle">webhook route → event, message</text>
+      <rect class="d-box-muted" x="188" y="186" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="203" text-anchor="middle">cache pool · PSR-18 · logger</text>
+      <rect class="d-box-muted" x="188" y="220" width="236" height="26" rx="6"/>
+      <text class="d-text-mono" x="306" y="237" text-anchor="middle">adobe-sign:verify</text>
+
+      <rect class="d-box" x="474" y="80" width="110" height="80" rx="8"/>
+      <text class="d-text-strong" x="529" y="112" text-anchor="middle">Core SDK</text>
+      <text class="d-text-mono" x="529" y="132" text-anchor="middle">conceptlz/</text>
+      <text class="d-text-mono" x="529" y="148" text-anchor="middle">adobe-sign</text>
+
+      <rect class="d-box-stamp" x="612" y="80" width="100" height="80" rx="8"/>
+      <text class="d-text-strong" x="662" y="116" text-anchor="middle">Acrobat</text>
+      <text class="d-text-strong" x="662" y="134" text-anchor="middle">Sign</text>
+
+      <path class="d-line" d="M138 110h32" marker-end="url(#arrow-home)"/>
+      <path class="d-line-brand" d="M172 150h-32" marker-end="url(#arrow-home-brand)"/>
+      <text class="d-text-soft" x="155" y="186" text-anchor="middle">events</text>
+      <path class="d-line" d="M440 110h32" marker-end="url(#arrow-home)"/>
+      <path class="d-line" d="M584 110h26" marker-end="url(#arrow-home)"/>
+      <path class="d-line-dashed" d="M662 160v50H442" marker-end="url(#arrow-home-brand)"/>
+      <text class="d-text-soft" x="560" y="230" text-anchor="middle">webhooks, OAuth redirects</text>
+    </svg>
+    <figcaption>The bundle configures the core client, owns the routes Adobe and your users call back on, and turns callbacks into Symfony events and messages. API logic stays in the core.</figcaption>
+  </figure>
+
+  <h2 id="relation-to-core">The core package and its documentation</h2>
+  <p>
+    Installing this bundle pulls in <code>conceptlz/adobe-sign</code>. All three packages (core, Laravel
+    bridge, Symfony bundle) share one version number and are released together; the bundle requires the
+    core at <code>^0.4</code> and first ships in the release after 0.4.0. All builders
+    (<code>AgreementInfo</code>, <code>ParticipantSetInfo</code>, <code>FileInfo</code>,
+    <code>WebhookInfo</code>, <code>Verification</code>), resources (<code>agreements()</code>,
+    <code>transientDocuments()</code>, <code>webhooks()</code>, …), models and exceptions come from the core
+    and are documented in the <a href="https://conceptlz.github.io/adobe-sign/">core SDK documentation</a>.
+    This site covers what is specific to Symfony and shows the core calls in a Symfony setting.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>You want to…</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr><td>Install, configure and verify credentials</td><td><a href="installation.html">Installation</a>, <a href="configuration.html">Configuration</a></td></tr>
+        <tr><td>Inject the client, choose between clients, act as another user</td><td><a href="usage.html">Using the client</a></td></tr>
+        <tr><td>Let each user connect their own Acrobat Sign account</td><td><a href="oauth.html">OAuth</a>, <a href="token-storage.html">Token storage</a></td></tr>
+        <tr><td>Receive signing progress in listeners or Messenger handlers</td><td><a href="webhooks.html">Webhooks</a>, <a href="messenger.html">Async with Messenger</a></td></tr>
+        <tr><td>Learn every builder option, identity checks, downloads</td><td><a href="https://conceptlz.github.io/adobe-sign/agreements.html">Core: Creating agreements</a>, <a href="https://conceptlz.github.io/adobe-sign/identity-verification.html">Identity verification</a>, <a href="https://conceptlz.github.io/adobe-sign/downloads.html">Downloads</a></td></tr>
+        <tr><td>Understand SES, AES and QES in legal terms</td><td><a href="https://conceptlz.github.io/adobe-sign/signature-levels.html">Core: Signature levels</a></td></tr>
+        <tr><td>Use Laravel instead</td><td><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge documentation</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="requirements">Requirements</h2>
+  <ul>
+    <li>PHP 8.2 or newer, with the <code>sodium</code> extension (bundled with PHP since 7.2; it encrypts stored OAuth tokens).</li>
+    <li>Symfony 7.4 or 8.x (<code>symfony/*</code> <code>^7.4 || ^8.0</code>). CI runs Symfony 7.4 on PHP 8.2–8.4 and Symfony 8 on PHP 8.4–8.5.</li>
+    <li>A PSR-18 HTTP client. With <code>symfony/http-client</code> and <code>nyholm/psr7</code> installed, the framework's own one is used.</li>
+    <li>An Acrobat Sign account. A free developer account is enough to build and test; its agreements are marked as demo documents.</li>
+    <li>Optional: <code>doctrine/dbal</code> for the token table, <code>symfony/messenger</code> for async webhooks, <code>symfony/security-bundle</code> for OAuth. A public HTTPS URL only if you receive webhooks.</li>
+  </ul>
+
+  <div class="callout callout-legal">
+    <p class="callout-title">Independent project</p>
+    <p>This bundle and the SDK it wraps are developed independently by Conceptualize and are not affiliated with or endorsed by Adobe. Adobe and Acrobat Sign are trademarks of Adobe Inc.</p>
+  </div>
+
+  <h2 id="where-next">Where next</h2>
+  <ul class="next-links">
+    <li><a href="installation.html"><strong>Installation</strong><span>Require the bundle, add a PSR-18 client, set your key and verify it.</span></a></li>
+    <li><a href="walkthrough.html"><strong>Walkthrough: send &amp; store</strong><span>Controller, webhook, Messenger handler and storage, end to end.</span></a></li>
+    <li><a href="oauth.html"><strong>OAuth</strong><span>Let users connect their own Acrobat Sign accounts and act on their behalf.</span></a></li>
+    <li><a href="faq.html"><strong>FAQ</strong><span>Short answers about versions, workers, multiple servers and testing.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-next" href="installation.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Installation</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

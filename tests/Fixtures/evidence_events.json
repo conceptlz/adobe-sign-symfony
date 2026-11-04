@@ -1,0 +1,142 @@
+{
+    "events": [
+        {
+            "type": "CREATED",
+            "date": "2026-11-03T10:00:00Z",
+            "participantEmail": "sender@vendor.example",
+            "participantRole": "SENDER",
+            "actingUserEmail": "",
+            "actingUserIpAddress": "",
+            "actingUserName": "",
+            "description": "",
+            "device": "",
+            "deviceLocation": {
+                "latitude": 0,
+                "longitude": 0
+            },
+            "devicePhoneNumber": "",
+            "digitalSignatureInfo": {
+                "company": "",
+                "email": "",
+                "name": ""
+            },
+            "electronicSealInfo": {
+                "company": "",
+                "id": "",
+                "name": ""
+            },
+            "initiatingUserEmail": "",
+            "initiatingUserName": "",
+            "participantId": "",
+            "synchronizationId": "",
+            "vaultEventId": "",
+            "vaultProviderName": "",
+            "versionId": ""
+        },
+        {
+            "type": "ACTION_COMPLETED",
+            "date": "2026-11-03T10:05:00Z",
+            "participantEmail": "jane@client.example",
+            "participantRole": "SIGNER",
+            "actingUserName": "Jane Client",
+            "signatureInputType": "TYPED",
+            "signatureDevice": "WEBAPP",
+            "actingUserEmail": "",
+            "actingUserIpAddress": "",
+            "description": "",
+            "device": "",
+            "deviceLocation": {
+                "latitude": 0,
+                "longitude": 0
+            },
+            "devicePhoneNumber": "",
+            "digitalSignatureInfo": {
+                "company": "",
+                "email": "",
+                "name": ""
+            },
+            "electronicSealInfo": {
+                "company": "",
+                "id": "",
+                "name": ""
+            },
+            "initiatingUserEmail": "",
+            "initiatingUserName": "",
+            "participantId": "",
+            "synchronizationId": "",
+            "vaultEventId": "",
+            "vaultProviderName": "",
+            "versionId": ""
+        },
+        {
+            "type": "ACTION_COMPLETED",
+            "date": "2026-11-03T10:06:00Z",
+            "participantEmail": "legal@vendor.example",
+            "participantRole": "APPROVER",
+            "actingUserName": "Legal",
+            "actingUserEmail": "",
+            "actingUserIpAddress": "",
+            "description": "",
+            "device": "",
+            "deviceLocation": {
+                "latitude": 0,
+                "longitude": 0
+            },
+            "devicePhoneNumber": "",
+            "digitalSignatureInfo": {
+                "company": "",
+                "email": "",
+                "name": ""
+            },
+            "electronicSealInfo": {
+                "company": "",
+                "id": "",
+                "name": ""
+            },
+            "initiatingUserEmail": "",
+            "initiatingUserName": "",
+            "participantId": "",
+            "synchronizationId": "",
+            "vaultEventId": "",
+            "vaultProviderName": "",
+            "versionId": ""
+        },
+        {
+            "type": "ACTION_COMPLETED",
+            "date": "2026-11-03T10:09:00Z",
+            "participantEmail": "cfo@vendor.example",
+            "participantRole": "SIGNER",
+            "actingUserName": "Carla CFO",
+            "signatureInputType": "DIGITAL",
+            "digitalSignatureInfo": {
+                "name": "Carla CFO",
+                "email": "cfo@vendor.example",
+                "company": "Vendor GmbH",
+                "certificateIssuer": "CN=TrustPro QTSP Qualified CA 2026, O=TrustPro, C=EU",
+                "cloudProviderName": "TrustPro",
+                "cloudProviderUrl": "https://qtsp.trustpro.example/csc/v1"
+            },
+            "actingUserEmail": "",
+            "actingUserIpAddress": "",
+            "description": "",
+            "device": "",
+            "deviceLocation": {
+                "latitude": 0,
+                "longitude": 0
+            },
+            "devicePhoneNumber": "",
+            "electronicSealInfo": {
+                "company": "",
+                "id": "",
+                "name": ""
+            },
+            "initiatingUserEmail": "",
+            "initiatingUserName": "",
+            "participantId": "",
+            "synchronizationId": "",
+            "vaultEventId": "",
+            "vaultProviderName": "",
+            "versionId": ""
+        }
+    ]
+}

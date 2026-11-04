@@ -1,0 +1,38 @@
+{
+  "webhookId": "CBJCHBCAABAAwebhook1",
+  "webhookName": "Status sync",
+  "webhookNotificationId": "CBJCHBCAABAAnotif1",
+  "webhookUrlInfo": {"url": "https://app.example.com/adobe/webhook"},
+  "webhookScope": "RESOURCE",
+  "webhookNotificationApplicableUsers": [
+    {"id": "CBJCHBCAABAAuser1", "email": "sender@example.com", "role": "SENDER", "payloadApplicable": "true"}
+  ],
+  "event": "AGREEMENT_WORKFLOW_COMPLETED",
+  "subEvent": "",
+  "eventDate": "2026-11-03T14:22:10Z",
+  "eventResourceType": "agreement",
+  "eventResourceParentType": "",
+  "eventResourceParentId": "",
+  "participantUserId": "CBJCHBCAABAAsigner1",
+  "participantUserEmail": "jane@example.com",
+  "actingUserId": "CBJCHBCAABAAsigner1",
+  "actingUserEmail": "jane@example.com",
+  "actingUserIpAddress": "203.0.113.7",
+  "initiatingUserId": "",
+  "initiatingUserEmail": "",
+  "agreement": {
+    "id": "CBJCHBCAABAAx1aFQyYF-aGrLsBZtVqaT9gPh6Xw42kK",
+    "name": "Mutual NDA",
+    "signatureType": "ESIGN",
+    "status": "SIGNED",
+    "createdDate": "2026-11-03T10:15:30Z",
+    "senderEmail": "sender@example.com",
+    "locale": "en_US",
+    "participantSetsInfo": {
+      "participantSets": [
+        {"memberInfos": [{"id": "CBJCHBCAABAAmem1", "email": "jane@example.com", "name": "Jane", "status": "COMPLETED"}],
+         "order": 1, "role": "SIGNER", "status": "COMPLETED", "id": "CBJCHBCAABAApset1"}
+      ]
+    }
+  }
+}

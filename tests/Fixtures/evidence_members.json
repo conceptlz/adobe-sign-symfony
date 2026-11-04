@@ -1,0 +1,83 @@
+{
+    "participantSets": [
+        {
+            "id": "ps-1",
+            "role": "SIGNER",
+            "order": 1,
+            "status": "COMPLETED",
+            "memberInfos": [
+                {
+                    "id": "m-1",
+                    "email": "Jane@Client.example",
+                    "name": "Jane Client",
+                    "status": "ACTIVE",
+                    "securityOption": {
+                        "authenticationMethod": "EMAIL_OTP"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "ps-2",
+            "role": "APPROVER",
+            "order": 2,
+            "status": "COMPLETED",
+            "memberInfos": [
+                {
+                    "id": "m-2",
+                    "email": "legal@vendor.example",
+                    "status": "ACTIVE",
+                    "securityOption": {
+                        "authenticationMethod": "NONE"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "ps-3",
+            "role": "SIGNER",
+            "order": 3,
+            "status": "COMPLETED",
+            "isDigitalSignatureRequired": true,
+            "memberInfos": [
+                {
+                    "id": "m-3",
+                    "email": "cfo@vendor.example",
+                    "status": "ACTIVE",
+                    "securityOption": {
+                        "authenticationMethod": "GOV_ID"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "ps-4",
+            "role": "SIGNER",
+            "order": 4,
+            "status": "WAITING_FOR_MY_SIGNATURE",
+            "isDigitalSignatureRequired": true,
+            "memberInfos": [
+                {
+                    "id": "m-4",
+                    "email": "ceo@vendor.example",
+                    "status": "ACTIVE",
+                    "securityOption": {
+                        "authenticationMethod": "NONE"
+                    }
+                }
+            ]
+        }
+    ],
+    "senderInfo": {
+        "email": "sender@vendor.example",
+        "participantId": "sender",
+        "self": true,
+        "company": "",
+        "hidden": false,
+        "name": "",
+        "status": "CANCELLED"
+    },
+    "ccsInfo": [],
+    "nextParticipantSets": [],
+    "sharesInfo": []
+}

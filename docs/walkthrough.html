@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Walkthrough: send &amp; store · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="An end-to-end Symfony tutorial: a controller sends an uploaded PDF in signing order, Adobe calls the bundle's webhook, a Messenger handler confirms the status, downloads the signed PDF with its audit report and stores it, with tests and production hardening.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html" aria-current="page">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>Walkthrough: send &amp; store</h1>
+    <p class="lede">Build the complete loop a contract takes through a Symfony app: a form uploads the PDF, a controller sends it in signing order, Adobe calls your webhook when everyone has signed, and a Messenger handler downloads the signed PDF and stores it. Every class is complete and copy-pasteable, and each step explains why it is written that way.</p>
+  </header>
+
+  <h2 id="the-loop">The loop at a glance</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 280" role="img" aria-label="Top row, left to right: an upload form posts to ContractController, which uploads the PDF, creates the agreement and registers a webhook at Acrobat Sign; Acrobat Sign emails the signers, who sign in order. When the last one signs, Acrobat Sign posts to the bundle's webhook route. Bottom row, right to left: the webhook route verifies the client id, drops duplicates and answers 200, putting an AdobeSignWebhookMessage on the async transport; a worker runs the StoreSignedAgreement handler, which asks Acrobat Sign for the status and the signed PDF, and finally the contract is stored and marked signed.">
+      <defs>
+        <marker id="arrow-wt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead" d="M0 0 10 5 0 10z"/></marker>
+        <marker id="arrow-wt-brand" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead-brand" d="M0 0 10 5 0 10z"/></marker>
+      </defs>
+      <rect class="d-box" x="10" y="30" width="130" height="64" rx="8"/>
+      <text class="d-text-strong" x="75" y="58" text-anchor="middle">Upload form</text>
+      <text class="d-text-soft" x="75" y="78" text-anchor="middle">Step 3</text>
+
+      <rect class="d-box-brand" x="180" y="30" width="160" height="64" rx="8"/>
+      <text class="d-text-strong" x="260" y="56" text-anchor="middle">ContractController</text>
+      <text class="d-text-soft" x="260" y="76" text-anchor="middle">upload · create · webhook</text>
+
+      <rect class="d-box-stamp" x="380" y="30" width="150" height="64" rx="8"/>
+      <text class="d-text-strong" x="455" y="56" text-anchor="middle">Acrobat Sign</text>
+      <text class="d-text-soft" x="455" y="76" text-anchor="middle">emails the signers</text>
+
+      <rect class="d-box" x="570" y="30" width="140" height="64" rx="8"/>
+      <text class="d-text-strong" x="640" y="56" text-anchor="middle">Signers</text>
+      <text class="d-text-soft" x="640" y="76" text-anchor="middle">client, then CEO</text>
+
+      <rect class="d-box-brand" x="570" y="180" width="140" height="64" rx="8"/>
+      <text class="d-text-mono" x="640" y="206" text-anchor="middle">/adobe-sign/webhook</text>
+      <text class="d-text-soft" x="640" y="226" text-anchor="middle">verify · dedupe · 200</text>
+
+      <rect class="d-box-muted" x="380" y="180" width="150" height="64" rx="8"/>
+      <text class="d-text-strong" x="455" y="206" text-anchor="middle">async transport</text>
+      <text class="d-text-mono" x="455" y="226" text-anchor="middle">WebhookMessage</text>
+
+      <rect class="d-box-brand" x="180" y="180" width="160" height="64" rx="8"/>
+      <text class="d-text-strong" x="260" y="206" text-anchor="middle">StoreSignedAgreement</text>
+      <text class="d-text-soft" x="260" y="226" text-anchor="middle">worker · Step 6</text>
+
+      <rect class="d-box-ok" x="10" y="180" width="130" height="64" rx="8"/>
+      <text class="d-text-strong" x="75" y="206" text-anchor="middle">Stored PDF</text>
+      <text class="d-text-soft" x="75" y="226" text-anchor="middle">status SIGNED</text>
+
+      <path class="d-line" d="M140 62h38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line" d="M340 62h38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line" d="M530 62h38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line-brand" d="M640 94v84" marker-end="url(#arrow-wt-brand)"/>
+      <text class="d-text-soft" x="648" y="140">POST when complete</text>
+      <path class="d-line" d="M570 212h-38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line" d="M380 212h-38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line" d="M180 212h-38" marker-end="url(#arrow-wt)"/>
+      <path class="d-line-dashed" d="M300 180L410 96" marker-end="url(#arrow-wt)"/>
+      <text class="d-text-soft" x="230" y="140">GET status, signed PDF</text>
+    </svg>
+    <figcaption>The request that sends the contract and the request that receives the webhook never wait for each other. The slow part (downloading and storing) runs in a worker, outside Adobe's 5-second webhook window.</figcaption>
+  </figure>
+  <p>
+    The example is a small contracts app: staff upload a PDF, type the client's email, and the contract goes
+    out for signature, first by the client and then by your CEO. When both have signed, the signed PDF with
+    Adobe's audit report lands in <code>var/contracts/</code> and the contract shows as signed.
+  </p>
+
+  <h2 id="before-you-start">Before you start</h2>
+  <ul>
+    <li>The bundle installed with an Integration Key that works: <code>php bin/console adobe-sign:verify</code> prints your user. See <a href="installation.html">Installation</a>.</li>
+    <li>Doctrine ORM (<code>composer require symfony/orm-pack</code>) and Messenger (<code>composer require symfony/messenger</code>). The examples use the Doctrine transport; Redis or AMQP work the same way.</li>
+    <li>For trying it locally: a public HTTPS URL that reaches your machine, because Adobe calls your webhook from the internet. See <a href="webhooks.html#local-development">local development with a tunnel</a>.</li>
+    <li>Your webhook's client id. With an Integration Key it is the client id of an Acrobat Sign API application in the same account; Adobe sends it in <code>X-AdobeSign-ClientId</code>. If unsure, log the header once with a temporary listener; see <a href="webhooks.html#allow-list">the allow-list</a>.</li>
+  </ul>
+
+  <h2 id="step-config">Step 1: Configuration</h2>
+  <p>Four small files. First the bundle: the key, the webhook allow-list, and Messenger dispatch switched on.</p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%'
+    webhooks:
+        client_ids: ['%env(ADOBE_SIGN_CLIENT_ID)%']
+        messenger: true</code></pre>
+  </figure>
+  <p>Then the routes. This app only needs the webhook:</p>
+  <figure class="code">
+    <figcaption>config/routes/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign_webhook:
+    resource: '@AdobeSignBundle/config/routes/webhook.php'</code></pre>
+  </figure>
+  <p>Messenger: an async transport, a failure transport, and the bundle's message routed to it.</p>
+  <figure class="code">
+    <figcaption>config/packages/messenger.yaml</figcaption>
+    <pre><code class="language-text">framework:
+    messenger:
+        failure_transport: failed
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'   # e.g. doctrine://default
+                retry_strategy:
+                    max_retries: 5
+                    delay: 10000          # 10 s, then 30 s, 90 s, ...
+                    multiplier: 3
+            failed: 'doctrine://default?queue_name=failed'
+        routing:
+            Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage: async</code></pre>
+  </figure>
+  <p>
+    And security: Adobe sends no cookies and can't log in, so the webhook path must not require a user. A
+    dedicated firewall with security switched off, listed before <code>main</code>, is the clearest way:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/security.yaml</figcaption>
+    <pre><code class="language-text">security:
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        adobe_sign_webhook:
+            pattern: ^/adobe-sign/webhook$
+            security: false
+        main:
+            lazy: true
+            # ... your login configuration</code></pre>
+  </figure>
+
+  <h2 id="step-entity">Step 2: The Contract entity</h2>
+  <p>
+    The app's own record of each contract. It stores Adobe's agreement id so the webhook can find the contract
+    again, and a status that only moves forward.
+  </p>
+  <figure class="code">
+    <figcaption>src/Entity/Contract.php</figcaption>
+    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use App\Repository\ContractRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ContractRepository::class)]
+class Contract
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 64, unique: true, nullable: true)]
+    private ?string $agreementId = null;
+
+    #[ORM\Column(length: 32)]
+    private string $status = 'draft';
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $signedPdfPath = null;
+
+    public function __construct(
+        #[ORM\Column(length: 255)] private string $title,
+        #[ORM\Column(length: 255)] private string $clientEmail,
+    ) {
+    }
+
+    public function getId(): ?int { return $this-&gt;id; }
+    public function getTitle(): string { return $this-&gt;title; }
+    public function getClientEmail(): string { return $this-&gt;clientEmail; }
+    public function getAgreementId(): ?string { return $this-&gt;agreementId; }
+    public function getStatus(): string { return $this-&gt;status; }
+
+    public function markSent(string $agreementId): void
+    {
+        $this-&gt;agreementId = $agreementId;
+        $this-&gt;status = 'sent';
+    }
+
+    public function markSigned(string $pdfPath): void
+    {
+        $this-&gt;signedPdfPath = $pdfPath;
+        $this-&gt;status = 'signed';
+    }
+
+    public function markClosed(string $adobeStatus): void
+    {
+        $this-&gt;status = strtolower($adobeStatus);   // "cancelled", "expired"
+    }
+
+    public function isFinal(): bool
+    {
+        return in_array($this-&gt;status, ['signed', 'cancelled', 'expired'], true);
+    }
+}</code></pre>
+  </figure>
+  <pre><code class="language-bash">php bin/console make:migration &amp;&amp; php bin/console doctrine:migrations:migrate</code></pre>
+
+  <h2 id="step-controller">Step 3: The controller</h2>
+  <p>A minimal form posts the PDF and the client's email:</p>
+  <figure class="code">
+    <figcaption>templates/contract/new.html.twig</figcaption>
+    <pre><code class="language-text">&lt;form method="post" enctype="multipart/form-data" action="{{ path('contract_send') }}"&gt;
+    &lt;input type="text" name="title" required placeholder="Master Services Agreement"&gt;
+    &lt;input type="email" name="client_email" required placeholder="client@example.com"&gt;
+    &lt;input type="file" name="contract" accept="application/pdf" required&gt;
+    &lt;input type="hidden" name="_token" value="{{ csrf_token('send-contract') }}"&gt;
+    &lt;button&gt;Send for signature&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+  </figure>
+  <p>The controller does three calls to Acrobat Sign and one database write:</p>
+  <figure class="code">
+    <figcaption>src/Controller/ContractController.php</figcaption>
+    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Entity\Contract;
+use Conceptlz\AdobeSign\Builder\{AgreementInfo, FileInfo, ParticipantSetInfo, WebhookInfo};
+use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Conceptlz\AdobeSign\Webhook\EventType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\{Request, Response};
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+final class ContractController extends AbstractController
+{
+    public function __construct(
+        private readonly AdobeSignManager $adobeSign,
+        private readonly EntityManagerInterface $em,
+    ) {
+    }
+
+    #[Route('/contracts/new', name: 'contract_new', methods: ['GET'])]
+    public function new(): Response
+    {
+        return $this-&gt;render('contract/new.html.twig');
+    }
+
+    #[Route('/contracts', name: 'contract_send', methods: ['POST'])]
+    public function send(Request $request): Response
+    {
+        if (!$this-&gt;isCsrfTokenValid('send-contract', $request-&gt;request-&gt;getString('_token'))) {
+            throw $this-&gt;createAccessDeniedException();
+        }
+        $pdf = $request-&gt;files-&gt;get('contract');
+        if (!$pdf instanceof UploadedFile || $pdf-&gt;getMimeType() !== 'application/pdf') {
+            throw new BadRequestHttpException('Upload a PDF.');
+        }
+
+        $contract = new Contract($request-&gt;request-&gt;getString('title'), $request-&gt;request-&gt;getString('client_email'));
+        $client = $this-&gt;adobeSign-&gt;client();
+
+        // 1. Upload the PDF as a transient document (valid for 7 days).
+        $documentId = $client-&gt;transientDocuments()-&gt;upload($pdf, $pdf-&gt;getClientOriginalName(), 'application/pdf');
+
+        // 2. Create the agreement: the client signs first, then the CEO.
+        $agreementId = $client-&gt;agreements()-&gt;create(
+            AgreementInfo::create($contract-&gt;getTitle())
+                -&gt;file(FileInfo::transientDocument($documentId))
+                -&gt;participantSet(ParticipantSetInfo::signer($contract-&gt;getClientEmail())-&gt;order(1))
+                -&gt;participantSet(ParticipantSetInfo::signer('ceo@example.com')-&gt;order(2))
+                -&gt;message('Please review and sign.'),
+        );
+
+        // 3. Ask Adobe to call our webhook about this agreement.
+        $client-&gt;webhooks()-&gt;create(
+            WebhookInfo::forAgreement(
+                "Contract $agreementId",
+                $this-&gt;generateUrl('adobe_sign_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $agreementId,
+            )-&gt;events(
+                EventType::AGREEMENT_WORKFLOW_COMPLETED,
+                EventType::AGREEMENT_REJECTED,
+                EventType::AGREEMENT_RECALLED,
+                EventType::AGREEMENT_EXPIRED,
+            ),
+        );
+
+        $contract-&gt;markSent($agreementId);
+        $this-&gt;em-&gt;persist($contract);
+        $this-&gt;em-&gt;flush();
+
+        $this-&gt;addFlash('success', 'Sent for signature.');
+
+        return $this-&gt;redirectToRoute('contract_new');
+    }
+}</code></pre>
+  </figure>
+
+  <h3 id="controller-explained">What each part of send() does</h3>
+  <ul>
+    <li><strong>It injects the manager, not the client.</strong> With an Integration Key either works; the manager keeps the controller unchanged if you later switch some senders to OAuth (<code>forUser($this-&gt;getUser())</code>).</li>
+    <li><strong>It names the upload.</strong> The <code>UploadedFile</code>'s path is PHP's temporary file; the second argument is the name signers see in their email.</li>
+    <li><strong>The order is explicit.</strong> <code>order(1)</code> and <code>order(2)</code> make it a sequence: the CEO is only emailed after the client signs. Two sets with the same order would sign in parallel.</li>
+    <li><strong>The webhook is per agreement.</strong> Adobe recommends it: if deliveries to your URL fail for a long time, Adobe disables the webhook, and that then affects one agreement rather than all. Creating it makes Adobe call your route immediately with a verification <code>GET</code>, so the route must be reachable at this point.</li>
+    <li><strong>It subscribes only to final events.</strong> This app only acts when signing ends. <code>EventType::AGREEMENT_ALL</code> would also deliver views, reminders and each signature, which is fine but more traffic.</li>
+    <li><strong>It saves after Adobe accepts.</strong> If any call throws, nothing is persisted and the exception reaches the user (map it with an <a href="usage.html#errors-to-responses">exception listener</a>). If the webhook registration fails after the agreement was created, the agreement still exists at Adobe; in production, persist the contract right after step 2 so a retry doesn't send twice.</li>
+  </ul>
+
+  <h2 id="step-webhook">Step 4: The webhook route (already done)</h2>
+  <p>
+    You wrote no code for this step: the bundle's <code>WebhookController</code> sits behind
+    <code>/adobe-sign/webhook</code>. On the verification <code>GET</code> it checks the client id and echoes it. On
+    each notification <code>POST</code> it checks the client id, parses the body, drops it if the
+    <code>webhookNotificationId</code> was already seen within <code>dedupe_ttl</code>, dispatches a
+    <code>WebhookReceivedEvent</code> and, because you enabled Messenger, an <code>AdobeSignWebhookMessage</code>.
+    Then it answers 200 with the echo. The whole thing takes milliseconds, well inside Adobe's 5-second limit.
+    <a href="webhooks.html#what-happens">Webhooks</a> covers every branch.
+  </p>
+
+  <h2 id="step-routing">Step 5: Route the message to the worker</h2>
+  <p>
+    Already done in Step 1's <code>messenger.yaml</code>. It matters more than it looks: without the
+    <code>routing</code> line, Messenger handles the message <em>synchronously, inside the webhook request</em>,
+    and the download would run within Adobe's 5-second window. Check the routing with:
+  </p>
+  <pre><code class="language-bash">php bin/console debug:messenger</code></pre>
+
+  <h2 id="step-handler">Step 6: The Messenger handler</h2>
+  <p>The handler does the slow, fallible part, in a worker, with its own retry budget.</p>
+  <figure class="code">
+    <figcaption>src/MessageHandler/StoreSignedAgreement.php</figcaption>
+    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\MessageHandler;
+
+use App\Contract\ContractStorage;
+use App\Repository\ContractRepository;
+use Conceptlz\AdobeSign\Exception\RateLimitException;
+use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage;
+use Conceptlz\AdobeSign\Webhook\AgreementEvent;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
+
+#[AsMessageHandler]
+final class StoreSignedAgreement
+{
+    public function __construct(
+        private readonly AdobeSignManager $adobeSign,
+        private readonly ContractRepository $contracts,
+        private readonly ContractStorage $storage,
+        private readonly EntityManagerInterface $em,
+        private readonly MessageBusInterface $bus,
+    ) {
+    }
+
+    public function __invoke(AdobeSignWebhookMessage $message): void
+    {
+        $event = $message-&gt;event();
+        $agreementId = $event instanceof AgreementEvent ? $event-&gt;agreementId() : null;
+        if ($agreementId === null) {
+            return;                                  // not about an agreement
+        }
+
+        $contract = $this-&gt;contracts-&gt;findOneBy(['agreementId' =&gt; $agreementId]);
+        if ($contract === null || $contract-&gt;isFinal()) {
+            return;                                  // not ours, or already handled
+        }
+
+        $client = $this-&gt;adobeSign-&gt;client();
+        try {
+            // Webhook payloads aren't signed: ask the API for the truth before acting.
+            $agreement = $client-&gt;agreements()-&gt;get($agreementId);
+
+            if ($agreement-&gt;isSigned()) {
+                $pdf = $client-&gt;agreements()-&gt;combinedDocument($agreementId, attachAuditReport: true);
+                $contract-&gt;markSigned($this-&gt;storage-&gt;save($agreementId, $pdf));
+            } elseif (in_array($agreement-&gt;status, ['CANCELLED', 'EXPIRED'], true)) {
+                $contract-&gt;markClosed($agreement-&gt;status);
+            } else {
+                return;                              // still in progress
+            }
+        } catch (RateLimitException $e) {
+            // Adobe asked for a long pause: come back later instead of blocking the worker.
+            $this-&gt;bus-&gt;dispatch($message, [new DelayStamp(($e-&gt;retryAfter ?? 60) * 1000)]);
+
+            return;
+        }
+
+        $this-&gt;em-&gt;flush();
+    }
+}</code></pre>
+  </figure>
+
+  <h3 id="handler-explained">Why the handler is written this way</h3>
+  <ul>
+    <li><strong>It re-checks the status.</strong> Adobe doesn't sign webhook payloads. The client-id allow-list stops casual forgeries, but the safe pattern is to treat the webhook as a hint and ask the API. Only a real <code>SIGNED</code> status leads to a download.</li>
+    <li><strong>It is idempotent.</strong> The bundle drops duplicate deliveries, but Messenger can still run a handler twice (a retry after a crash, a replay from the failure transport). <code>isFinal()</code> turns the second run into a no-op.</li>
+    <li><strong>It asks for the audit report.</strong> <code>attachAuditReport: true</code> appends Adobe's audit trail (who signed, when, from which IP, with which verification) to the PDF. Keep it with the document: it is what you show when a signature is challenged.</li>
+    <li><strong>It streams.</strong> <code>combinedDocument()</code> returns a PSR-7 stream that the storage service copies to disk in chunks.</li>
+    <li><strong>It cooperates with throttling.</strong> Short <code>Retry-After</code> waits are retried inside the SDK (up to <code>retries.max_delay_seconds</code>). A longer one surfaces as <code>RateLimitException</code>, and the handler re-queues the message with a <code>DelayStamp</code> rather than burning a Messenger retry. Every other exception goes to Messenger's retry strategy and finally to the <code>failed</code> transport.</li>
+    <li><strong>It injects the manager.</strong> The worker is long-running; <code>client()</code> per message picks up the fresh client after each <code>kernel.reset</code>. With OAuth there is no signed-in user in a worker: store the sender's key on the contract and call <code>forUser($contract-&gt;getSenderKey())</code>.</li>
+  </ul>
+
+  <h2 id="step-storage">Step 7: The storage service</h2>
+  <figure class="code">
+    <figcaption>src/Contract/ContractStorage.php</figcaption>
+    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Contract;
+
+use Psr\Http\Message\StreamInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
+
+final class ContractStorage
+{
+    public function __construct(
+        #[Autowire('%kernel.project_dir%/var/contracts')] private readonly string $directory,
+        private readonly Filesystem $filesystem = new Filesystem(),
+    ) {
+    }
+
+    /** Copies the stream to disk and returns the path. */
+    public function save(string $agreementId, StreamInterface $pdf): string
+    {
+        $path = sprintf('%s/%s/%s.pdf', $this-&gt;directory, date('Y'), $agreementId);
+        $this-&gt;filesystem-&gt;mkdir(\dirname($path));
+
+        $in = $pdf-&gt;detach() ?? throw new \RuntimeException('Download stream is not readable.');
+        $out = fopen($path.'.part', 'wb') ?: throw new \RuntimeException("Cannot write $path.");
+        stream_copy_to_stream($in, $out);
+        fclose($in);
+        fclose($out);
+
+        // Rename last: a half-written file never looks like a finished contract.
+        $this-&gt;filesystem-&gt;rename($path.'.part', $path, true);
+
+        return $path;
+    }
+}</code></pre>
+  </figure>
+  <p>
+    On several servers, write to shared storage instead. With Flysystem (<code>league/flysystem-bundle</code>) the
+    body of <code>save()</code> becomes <code>$this-&gt;storage-&gt;writeStream($key, $pdf-&gt;detach())</code>, and S3,
+    Azure or GCS work the same way.
+  </p>
+
+  <h2 id="step-try-it">Step 8: Try it</h2>
+  <ol class="steps">
+    <li><span class="step-title">Start the app and a tunnel</span><p>Run <code>symfony server:start</code>, then expose it over HTTPS with a tunnel and open the app through the tunnel's URL, so <code>generateUrl(..., ABSOLUTE_URL)</code> produces a URL Adobe can reach. If your tunnel sets <code>X-Forwarded-*</code> headers, configure <code>framework.trusted_proxies</code> so the URL is <code>https://</code>.</p></li>
+    <li><span class="step-title">Start a worker</span><pre><code class="language-bash">php bin/console messenger:consume async -vv</code></pre><p><code>-vv</code> prints every message as it is received and handled.</p></li>
+    <li><span class="step-title">Send a contract</span><p>Open <code>/contracts/new</code>, use addresses you control (they receive real emails), and submit. Adobe calls the webhook once to verify it; the <code>adobe_sign</code> log stays quiet if the client id matched.</p></li>
+    <li><span class="step-title">Sign as both signers</span><p>Sign from the first email, then the second. After the last signature Adobe posts <code>AGREEMENT_WORKFLOW_COMPLETED</code>; the worker prints the handled message, and the PDF appears in <code>var/contracts/</code>.</p></li>
+  </ol>
+
+  <h2 id="step-test">Step 9: Test it without Adobe</h2>
+  <p>
+    Two tests cover the loop. The first drives the real webhook route and checks that a message was queued; the
+    second runs the handler against a mock PSR-18 client. Configure the mock as shown in
+    <a href="testing.html#mock-client-setup">Testing</a>, and make the <code>async</code> transport <code>in-memory://</code> in the test environment.
+  </p>
+  <figure class="code">
+    <figcaption>tests/Functional/ContractWebhookTest.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
+
+final class ContractWebhookTest extends WebTestCase
+{
+    public function test_completed_agreement_is_queued_once(): void
+    {
+        $client = static::createClient();
+        $client-&gt;disableReboot();
+        $payload = (string) file_get_contents(__DIR__.'/../Fixtures/workflow_completed.json');
+
+        $client-&gt;request('POST', '/adobe-sign/webhook', server: [
+            'HTTP_X_ADOBESIGN_CLIENTID' =&gt; 'test-client-id',
+            'CONTENT_TYPE' =&gt; 'application/json',
+        ], content: $payload);
+
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('X-AdobeSign-ClientId', 'test-client-id');
+
+        $transport = static::getContainer()-&gt;get('messenger.transport.async');
+        self::assertInstanceOf(InMemoryTransport::class, $transport);
+        self::assertCount(1, $transport-&gt;getSent());
+        self::assertInstanceOf(AdobeSignWebhookMessage::class, $transport-&gt;getSent()[0]-&gt;getMessage());
+    }
+}</code></pre>
+  </figure>
+  <p>The handler test queues Adobe's answers and checks the result. The full pattern, including the fixture and the mock setup, is in <a href="testing.html#testing-handlers">testing your own handlers</a>.</p>
+
+  <h2 id="production-hardening">Hardening for production</h2>
+  <ul>
+    <li><strong>Shared cache.</strong> Duplicate detection lives in <code>cache_pool</code>. With several web servers, point it at Redis or another shared pool, or a retry landing on a second server is processed again. See <a href="configuration.html#http-and-cache-keys">cache configuration</a>.</li>
+    <li><strong>Workers under supervision.</strong> Run <code>messenger:consume async --time-limit=3600 --memory-limit=256M</code> under systemd or Supervisor, and <code>messenger:stop-workers</code> on deploy. See <a href="messenger.html#running-workers">running workers</a>.</li>
+    <li><strong>Failure handling.</strong> Watch the <code>failed</code> transport (<code>messenger:failed:show</code>) and alert on it. After 72 hours of failed deliveries Adobe disables a webhook, so a scheduled command that re-checks contracts still marked "sent" after a few days is a cheap safety net.</li>
+    <li><strong>Timeouts.</strong> Large agreements take time to download. Make sure <code>framework.http_client</code>'s <code>max_duration</code> fits, and that the worker's time limit is longer.</li>
+    <li><strong>Send once.</strong> Persist the contract with its agreement id before registering the webhook, so a retry of a failed request doesn't create a second agreement. Use <code>externalId()</code> on the builder to find agreements Adobe created but you didn't record.</li>
+    <li><strong>Signature level.</strong> If the project requires AES or QES, check it in the handler before marking the contract signed: <code>$this-&gt;adobeSign-&gt;signatureShortfalls($agreementId)</code>. See <a href="signature-levels.html#checking-after-signing">checking after signing</a>.</li>
+  </ul>
+
+  <h2 id="walkthrough-questions">Common questions</h2>
+  <div class="faq">
+    <details id="walkthrough-webhook-create-fails">
+      <summary>webhooks()-&gt;create() fails while creating the agreement works. Why?</summary>
+      <div class="faq-answer"><p>Adobe calls your URL with a <code>GET</code> before creating the webhook. It must be public HTTPS, not behind a firewall that requires login, and the client id Adobe sends must be in your allow-list. Locally you need a tunnel. See <a href="troubleshooting.html#webhook-403">Troubleshooting</a>.</p></div>
+    </details>
+    <details id="walkthrough-no-file">
+      <summary>Everyone signed, but no PDF appeared. Where do I look?</summary>
+      <div class="faq-answer"><p>In order: is a worker consuming <code>async</code>? Is the message routed (<code>debug:messenger</code>)? Anything in <code>messenger:failed:show</code>? Any "Rejected Acrobat Sign webhook" warning in the <code>adobe_sign</code> log? Is the webhook still active in Acrobat Sign? See <a href="troubleshooting.html#messenger-not-handled">Troubleshooting</a>.</p></div>
+    </details>
+    <details id="walkthrough-account-webhook">
+      <summary>Can I use one account-wide webhook instead of one per agreement?</summary>
+      <div class="faq-answer"><p>Yes: create it once with <code>WebhookInfo::forAccount('All agreements', $url)</code> (an account-admin task) and drop step 3 of the controller. The handler already ignores agreements it doesn't know. Adobe recommends per-agreement webhooks because a disabled webhook then affects one agreement.</p></div>
+    </details>
+    <details id="walkthrough-oauth-variant">
+      <summary>How does this change if users send from their own accounts via OAuth?</summary>
+      <div class="faq-answer"><p>In the controller use <code>$this-&gt;adobeSign-&gt;forUser($this-&gt;getUser())</code> and store <code>$this-&gt;adobeSign-&gt;userKey($this-&gt;getUser())</code> on the contract. In the handler, call <code>forUser()</code> with that stored key. The webhook route doesn't change. See <a href="oauth.html">OAuth</a>.</p></div>
+    </details>
+    <details id="walkthrough-separate-audit">
+      <summary>Can I store the audit report as a separate file?</summary>
+      <div class="faq-answer"><p>Yes. Call <code>combinedDocument($id)</code> without <code>attachAuditReport</code> for the signed PDF and <code>auditTrail($id)</code> for the report, and save each stream separately. The core's <a href="https://conceptlz.github.io/adobe-sign/downloads.html">downloads page</a> lists the other formats.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="webhooks.html"><strong>Webhooks</strong><span>The route, the handshake, dedupe and listener patterns in depth.</span></a></li>
+    <li><a href="messenger.html"><strong>Async with Messenger</strong><span>Routing, retries, idempotency and workers for webhook messages.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="usage.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Using the client</span></a>
+  <a class="pager-next" href="oauth.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">OAuth: connect user accounts</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

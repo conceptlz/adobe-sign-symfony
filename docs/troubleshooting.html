@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Troubleshooting · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Fixes for common problems with the Acrobat Sign Symfony bundle: MisconfiguredException messages, missing PSR-18 clients and routes, OAuth 401 and 400 errors, redirect URI mismatches, lost or unreadable tokens, webhook 403s and login redirects, duplicates, Messenger, data centres and account restrictions.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html" aria-current="page">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Help</p>
+    <h1>Troubleshooting</h1>
+    <p class="lede">Each entry starts from what you see, explains why it happens, and gives the fix. Start with the three checks; most problems are configuration, a firewall in the wrong place, a cache that isn't shared, or a worker that isn't running.</p>
+  </header>
+
+  <h2 id="first-checks">First, three checks</h2>
+  <ol class="steps">
+    <li><span class="step-title">Do the credentials work?</span><pre><code class="language-bash">php bin/console adobe-sign:verify
+php bin/console adobe-sign:verify --user=jane@example.com     # an OAuth connection</code></pre>
+<p>It calls Adobe and prints the user, or the exact error, including every <code>MisconfiguredException</code>.</p>
+</li>
+    <li><span class="step-title">Is the configuration you think you have loaded?</span><pre><code class="language-bash">php bin/console debug:config adobe_sign --env=prod
+php bin/console debug:container AdobeSignManager --show-arguments</code></pre>
+<p>Restart PHP-FPM, FrankenPHP workers and Messenger consumers after configuration changes; they keep what they loaded.</p>
+</li>
+    <li><span class="step-title">Are the routes there, and who guards them?</span><pre><code class="language-bash">php bin/console debug:router | grep adobe_sign
+php bin/console debug:firewall</code></pre>
+<p>You should see <code>adobe_sign_webhook</code> and, if you use OAuth, the two <code>adobe_sign_oauth_*</code> routes. The webhook path must not be behind a login.</p>
+</li>
+  </ol>
+
+  <section class="finder" aria-labelledby="find-your-problem">
+    <h2 class="finder-title" id="find-your-problem">Find your problem</h2>
+    <p>25 problems in 6 groups. Type an error code, an exception name or a word from the message to narrow them down, or pick one from the index.</p>
+    <div class="finder-search" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+      <label class="visually-hidden" for="finder-input">Filter problems</label>
+      <input class="finder-input" id="finder-input" type="search" placeholder="e.g. 403, MisconfiguredException, state" autocomplete="off" spellcheck="false">
+      <p class="finder-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="finder-groups">
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#setup-problems">Setup and configuration</a></p>
+        <ul>
+          <li><a href="#misconfigured-exception">MisconfiguredException</a></li>
+          <li><a href="#no-psr18-client">No PSR-18 client found</a></li>
+          <li><a href="#routes-not-found">Routes not found (404 or RouteNotFoundException)</a></li>
+          <li><a href="#container-missing-service">Container build fails: non-existent service</a></li>
+          <li><a href="#invalid-access-token">Key rejected: INVALID_ACCESS_TOKEN</a></li>
+        </ul>
+      </div>
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#oauth-problems">OAuth</a></p>
+        <ul>
+          <li><a href="#oauth-callback-401">Callback answers 401</a></li>
+          <li><a href="#oauth-state-mismatch">Callback answers 400 (state mismatch)</a></li>
+          <li><a href="#oauth-redirect-uri">Redirect URI rejected by Adobe</a></li>
+          <li><a href="#oauth-no-session">SessionNotFoundException on the redirect route</a></li>
+          <li><a href="#oauth-token-dead">Connection expired: OAuthException</a></li>
+        </ul>
+      </div>
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#token-problems">Token storage</a></p>
+        <ul>
+          <li><a href="#tokens-lost">Users appear disconnected after a deploy or cache clear</a></li>
+          <li><a href="#tokens-unreadable">Everyone disconnected after rotating APP_SECRET</a></li>
+          <li><a href="#doctrine-table-missing">Token table missing</a></li>
+        </ul>
+      </div>
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#webhook-problems">Webhooks</a></p>
+        <ul>
+          <li><a href="#webhook-403">Webhook answers 403: client id not allowed</a></li>
+          <li><a href="#webhook-login-redirect">Webhook redirected to the login page</a></li>
+          <li><a href="#webhook-stateless-session">&quot;Session was used while the request was declared stateless&quot;</a></li>
+          <li><a href="#webhook-http-url">&quot;Acrobat Sign only delivers webhooks to HTTPS URLs&quot;</a></li>
+          <li><a href="#duplicates-across-servers">The same notification is handled twice</a></li>
+          <li><a href="#webhook-disabled">Webhooks worked, then stopped</a></li>
+        </ul>
+      </div>
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#messenger-problems">Messenger</a></p>
+        <ul>
+          <li><a href="#messenger-not-handled">Webhook answers 200, but the handler never runs</a></li>
+          <li><a href="#messenger-no-handler">Webhook answers 500: NoHandlerForMessageException</a></li>
+        </ul>
+      </div>
+      <div class="finder-group">
+        <p class="finder-group-title"><a href="#api-problems">API errors</a></p>
+        <ul>
+          <li><a href="#invalid-api-access-point">403 INVALID_API_ACCESS_POINT</a></li>
+          <li><a href="#account-capability">AccountCapabilityException</a></li>
+          <li><a href="#not-ready-yet">AGREEMENT_NOT_EXPOSED right after creating an agreement</a></li>
+          <li><a href="#rate-limited">RateLimitException</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="issue-group" aria-labelledby="setup-problems"><h2 id="setup-problems">Setup and configuration</h2>
+<section class="issue no-toc" aria-labelledby="misconfigured-exception">
+<header class="issue-head"><h3 id="misconfigured-exception">MisconfiguredException</h3>
+<p class="issue-tags"><span class="badge badge-brand">MisconfiguredException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>Conceptlz\AdobeSign\Symfony\MisconfiguredException</code> from an injected client, the manager, <code>adobe-sign:verify</code>, the OAuth routes or the webhook route (as a 500).</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>A setting the feature needs is empty or invalid. The bundle checks when a feature is first used, not at boot. The message names the setting:</p>
+<div class="table-wrap">
+    <table>
+      <thead><tr><th>Message starts with</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>Set adobe_sign.integration_key…</td><td>Set <code>ADOBE_SIGN_INTEGRATION_KEY</code> in <code>.env.local</code> or the server environment, or set <code>auth: oauth</code> if you meant OAuth.</td></tr>
+        <tr><td>adobe_sign.auth is "oauth" but no user is signed in…</td><td>You're in a command, worker, listener or anonymous request. Use <code>$manager-&gt;forUser($key)</code> there, and inject the manager rather than <code>AdobeSign</code>.</td></tr>
+        <tr><td>adobe_sign.auth must be "integration_key" or "oauth"…</td><td>Fix the value. Case doesn't matter; other words do.</td></tr>
+        <tr><td>Set adobe_sign.oauth.client_id and client_secret…</td><td>Add both credentials of your API application.</td></tr>
+        <tr><td>Set adobe_sign.oauth.redirect_uri: the router is not available…</td><td>Set <code>oauth.redirect_uri</code> explicitly; the router isn't there to generate it.</td></tr>
+        <tr><td>Set adobe_sign.webhooks.client_ids…</td><td>Add the client id(s) Adobe sends, or <code>oauth.client_id</code>.</td></tr>
+        <tr><td>adobe_sign.signature_level must be ses, aes or qes…</td><td>Fix the value; it is checked every time a client is built.</td></tr>
+        <tr><td>adobe_sign.oauth.encryption_key is empty…</td><td><code>APP_SECRET</code> is empty in this environment (recent skeletons leave it empty in <code>.env</code>), or <code>encryption_key</code> points at an empty variable. Set one.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Set the value, clear the cache in production (<code>cache:clear --env=prod</code>, or re-run <code>composer dump-env prod</code> if you use it) and restart long-running workers. <code>adobe-sign:verify</code> confirms the fix.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="no-psr18-client">
+<header class="issue-head"><h3 id="no-psr18-client">No PSR-18 client found</h3>
+<p class="issue-tags"><span class="badge badge-brand">NotFoundException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>Http\Discovery\Exception\NotFoundException</code> (or a <code>DiscoveryFailedException</code>) on the first API call, saying no PSR-18 client or no PSR-17 factory could be found.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The SDK needs a PSR-18 client and PSR-17 factories. <code>http_client</code> isn't set, FrameworkBundle didn't register <code>psr18.http_client</code> (it needs <code>symfony/http-client</code> plus a PSR-17 implementation), and discovery found nothing else installed. A typo in <code>http_client</code> leads here too, because a missing service id falls back to discovery.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p><code>composer require symfony/http-client nyholm/psr7</code>, clear the cache, and check that <code>php bin/console debug:container psr18.http_client</code> finds the service. If you set <code>http_client</code>, check the id the same way. See <a href="installation.html#http-client">the HTTP client</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="routes-not-found">
+<header class="issue-head"><h3 id="routes-not-found">Routes not found</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 404</span><span class="badge badge-brand">RouteNotFoundException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>No route found for "POST /adobe-sign/webhook"</code> (Adobe's verification fails), or <code>Unable to generate a URL for the named route "adobe_sign_oauth_callback" as such route does not exist</code> from <code>oauth()</code>, the redirect route or your own <code>generateUrl('adobe_sign_webhook')</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The bundle ships its routes but never loads them by itself. Without a route import, neither path exists. The default OAuth redirect URI is generated from <code>adobe_sign_oauth_callback</code>, so it fails if only the webhook routes are imported.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Import <code>@AdobeSignBundle/config/routes.php</code> (or the file you need) in <code>config/routes/adobe_sign.yaml</code>, then <code>debug:router | grep adobe_sign</code>. With a <code>prefix</code>, register the prefixed URLs at Adobe. See <a href="installation.html#import-routes">importing the routes</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="container-missing-service">
+<header class="issue-head"><h3 id="container-missing-service">Container build fails: non-existent service</h3>
+<p class="issue-tags"><span class="badge badge-brand">ServiceNotFoundException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>cache:clear</code> or the first request fails with, for example, <code>The service "Conceptlz\AdobeSign\Symfony\Controller\WebhookController" has a dependency on a non-existent service "messenger.default_bus"</code>, or the same for <code>doctrine.dbal.default_connection</code> or a cache pool id.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>A configuration key names a service that doesn't exist: <code>webhooks.messenger</code> without Messenger installed (or a wrong <code>bus</code>), <code>token_store: doctrine</code> without DoctrineBundle (or a wrong <code>doctrine.connection</code>), a misspelt <code>cache_pool</code> or <code>token_cache_pool</code>, or a <code>token_store</code> / <code>user_key_resolver</code> id that isn't a service.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Install the missing package (<code>symfony/messenger</code>, <code>symfony/orm-pack</code>) or correct the id. <code>debug:container &lt;id&gt;</code> and <code>debug:messenger</code> list what exists.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="invalid-access-token">
+<header class="issue-head"><h3 id="invalid-access-token">Key rejected: INVALID_ACCESS_TOKEN</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 401</span><span class="badge badge-brand">AuthenticationException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>adobe-sign:verify</code> or any call fails with <code>AuthenticationException</code> and code <code>INVALID_ACCESS_TOKEN</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The Integration Key is wrong, truncated, revoked, or belongs to a user who was deactivated. Quotes or spaces copied into <code>.env.local</code> are a common cause.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Create a new key in Acrobat Sign (<em>Account → Acrobat Sign API → API Information</em>), paste it without quotes, and check the owning user is active. Make sure it has the scopes your calls need.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <section class="issue-group" aria-labelledby="oauth-problems"><h2 id="oauth-problems">OAuth</h2>
+<section class="issue no-toc" aria-labelledby="oauth-callback-401">
+<header class="issue-head"><h3 id="oauth-callback-401">Callback answers 401</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 401</span><span class="badge badge-brand">UnauthorizedHttpException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>After consenting at Adobe, the user lands on a 401 page: "Sign in before connecting Acrobat Sign."</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>When the callback runs, <code>security.token_storage</code> holds no user. Either the callback path isn't covered by a firewall that authenticates users (a <code>security: false</code> firewall, or a pattern that misses <code>/adobe-sign/oauth</code>), SecurityBundle isn't installed, or the user's session ended while they were at Adobe (expired, or a different host lost the cookie).</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Make sure <code>/adobe-sign/oauth/*</code> is under your main firewall and guarded with <code>access_control</code> (<code>ROLE_USER</code>), so signed-out users log in <em>before</em> going to Adobe. <code>debug:firewall</code> shows which firewall matches. The state is consumed even on a 401, so the user must click "Connect" again. See <a href="oauth.html#protect-routes">protecting the routes</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="oauth-state-mismatch">
+<header class="issue-head"><h3 id="oauth-state-mismatch">Callback answers 400 (state mismatch)</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 400</span><span class="badge badge-brand">STATE_MISMATCH</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>"OAuth state mismatch: the callback was not started by this session." (or "OAuth callback has no authorization code.") after returning from Adobe.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The state in the URL doesn't match the one in this session, or the session has none. Typical causes: the flow started on <code>www.example.com</code> and the redirect URI points at <code>example.com</code> (different cookie, different session); the session expired or wasn't persisted (a stateless firewall, a session handler that drops writes); the user started connecting in two tabs (the second overwrites the first state); or they refreshed or bookmarked the callback URL (the state is single-use).</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Use one canonical host for both the app and the registered redirect URI, keep sessions enabled on the OAuth routes, and start again from your app's "Connect" link. If it happens to everyone, check the session cookie's <code>secure</code> and <code>samesite</code> settings and that the redirect route's response actually sets it.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="oauth-redirect-uri">
+<header class="issue-head"><h3 id="oauth-redirect-uri">Redirect URI rejected by Adobe</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 403</span><span class="badge badge-brand">redirect_uri</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>Adobe's page shows an error about an invalid redirect URI instead of the consent screen, or the callback answers 403 after the code exchange fails.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The redirect URI the bundle sends doesn't match the one registered on the API application character for character. With <code>redirect_uri: ~</code> it is generated from the current request: behind a TLS-terminating proxy without <code>trusted_proxies</code> it becomes <code>http://…</code>; on another host or port, or under a route <code>prefix</code>, it differs too.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Set <code>oauth.redirect_uri</code> explicitly to the registered URL, or configure <code>framework.trusted_proxies</code> and <code>trusted_headers</code> so Symfony sees the public scheme and host. Compare the <code>redirect_uri</code> parameter in the redirect to Adobe with the registered value. See <a href="oauth.html#redirect-uri">the redirect URI</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="oauth-no-session">
+<header class="issue-head"><h3 id="oauth-no-session">SessionNotFoundException on the redirect route</h3>
+<p class="issue-tags"><span class="badge badge-brand">SessionNotFoundException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>"There is currently no session available." when opening <code>/adobe-sign/oauth/redirect</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The OAuth controller keeps the state in the session, and sessions are disabled (<code>framework.session: false</code> or not configured), as in API-only apps.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Enable <code>framework.session</code>. If your app must stay sessionless, build the flow yourself with <code>$manager-&gt;oauth()</code> and keep the state somewhere tied to the user (for example a short-lived signed cookie).</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="oauth-token-dead">
+<header class="issue-head"><h3 id="oauth-token-dead">Connection expired: OAuthException</h3>
+<p class="issue-tags"><span class="badge badge-brand">OAuthException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>OAuthException</code> with <code>NO_TOKEN</code>, <code>NO_REFRESH_TOKEN</code>, <code>INVALID_TOKEN</code> or <code>EXPIRED_TOKEN</code> when using <code>forUser()</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p><code>NO_TOKEN</code>: nothing readable is stored under that key: the user never connected, the key changed (a new <code>UserKeyResolver</code>, a changed user identifier), the token was lost or can't be decrypted (see <a href="#tokens-lost">lost</a> and <a href="#tokens-unreadable">unreadable tokens</a>). The others: the refresh token no longer works, because the user or an admin revoked access or it went unused for too long.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Send the user through <code>adobe_sign_oauth_redirect</code> again; catching <code>OAuthException</code> and redirecting is the usual pattern. Check <code>isConnected()</code> before calls to avoid <code>NO_TOKEN</code> in the first place.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <section class="issue-group" aria-labelledby="token-problems"><h2 id="token-problems">Token storage</h2>
+<section class="issue no-toc" aria-labelledby="tokens-lost">
+<header class="issue-head"><h3 id="tokens-lost">Users appear disconnected after a deploy or cache clear</h3>
+<p class="issue-tags"><span class="badge badge-brand">CacheTokenStore</span><span class="badge badge-brand">NO_TOKEN</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>isConnected()</code> returns false and <code>forUser()</code> fails with <code>NO_TOKEN</code> for users who connected recently; or it works on one server and not another, or in the web app but not in workers.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>With <code>token_store: cache</code>, tokens live in <code>oauth.token_cache_pool</code>, <code>cache.app</code> by default: a filesystem pool under <code>var/cache</code> on each machine. A new container, a deploy that replaces <code>var/</code>, <code>cache:pool:clear</code>, an array or APCu pool, a pool with a <code>default_lifetime</code>, or Redis evicting keys all lose them; separate servers never shared them.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Switch to <code>token_store: doctrine</code>, or point <code>token_cache_pool</code> at a dedicated, shared, persistent pool without a default lifetime (and a Redis eviction policy that doesn't evict it). Affected users reconnect once. See <a href="token-storage.html#persistent-pool">persistent pools</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="tokens-unreadable">
+<header class="issue-head"><h3 id="tokens-unreadable">Everyone disconnected after rotating APP_SECRET</h3>
+<p class="issue-tags"><span class="badge badge-brand">TokenEncryptor</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>After changing <code>APP_SECRET</code> (or <code>encryption_key</code>), or on a server with a different value, every user appears disconnected. Rows are still in the table; nothing throws.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>Tokens are encrypted with a key derived from <code>oauth.encryption_key</code>, which defaults to <code>%kernel.secret%</code>. Values encrypted with another key decrypt to null by design, so the store reports "no token".</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Use the same secret on every server and worker. If the old secret is still known, restore it, or re-encrypt the tokens once with both keys. Otherwise users reconnect. For the future, set a dedicated <code>encryption_key</code> so rotating <code>APP_SECRET</code> doesn't touch tokens. See <a href="token-storage.html#rotating-the-secret">rotating the secret</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="doctrine-table-missing">
+<header class="issue-head"><h3 id="doctrine-table-missing">Token table missing</h3>
+<p class="issue-tags"><span class="badge badge-brand">TableNotFoundException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>A DBAL error such as <code>SQLSTATE[42S02]: Base table or view not found</code>, <code>relation "adobe_sign_tokens" does not exist</code> or <code>no such table: adobe_sign_tokens</code>, from the OAuth callback, <code>forUser()</code> or <code>isConnected()</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p><code>token_store: doctrine</code> is set but the table was never created on that connection: no migration was generated, it wasn't run in this environment, a <code>schema_filter</code> hid it, or <code>oauth.doctrine.connection</code> points at a different database than the one you migrated.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>With the ORM: <code>doctrine:migrations:diff</code> then <code>migrate</code>. Without it: <code>php bin/console adobe-sign:create-token-table</code> (idempotent, safe on every deploy). For a test database, run the same before the suite. See <a href="token-storage.html#doctrine-store">the Doctrine store</a>.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <section class="issue-group" aria-labelledby="webhook-problems"><h2 id="webhook-problems">Webhooks</h2>
+<section class="issue no-toc" aria-labelledby="webhook-403">
+<header class="issue-head"><h3 id="webhook-403">Webhook answers 403: client id not allowed</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 403</span><span class="badge badge-brand">WebhookException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>webhooks()-&gt;create()</code> fails because Adobe's verification got a 403, or deliveries fail. The <code>adobe_sign</code> log shows "Rejected Acrobat Sign webhook" with the reason "Missing X-AdobeSign-ClientId header." or "Webhook from an unexpected client id."</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The client id Adobe sends isn't in <code>webhooks.client_ids</code> (or <code>oauth.client_id</code> when the list is empty). Common reasons: webhooks created with an Integration Key carry a different application's id than you assumed; an explicit <code>client_ids</code> list replaced the OAuth client id; staging and production use different applications; or a proxy strips the header.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Find the id Adobe actually sends (log the header once, see <a href="webhooks.html#allow-list">the allow-list</a>), add it to <code>webhooks.client_ids</code>, clear the cache, then re-create the webhook or re-enable it with <code>updateState($id, 'ACTIVE')</code>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="webhook-login-redirect">
+<header class="issue-head"><h3 id="webhook-login-redirect">Webhook redirected to the login page</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 302</span><span class="badge badge-danger">HTTP 401</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>Adobe's verification fails, and your access log shows <code>/adobe-sign/webhook</code> answering 302 to <code>/login</code>, or 401. The <code>adobe_sign</code> log shows nothing, because the controller never ran.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>A firewall or an <code>access_control</code> rule requires a user for the webhook path: a catch-all such as <code>{ path: ^/, roles: ROLE_USER }</code>, a rule for <code>^/adobe-sign</code> meant for the OAuth routes, or a stateless API firewall that demands a token for every path.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Give the path its own firewall with <code>security: false</code> before <code>main</code>, or add <code>{ path: ^/adobe-sign/webhook, roles: PUBLIC_ACCESS }</code> above any broader rule, and narrow OAuth rules to <code>^/adobe-sign/oauth</code>. Check with <code>debug:firewall</code>. See <a href="webhooks.html#firewall-and-access-control">firewalls and access_control</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="webhook-stateless-session">
+<header class="issue-head"><h3 id="webhook-stateless-session">&quot;Session was used while the request was declared stateless&quot;</h3>
+<p class="issue-tags"><span class="badge badge-brand">UnexpectedSessionUsageException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>In the <code>dev</code> environment, posting to the webhook throws <code>UnexpectedSessionUsageException</code>; in <code>prod</code>, a warning is logged and a session cookie is sent to Adobe.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The webhook route is stateless, but something started the session for it: usually a non-lazy stateful firewall covering the path, or one of your own listeners reading the session or the user on every request.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Put the path under a <code>security: false</code> firewall, or make <code>main</code> <code>lazy: true</code>. Make your own global listeners skip requests whose <code>_stateless</code> attribute is true.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="webhook-http-url">
+<header class="issue-head"><h3 id="webhook-http-url">&quot;Acrobat Sign only delivers webhooks to HTTPS URLs&quot;</h3>
+<p class="issue-tags"><span class="badge badge-brand">InvalidArgumentException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>WebhookInfo::forAgreement()</code> (or another constructor) throws before any request.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The URL starts with <code>http://</code>. With <code>generateUrl(..., ABSOLUTE_URL)</code> that means Symfony thinks the request was plain HTTP (a proxy without <code>trusted_proxies</code>), or you're in the console or a worker without <code>framework.router.default_uri</code>, so the router used <code>http://localhost</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Configure <code>trusted_proxies</code> and <code>trusted_headers</code>, and set <code>framework.router.default_uri</code> to your public <code>https://</code> origin. Locally, use an HTTPS tunnel. See <a href="webhooks.html#https-and-proxies">HTTPS and the generated URL</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="duplicates-across-servers">
+<header class="issue-head"><h3 id="duplicates-across-servers">The same notification is handled twice</h3>
+<p class="issue-tags"><span class="badge badge-brand">cache_pool</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>A listener or handler runs twice for one signature: two emails, two rows, two downloads.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>Duplicate detection lives in <code>cache_pool</code>. If each server has its own (<code>cache.app</code> on local disk), a retry that lands on another server looks new. It also happens after the pool was cleared, when <code>dedupe_ttl</code> is shorter than Adobe's 72-hour retry window, or when Messenger redelivers a message after a crash (deduplication can't help there).</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Point <code>cache_pool</code> at a shared pool (Redis, Memcached, database) used by every web server, keep <code>dedupe_ttl</code> at 259200, and make handlers idempotent. See <a href="messenger.html#idempotency">idempotency</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="webhook-disabled">
+<header class="issue-head"><h3 id="webhook-disabled">Webhooks worked, then stopped</h3>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>No more deliveries for some or all agreements, and nothing in your logs.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>Adobe disables a webhook after 72 hours of failed deliveries: an outage, an expired certificate, a deploy that put the path behind a login, a 403 after an allow-list change. Notifications while it is disabled are not sent later.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Fix the cause, find disabled webhooks with <code>webhooks()-&gt;all(showInActiveWebhooks: true)</code>, re-enable them with <code>updateState($id, 'ACTIVE')</code>, and reconcile agreements your records still show as open by asking the API. <code>notifyOnProblems()</code> on the builder makes Adobe email you before it gets that far.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <section class="issue-group" aria-labelledby="messenger-problems"><h2 id="messenger-problems">Messenger</h2>
+<section class="issue no-toc" aria-labelledby="messenger-not-handled">
+<header class="issue-head"><h3 id="messenger-not-handled">Webhook answers 200, but the handler never runs</h3>
+<p class="issue-tags"><span class="badge badge-brand">AdobeSignWebhookMessage</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>Adobe's deliveries succeed, but your <code>#[AsMessageHandler]</code> for <code>AdobeSignWebhookMessage</code> does nothing: no PDF, no log line.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>In order of likelihood: no worker is consuming the transport the message is routed to; <code>webhooks.messenger</code> isn't enabled in this environment (only <code>WebhookReceivedEvent</code> fires); the message went to another bus than the one your handler is registered on; the handler returned early (wrong event type, agreement not found); the message failed and sits in the failure transport; or it was a duplicate.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Check <code>debug:config adobe_sign</code> (messenger enabled, bus), <code>debug:messenger</code> (handler and routing on that bus), <code>messenger:stats</code> (messages waiting), <code>messenger:failed:show</code>, and run <code>messenger:consume async -vv</code> to watch. Restart workers after deploying handler changes. See <a href="messenger.html#running-workers">running workers</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="messenger-no-handler">
+<header class="issue-head"><h3 id="messenger-no-handler">Webhook answers 500: NoHandlerForMessageException</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 500</span><span class="badge badge-brand">NoHandlerForMessageException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>"No handler for message Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage" in your error log, and Adobe's delivery fails.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p><code>webhooks.messenger</code> is on, the message isn't routed to a transport, and the bus has no handler for it, so Messenger refuses it inside the webhook request. The bundle doesn't record a notification it failed to handle, so Adobe keeps retrying, but it gives up after 72 hours.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Route the message to a transport and deploy at least one handler, or dispatch to a bus with <code>allow_no_handlers: true</code>. Deliveries Adobe retries after the fix are processed normally; for a long outage, reconcile affected agreements by asking the API for their status. See <a href="messenger.html#enable">Enabling Messenger</a>.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <section class="issue-group" aria-labelledby="api-problems"><h2 id="api-problems">API errors</h2>
+<section class="issue no-toc" aria-labelledby="invalid-api-access-point">
+<header class="issue-head"><h3 id="invalid-api-access-point">403 INVALID_API_ACCESS_POINT</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 403</span><span class="badge badge-brand">ApiException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>An <code>ApiException</code> with status 403 and code <code>INVALID_API_ACCESS_POINT</code>.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The request went to the wrong data centre. The SDK already handles the normal case: on this error it forgets the cached data centre, rediscovers it and retries once. If you still see it, the rediscovery itself points somewhere the credentials don't belong: a wrong <code>bootstrap_url</code> (for example an account in a separate Adobe environment against the commercial host), or an OAuth token whose stored access point no longer matches the account.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Leave <code>bootstrap_url</code> at its default unless your account lives in a separate Adobe environment. For an OAuth user, have them connect again, which stores a fresh access point. Clearing <code>cache_pool</code> is safe; the data centre is rediscovered on the next call.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="account-capability">
+<header class="issue-head"><h3 id="account-capability">AccountCapabilityException</h3>
+<p class="issue-tags"><span class="badge badge-brand">AccountCapabilityException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>AccountCapabilityException</code> with codes such as <code>HYBRID_ROUTING_NOT_ALLOWED</code>, <code>GOV_ID_LIMIT_EXCEEDED</code> or <code>SEND_LIMIT_EXCEEDED</code>, or a message saying something is not allowed by account settings.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>The request is valid, but the Acrobat Sign account's plan or settings don't allow it: mixed sequential and parallel signing (hybrid routing), an identity method that isn't enabled or is out of quota, digital signatures not enabled for AES or QES, a sending limit.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Enable the feature in Acrobat Sign admin or upgrade the plan, or change the request (for example a purely sequential order). Show users a clear message rather than a 500; <code>$e-&gt;errorCode</code> tells you which capability is missing. In a Messenger handler, treat it as unrecoverable. See <a href="usage.html#errors-to-responses">turning exceptions into responses</a>.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="not-ready-yet">
+<header class="issue-head"><h3 id="not-ready-yet">AGREEMENT_NOT_EXPOSED right after creating an agreement</h3>
+<p class="issue-tags"><span class="badge badge-brand">ApiException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p>A call made seconds after <code>agreements()-&gt;create()</code> (signing URLs, members, documents) fails with <code>AGREEMENT_NOT_EXPOSED</code>, or members are empty.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>Adobe processes new agreements asynchronously. The status is <code>DOCUMENTS_NOT_YET_PROCESSED</code> for a few seconds, and participant data lags behind the status.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>Don't fetch signing URLs in the same request that creates the agreement. Dispatch a Messenger message with a short <code>DelayStamp</code>, or retry a few times with a pause. The core's <a href="https://conceptlz.github.io/adobe-sign/downloads.html">downloads page</a> shows a retry loop.</p>
+</div>
+</div>
+</section>
+<section class="issue no-toc" aria-labelledby="rate-limited">
+<header class="issue-head"><h3 id="rate-limited">RateLimitException</h3>
+<p class="issue-tags"><span class="badge badge-danger">HTTP 429</span><span class="badge badge-brand">RateLimitException</span></p>
+</header>
+<div class="issue-part issue-symptom">
+<p class="issue-label">What you see</p>
+<div class="issue-body"><p><code>RateLimitException</code>, often during bulk jobs, with <code>$retryAfter</code> set.</p>
+</div>
+</div>
+<div class="issue-part issue-cause">
+<p class="issue-label">Why it happens</p>
+<div class="issue-body"><p>Adobe throttled the account. The SDK retries 429 and 503 itself up to <code>retries.max</code> times, waiting up to <code>retries.max_delay_seconds</code> each; it throws when Adobe asks for a longer wait or the retries run out.</p>
+</div>
+</div>
+<div class="issue-part issue-fix">
+<p class="issue-label">How to fix it</p>
+<div class="issue-body"><p>In a request, answer 503 with <code>Retry-After</code>. In a worker, re-dispatch the message with <code>new DelayStamp($e-&gt;retryAfter * 1000)</code>. Spread bulk work out, and use webhooks instead of polling.</p>
+</div>
+</div>
+</section>
+</section>
+
+  <h2 id="troubleshooting-questions">Common questions</h2>
+  <div class="faq">
+    <details id="troubleshooting-debug-requests">
+      <summary>How can I see what the SDK sends?</summary>
+      <div class="faq-answer"><p>Route the <code>adobe_sign</code> Monolog channel at <code>debug</code> level to log every request (method, path, status, duration), never headers or bodies. For full requests during development, use the Symfony profiler's HTTP Client panel (with <code>psr18.http_client</code>, calls go through Symfony's HttpClient) or a mock client in tests. Never log bodies in production: they contain documents and personal data.</p></div>
+    </details>
+    <details id="troubleshooting-exception-secret">
+      <summary>Will an exception in my error tracker leak the key or tokens?</summary>
+      <div class="faq-answer"><p>No. The SDK redacts the <code>Authorization</code> header and OAuth secrets from every exception it creates, tokens and the encryption secret are hidden from dumps, and <code>adobe-sign:verify</code> never prints the key. Your own code can still leak them if it logs configuration wholesale.</p></div>
+    </details>
+    <details id="troubleshooting-demo-prefix">
+      <summary>Why do agreement names start with [DEMO USE ONLY]?</summary>
+      <div class="faq-answer"><p>Adobe adds that prefix to agreements created from developer accounts. It disappears on a production account; nothing in your code causes it.</p></div>
+    </details>
+    <details id="troubleshooting-works-in-dev">
+      <summary>It works in dev but not in prod. Where do I start?</summary>
+      <div class="faq-answer"><p>Compare <code>debug:config adobe_sign --env=prod</code> with dev, check the production environment variables or secrets exist, clear the prod cache, and check the three classic differences: a shared cache pool, the webhook firewall, and trusted proxies for generated URLs.</p></div>
+    </details>
+    <details id="troubleshooting-still-stuck">
+      <summary>None of this matches my problem. What next?</summary>
+      <div class="faq-answer"><p>Check the core's <a href="https://conceptlz.github.io/adobe-sign/troubleshooting.html">troubleshooting page</a> for API-level issues, then open an issue with the exception class, Adobe's error code, the package version, your Symfony version and what you expected. Leave out keys, tokens and personal data.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="faq.html"><strong>FAQ</strong><span>Short answers to common questions.</span></a></li>
+    <li><a href="webhooks.html"><strong>Webhooks</strong><span>How the route works, step by step.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="testing.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Testing your application</span></a>
+  <a class="pager-next" href="faq.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">FAQ</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

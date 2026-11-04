@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Installation · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Install the Acrobat Sign bundle in a Symfony 7.4 or 8 app: composer require, bundle registration, a PSR-18 client, environment variables, the adobe_sign config file, route imports, the verify command and the optional Doctrine, Messenger and Security pieces.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html" aria-current="page">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Start here</p>
+    <h1>Installation</h1>
+    <p class="lede">From <code>composer require</code> to a verified connection in about ten minutes. This page installs the bundle, gives the SDK an HTTP client, puts your key in the environment, imports the routes, and checks the credentials against Acrobat Sign. Optional pieces (Doctrine, Messenger, Security) are at the end.</p>
+  </header>
+
+  <h2 id="requirements">Requirements</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>What</th><th>Version</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>PHP</td><td>8.2 or newer</td><td>The minimum the core SDK and the bundle are tested on.</td></tr>
+        <tr><td><code>ext-sodium</code></td><td>any</td><td>Encrypts stored OAuth tokens. Bundled with PHP; some minimal Docker images need <code>docker-php-ext-install sodium</code>.</td></tr>
+        <tr><td>Symfony</td><td>7.4 or 8.x</td><td>The bundle is an <code>AbstractBundle</code> and requires <code>^7.4 || ^8.0</code> of FrameworkBundle, HttpKernel, Routing, Cache, Console and friends.</td></tr>
+        <tr><td>A PSR-18 client</td><td>any</td><td>The core SDK sends requests through PSR-18. See <a href="#http-client">the HTTP client</a>.</td></tr>
+        <tr><td>Acrobat Sign account</td><td>developer or paid</td><td>A free developer account works for building and testing; agreements from it get a <code>[DEMO USE ONLY]</code> prefix.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The core package, <code>conceptlz/adobe-sign</code>, comes in as a dependency; you don't require it
+    separately. The bundle and the core share one version number and are released together.
+  </p>
+
+  <h2 id="install-steps">Install in six steps</h2>
+  <ol class="steps">
+    <li>
+      <span class="step-title">Require the bundle</span>
+      <pre><code class="language-bash">composer require conceptlz/adobe-sign-symfony</code></pre>
+      <p>The package type is <code>symfony-bundle</code>, so Symfony Flex adds it to <code>config/bundles.php</code> for you. There is no recipe, so Flex doesn't create config files; the next steps do that by hand.</p>
+    </li>
+    <li>
+      <span class="step-title">Register the bundle if Flex didn't</span>
+      <figure class="code">
+        <figcaption>config/bundles.php</figcaption>
+        <pre><code class="language-php">return [
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class =&gt; ['all' =&gt; true],
+    // ...
+    Conceptlz\AdobeSign\Symfony\AdobeSignBundle::class =&gt; ['all' =&gt; true],
+];</code></pre>
+      </figure>
+      <p>Register it in every environment. Disabling it in <code>test</code> would remove the services your tests need; swap the HTTP client instead (see <a href="testing.html">Testing</a>).</p>
+    </li>
+    <li>
+      <span class="step-title">Make sure a PSR-18 client exists</span>
+      <pre><code class="language-bash">composer require symfony/http-client nyholm/psr7</code></pre>
+      <p>Skip this if your app already has <code>symfony/http-client</code> and a PSR-17 implementation. Details in <a href="#http-client">the HTTP client</a>.</p>
+    </li>
+    <li>
+      <span class="step-title">Put the key in the environment</span>
+      <p>Declare the variable (empty) in the committed <code>.env</code> and give it a value in <code>.env.local</code>, which is git-ignored. See <a href="#credentials">credentials</a>.</p>
+    </li>
+    <li>
+      <span class="step-title">Create the configuration and import the routes</span>
+      <p>Two small YAML files: <code>config/packages/adobe_sign.yaml</code> and <code>config/routes/adobe_sign.yaml</code>. See <a href="#config-file">the config file</a> and <a href="#import-routes">importing the routes</a>.</p>
+    </li>
+    <li>
+      <span class="step-title">Verify</span>
+      <pre><code class="language-bash">php bin/console adobe-sign:verify</code></pre>
+      <p>It calls Acrobat Sign with your credentials and prints who they belong to. See <a href="#verify-command">checking the connection</a>.</p>
+    </li>
+  </ol>
+
+  <h2 id="http-client">The HTTP client (PSR-18)</h2>
+  <p>
+    The core SDK never creates its own HTTP stack. It accepts any PSR-18 client, which keeps it framework-free
+    and lets your tests swap in a fake. The bundle decides which client to hand it in this order:
+  </p>
+  <ol>
+    <li>The service named in <code>adobe_sign.http_client</code>, if you set one.</li>
+    <li>Otherwise the framework's PSR-18 client, service <code>psr18.http_client</code>. FrameworkBundle registers it when <code>symfony/http-client</code> is installed together with a PSR-17 implementation such as <code>nyholm/psr7</code>. It inherits your <code>framework.http_client</code> settings (timeouts, proxies, retry options).</li>
+    <li>Otherwise <code>php-http/discovery</code> looks for any installed PSR-18 client, for example Guzzle 7.</li>
+  </ol>
+  <p>
+    The PSR-17 request and stream factories are always found by discovery, which is why
+    <code>nyholm/psr7</code> (or <code>guzzlehttp/psr7</code>) must be installed. If nothing can be found,
+    the first API call throws <code>Http\Discovery\Exception\NotFoundException</code>; see
+    <a href="troubleshooting.html#no-psr18-client">Troubleshooting</a>.
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/framework.yaml: timeouts for every PSR-18 call, including the SDK's</figcaption>
+    <pre><code class="language-text">framework:
+    http_client:
+        default_options:
+            timeout: 10          # seconds to wait for the first byte
+            max_duration: 120    # large signed PDFs can take a while</code></pre>
+  </figure>
+  <div class="callout callout-tip">
+    <p class="callout-title">A typo in http_client fails quietly</p>
+    <p>The bundle references the <code>http_client</code> service with "null on invalid", so an id that doesn't exist falls back to discovery instead of failing the container build. If requests don't go where you expect, check the id with <code>php bin/console debug:container &lt;id&gt;</code>.</p>
+  </div>
+
+  <h2 id="credentials">Credentials in the environment</h2>
+  <p>
+    Acrobat Sign accepts two kinds of credentials, and the bundle supports both. Pick one now; you can add the
+    other later.
+  </p>
+  <h3 id="choose-auth">Integration Key or OAuth?</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Integration Key</th><th>OAuth</th></tr></thead>
+      <tbody>
+        <tr><td>Who sends</td><td>One Acrobat Sign user (usually a service account) for the whole app</td><td>Each of your users, from their own Acrobat Sign account</td></tr>
+        <tr><td>Setup</td><td>One environment variable</td><td>An API application at Adobe, a client id and secret, routes, token storage, a firewall</td></tr>
+        <tr><td>Expiry</td><td>Never, until revoked in Acrobat Sign</td><td>Access tokens expire after about an hour and refresh automatically</td></tr>
+        <tr><td>Where agreements live</td><td>In that one account</td><td>In each user's account, under their name</td></tr>
+        <tr><td>Good for</td><td>Internal tools, one company sending to its clients</td><td>SaaS products whose customers already use Acrobat Sign</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Create an Integration Key in Acrobat Sign under <em>Account → Acrobat Sign API → API Information →
+    Integration Key</em>. Give it the scopes your app needs (at least <code>agreement_read</code>,
+    <code>agreement_write</code>, <code>agreement_send</code>, <code>user_login</code>, and
+    <code>webhook_read</code>/<code>webhook_write</code> if you register webhooks).
+  </p>
+  <figure class="code">
+    <figcaption>.env (committed: declares the variables, no secrets)</figcaption>
+    <pre><code class="language-dotenv">###&gt; conceptlz/adobe-sign-symfony ###
+ADOBE_SIGN_INTEGRATION_KEY=
+ADOBE_SIGN_CLIENT_ID=
+ADOBE_SIGN_CLIENT_SECRET=
+###&lt; conceptlz/adobe-sign-symfony ###</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>.env.local (git-ignored: the real values on your machine)</figcaption>
+    <pre><code class="language-dotenv">ADOBE_SIGN_INTEGRATION_KEY=3AAABLblqZhB...your-key...
+# Only for OAuth or webhooks:
+ADOBE_SIGN_CLIENT_ID=CBJCHBCAABAA...
+ADOBE_SIGN_CLIENT_SECRET=...</code></pre>
+  </figure>
+  <p>
+    Declaring the variables empty in <code>.env</code> matters: a <code>%env(ADOBE_SIGN_INTEGRATION_KEY)%</code>
+    reference to an undefined variable throws <code>EnvNotFoundException</code> when the container builds the
+    manager, while an empty one gives you the bundle's clearer <code>MisconfiguredException</code> that names
+    the setting. On servers, prefer real environment variables or Symfony secrets:
+  </p>
+  <pre><code class="language-bash">php bin/console secrets:set ADOBE_SIGN_INTEGRATION_KEY --env=prod</code></pre>
+  <div class="callout callout-danger">
+    <p class="callout-title">Treat the key like a password</p>
+    <p>An Integration Key can send, read and cancel agreements as its owner. Never commit it, never log it, and never put it in front-end code. The SDK redacts the <code>Authorization</code> header from every exception it creates, so error trackers don't receive it.</p>
+  </div>
+
+  <h2 id="config-file">The config file</h2>
+  <p>
+    The bundle's configuration root is <code>adobe_sign</code>. For an Integration Key, one line is enough;
+    every other key has a default.
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml (Integration Key)</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    integration_key: '%env(ADOBE_SIGN_INTEGRATION_KEY)%'</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml (OAuth, users connect their own accounts)</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    auth: oauth
+    oauth:
+        client_id: '%env(ADOBE_SIGN_CLIENT_ID)%'
+        client_secret: '%env(ADOBE_SIGN_CLIENT_SECRET)%'
+        token_store: doctrine          # or keep "cache" with a persistent pool
+        redirect_after: /settings/integrations</code></pre>
+  </figure>
+  <p>
+    See <a href="configuration.html">Configuration</a> for every key, its default and what it changes. Two
+    defaults are worth knowing now: <code>cache_pool</code> and <code>oauth.token_cache_pool</code> are both
+    <code>cache.app</code>. That is fine on one machine, but on several servers or for OAuth tokens you
+    want a shared, persistent pool; see <a href="configuration.html#http-and-cache-keys">cache and HTTP</a>.
+  </p>
+
+  <h2 id="import-routes">Importing the routes</h2>
+  <p>
+    The bundle ships its routes as PHP files but doesn't load them by itself, so you decide which ones exist
+    and under which prefix.
+  </p>
+  <figure class="code">
+    <figcaption>config/routes/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text"># Everything: OAuth connect routes and the webhook
+adobe_sign:
+    resource: '@AdobeSignBundle/config/routes.php'
+
+# Or pick one:
+# adobe_sign_oauth:
+#     resource: '@AdobeSignBundle/config/routes/oauth.php'
+# adobe_sign_webhook:
+#     resource: '@AdobeSignBundle/config/routes/webhook.php'</code></pre>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Route name</th><th>Method</th><th>Path</th><th>File</th></tr></thead>
+      <tbody>
+        <tr><td><code>adobe_sign_oauth_redirect</code></td><td>GET</td><td><code>/adobe-sign/oauth/redirect</code></td><td><code>routes/oauth.php</code></td></tr>
+        <tr><td><code>adobe_sign_oauth_callback</code></td><td>GET</td><td><code>/adobe-sign/oauth/callback</code></td><td><code>routes/oauth.php</code></td></tr>
+        <tr><td><code>adobe_sign_webhook</code></td><td>GET, POST</td><td><code>/adobe-sign/webhook</code></td><td><code>routes/webhook.php</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Add <code>prefix: /integrations</code> to an import to move its paths; the route names stay the same,
+    and the default OAuth redirect URI follows the callback route automatically. Check the result with:
+  </p>
+  <pre><code class="language-bash">php bin/console debug:router | grep adobe_sign</code></pre>
+  <p>
+    Using only an Integration Key and no webhooks? Then you don't need to import anything: the services work
+    without routes.
+  </p>
+
+  <h2 id="verify-command">Checking the connection</h2>
+  <pre><code class="language-bash">$ php bin/console adobe-sign:verify
+
+ [OK] Connected to Acrobat Sign.
+
+ ---------------- -------------------------
+  User             sender@example.com
+  Account admin    yes
+  Account          CBJCHBCAABAA...
+ ---------------- -------------------------</code></pre>
+  <p>
+    The command calls <span class="endpoint"><b>GET</b> /users/me</span> with the default client. The first call
+    of a fresh app also discovers the account's data centre through <span class="endpoint"><b>GET</b> /baseUris</span>
+    and caches it in <code>cache_pool</code>. On any SDK error it prints the SDK's message (for example
+    <code>INVALID_ACCESS_TOKEN</code>) and exits with status 1, so you can run it in a deploy pipeline as a
+    smoke test. It never prints the key.
+  </p>
+  <p>
+    For OAuth, check one user's connection by their token key, which is their user identifier by default:
+  </p>
+  <pre><code class="language-bash">php bin/console adobe-sign:verify --user=jane@example.com</code></pre>
+
+  <h2 id="optional-pieces">Optional pieces</h2>
+  <p>
+    The bundle has hard dependencies only on Symfony components every full-stack app already has. Three
+    features need more, and the bundle registers their services only when you configure them.
+  </p>
+
+  <h3 id="optional-doctrine">Doctrine DBAL, for a token table</h3>
+  <pre><code class="language-bash">composer require doctrine/dbal          # usually via symfony/orm-pack</code></pre>
+  <p>
+    Needed only for <code>oauth.token_store: doctrine</code>. With Doctrine ORM installed as well, the table
+    is added to the ORM schema so <code>doctrine:migrations:diff</code> generates its migration; without the
+    ORM, run <code>php bin/console adobe-sign:create-token-table</code>. See <a href="token-storage.html">Token
+    storage &amp; Doctrine</a>.
+  </p>
+
+  <h3 id="optional-messenger">Symfony Messenger, for async webhooks</h3>
+  <pre><code class="language-bash">composer require symfony/messenger</code></pre>
+  <p>
+    Needed only for <code>webhooks.messenger</code>. Enabling it without Messenger installed fails the
+    container build with a missing <code>messenger.default_bus</code> service, which is deliberate: a
+    silently ignored setting would lose notifications. See <a href="messenger.html">Async with Messenger</a>.
+  </p>
+
+  <h3 id="optional-security">Symfony Security, for OAuth</h3>
+  <pre><code class="language-bash">composer require symfony/security-bundle</code></pre>
+  <p>
+    The OAuth callback stores tokens under the signed-in user, which it reads from
+    <code>security.token_storage</code>. Without SecurityBundle there is never a signed-in user, so the callback
+    answers 401. Your app also needs sessions enabled (<code>framework.session</code>), because the
+    single-use OAuth state lives there. See <a href="oauth.html#protect-routes">protecting the routes</a>.
+  </p>
+
+  <h2 id="upgrading">Upgrading</h2>
+  <p>
+    Before 1.0, a minor version (0.4 → 0.5) may contain breaking changes; patch versions don't. Update the
+    bundle and the core together, read the changelog, clear the cache and restart workers:
+  </p>
+  <pre><code class="language-bash">composer update conceptlz/adobe-sign-symfony conceptlz/adobe-sign --with-dependencies
+php bin/console cache:clear
+php bin/console messenger:stop-workers</code></pre>
+
+  <h2 id="installation-questions">Common questions</h2>
+  <div class="faq">
+    <details id="installation-flex-recipe">
+      <summary>Why didn't Flex create config/packages/adobe_sign.yaml?</summary>
+      <div class="faq-answer"><p>There is no Flex recipe for the bundle yet. Flex still registers it in <code>config/bundles.php</code> because the package type is <code>symfony-bundle</code>, but the config file and the route import are yours to create. Both are a few lines; copy them from this page.</p></div>
+    </details>
+    <details id="installation-guzzle">
+      <summary>Can I use Guzzle instead of symfony/http-client?</summary>
+      <div class="faq-answer"><p>Yes. Guzzle 7 is a PSR-18 client. Either let discovery find it (if <code>psr18.http_client</code> isn't registered), or register it as a service and set <code>adobe_sign.http_client</code> to that service id.</p></div>
+    </details>
+    <details id="installation-no-routes">
+      <summary>Do I have to import the routes?</summary>
+      <div class="faq-answer"><p>Only for the features that need them: the OAuth routes for users connecting their accounts, the webhook route for Adobe's callbacks. Sending agreements with an Integration Key works without any route.</p></div>
+    </details>
+    <details id="installation-verify-ci">
+      <summary>Can I run adobe-sign:verify in CI?</summary>
+      <div class="faq-answer"><p>Yes, as a post-deploy smoke test with real credentials: it exits 1 on failure. Don't run it in the test suite, where the HTTP client should be a mock; it would then only test your mock.</p></div>
+    </details>
+    <details id="installation-sodium-missing">
+      <summary>Composer says ext-sodium is missing. Do I need it for an Integration Key?</summary>
+      <div class="faq-answer"><p>The requirement is unconditional, because the token encryptor is part of the bundle. Sodium ships with PHP; enable it in <code>php.ini</code> or install it in your Docker image (<code>docker-php-ext-install sodium</code>).</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="configuration.html"><strong>Configuration</strong><span>Every key of the adobe_sign tree, its default and its effect.</span></a></li>
+    <li><a href="usage.html"><strong>Using the client</strong><span>Inject the client, send your first agreement, handle errors.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="index.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Overview</span></a>
+  <a class="pager-next" href="configuration.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Configuration</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

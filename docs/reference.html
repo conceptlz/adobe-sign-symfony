@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Services, events, routes &amp; commands · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Reference for the Acrobat Sign Symfony bundle: classes, service ids and aliases, tags, events and their properties, the Messenger message, routes and responses, console commands, configuration keys and MisconfiguredException messages.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html" aria-current="page">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Reference</p>
+    <h1>Services, events, routes &amp; commands</h1>
+    <p class="lede">Everything the Symfony bundle adds, in one place: class names, service ids, tags, event properties, routes, commands, configuration keys and error messages, exactly as they are in the code. The guides explain when to use each piece.</p>
+  </header>
+
+  <h2 id="classes">Classes at a glance</h2>
+  <p>All classes live under <code>Conceptlz\AdobeSign\Symfony\</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Class</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>AdobeSignBundle</code></td><td>The bundle (<code>AbstractBundle</code>, alias <code>adobe_sign</code>): configuration tree and all service definitions. Constant <code>DEFAULT_SCOPES</code>.</td></tr>
+        <tr><td><code>AdobeSignManager</code></td><td>Builds clients; OAuth, token, webhook and signature-level helpers. Implements <code>ResetInterface</code>.</td></tr>
+        <tr><td><code>UserKeyResolver</code></td><td>Interface: <code>keyFor(UserInterface $user): string</code>.</td></tr>
+        <tr><td><code>DefaultUserKeyResolver</code></td><td>Keys tokens by <code>getUserIdentifier()</code>.</td></tr>
+        <tr><td><code>MisconfiguredException</code></td><td>A setting a feature needs is missing or invalid. Extends <code>RuntimeException</code>, implements the core's <code>AdobeSignException</code>.</td></tr>
+        <tr><td><code>TokenStore\TokenEncryptor</code></td><td>libsodium secretbox for stored tokens: <code>encrypt(AccessToken): string</code>, <code>decrypt(string): ?AccessToken</code>.</td></tr>
+        <tr><td><code>TokenStore\CacheTokenStore</code></td><td>Core <code>TokenStore</code> in a PSR-6 pool; adds <code>forget()</code>.</td></tr>
+        <tr><td><code>TokenStore\DoctrineDbalTokenStore</code></td><td>Core <code>TokenStore</code> in a DBAL table; adds <code>forget()</code>, <code>configureSchema()</code>, <code>createTable()</code>, <code>table()</code>.</td></tr>
+        <tr><td><code>TokenStore\DoctrineSchemaListener</code></td><td>Internal: adds the token table to the ORM schema on <code>postGenerateSchema</code>.</td></tr>
+        <tr><td><code>Controller\OAuthController</code></td><td>Actions <code>redirect()</code> and <code>callback()</code>.</td></tr>
+        <tr><td><code>Controller\WebhookController</code></td><td>Invokable webhook endpoint.</td></tr>
+        <tr><td><code>Event\OAuthConnectedEvent</code></td><td>A user finished the OAuth flow.</td></tr>
+        <tr><td><code>Event\WebhookReceivedEvent</code></td><td>A new webhook notification arrived.</td></tr>
+        <tr><td><code>Message\AdobeSignWebhookMessage</code></td><td>The Messenger message for a notification.</td></tr>
+        <tr><td><code>Command\VerifyCommand</code></td><td><code>adobe-sign:verify</code>.</td></tr>
+        <tr><td><code>Command\CreateTokenTableCommand</code></td><td><code>adobe-sign:create-token-table</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="services">Services and aliases</h2>
+  <p>
+    Registered by <code>AdobeSignBundle::loadExtension()</code>. Ids that are class names are autowirable by that type.
+    Inspect them with <code>php bin/console debug:container adobe_sign</code> and
+    <code>debug:container 'Conceptlz\AdobeSign'</code>.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Id</th><th>Class</th><th>Public</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\AdobeSignManager</code></td><td>same</td><td>yes</td><td>Tags: <code>monolog.logger</code> (channel <code>adobe_sign</code>), <code>kernel.reset</code> (method <code>reset</code>).</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\AdobeSign</code></td><td>core client</td><td>yes</td><td>Factory <code>[AdobeSignManager, 'client']</code>, not shared.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Auth\TokenStore</code></td><td>alias</td><td>no</td><td>Points at the configured store.</td></tr>
+        <tr><td><code>adobe_sign.token_store.cache</code></td><td><code>CacheTokenStore</code></td><td>no</td><td>Only with <code>token_store: cache</code>. Arguments: <code>oauth.token_cache_pool</code>, <code>TokenEncryptor</code>.</td></tr>
+        <tr><td><code>adobe_sign.token_store.doctrine</code></td><td><code>DoctrineDbalTokenStore</code></td><td>no</td><td>Only with <code>token_store: doctrine</code>. Arguments: <code>doctrine.dbal.&lt;connection&gt;_connection</code>, <code>TokenEncryptor</code>, table.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\TokenStore\DoctrineDbalTokenStore</code></td><td>alias</td><td>no</td><td>Of <code>adobe_sign.token_store.doctrine</code>, only with <code>token_store: doctrine</code>.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\TokenStore\TokenEncryptor</code></td><td>same</td><td>no</td><td>Argument: <code>oauth.encryption_key</code>.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\UserKeyResolver</code></td><td><code>DefaultUserKeyResolver</code></td><td>no</td><td>Used unless <code>oauth.user_key_resolver</code> names another service.</td></tr>
+        <tr><td><code>adobe_sign.cache</code></td><td><code>Symfony\Component\Cache\Psr16Cache</code></td><td>no</td><td>PSR-16 view of <code>cache_pool</code>, given to every client for the data-centre lookup.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\Controller\OAuthController</code></td><td>same</td><td>yes</td><td>Tag <code>controller.service_arguments</code>.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\Controller\WebhookController</code></td><td>same</td><td>yes</td><td>Tags <code>controller.service_arguments</code>, <code>monolog.logger</code> (channel <code>adobe_sign</code>).</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\Command\VerifyCommand</code></td><td>same</td><td>no</td><td>Tag <code>console.command</code>.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\Command\CreateTokenTableCommand</code></td><td>same</td><td>no</td><td>Only with <code>token_store: doctrine</code>.</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\TokenStore\DoctrineSchemaListener</code></td><td>same</td><td>no</td><td>Only with <code>token_store: doctrine</code> and <code>doctrine/orm</code> installed. Tag <code>doctrine.event_listener</code> (<code>postGenerateSchema</code>).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 id="manager-dependencies">What the manager receives</h3>
+  <p>
+    The resolved configuration, the <code>TokenStore</code>, the <code>UserKeyResolver</code> (or
+    <code>oauth.user_key_resolver</code>), <code>adobe_sign.cache</code>, and these optional services, each passed as
+    null when missing: <code>logger</code>, the <code>http_client</code> service or <code>psr18.http_client</code>,
+    <code>router</code>, <code>security.token_storage</code> and <code>clock</code>.
+  </p>
+
+  <h2 id="manager-methods">AdobeSignManager methods</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Returns</th><th>Throws</th></tr></thead>
+      <tbody>
+        <tr><td><code>client()</code></td><td><code>AdobeSign</code></td><td><code>MisconfiguredException</code></td></tr>
+        <tr><td><code>forUser(UserInterface|string|int $user)</code></td><td><code>AdobeSign</code></td><td><code>MisconfiguredException</code> (OAuth not configured)</td></tr>
+        <tr><td><code>isConnected(UserInterface|string|int $user)</code></td><td><code>bool</code></td><td>whatever the store throws</td></tr>
+        <tr><td><code>oauth()</code></td><td><code>Conceptlz\AdobeSign\Auth\OAuthClient</code></td><td><code>MisconfiguredException</code></td></tr>
+        <tr><td><code>tokens()</code></td><td><code>Conceptlz\AdobeSign\Auth\TokenStore</code></td><td></td></tr>
+        <tr><td><code>webhookHandler()</code></td><td><code>Conceptlz\AdobeSign\Webhook\WebhookHandler</code></td><td><code>MisconfiguredException</code></td></tr>
+        <tr><td><code>userKey(UserInterface|string|int $user)</code></td><td><code>string</code></td><td></td></tr>
+        <tr><td><code>signatureLevel()</code></td><td><code>Conceptlz\AdobeSign\Enum\SignatureLevel</code></td><td><code>MisconfiguredException</code></td></tr>
+        <tr><td><code>qualifiedIssuers()</code></td><td><code>list&lt;string&gt;</code></td><td></td></tr>
+        <tr><td><code>signatureShortfalls(string $agreementId, ?SignatureLevel $required = null)</code></td><td><code>list&lt;string&gt;</code></td><td>SDK exceptions; <code>InvalidArgumentException</code> for QES without issuers</td></tr>
+        <tr><td><code>reset()</code></td><td><code>void</code></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Descriptions and examples: <a href="usage.html#manager-methods">The manager's methods</a>.</p>
+
+  <h2 id="events">Events</h2>
+  <p>Both extend <code>Symfony\Contracts\EventDispatcher\Event</code> and are dispatched under their class name, so <code>#[AsEventListener]</code> on an <code>__invoke(TheEvent $e)</code> method is enough.</p>
+
+  <h3 id="event-oauth-connected">OAuthConnectedEvent</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>$user</code></td><td><code>Symfony\Component\Security\Core\User\UserInterface</code></td><td>The signed-in user who connected.</td></tr>
+        <tr><td><code>$key</code></td><td><code>string</code></td><td>Token-store key, from <code>userKey()</code>.</td></tr>
+        <tr><td><code>$apiAccessPoint</code></td><td><code>?string</code></td><td>The account's API host, e.g. <code>https://api.eu1.adobesign.com/</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Dispatched by <code>OAuthController::callback()</code> after the token is stored, before the redirect.</p>
+
+  <h3 id="event-webhook-received">WebhookReceivedEvent</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>$event</code></td><td><code>Conceptlz\AdobeSign\Webhook\WebhookEvent</code></td><td>The typed notification: <code>AgreementEvent</code>, <code>MegaSignEvent</code>, <code>WidgetEvent</code>, <code>LibraryDocumentEvent</code> or <code>UnknownEvent</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Dispatched synchronously by <code>WebhookController</code> for each new notification (duplicates dropped), before the Messenger message.</p>
+
+  <h2 id="message">The Messenger message</h2>
+  <div class="api" id="api-webhook-message">
+    <pre class="api-signature">final class AdobeSignWebhookMessage</pre>
+    <div class="api-body">
+      <p><code>__construct(array $payload)</code>, readonly <code>$payload</code>: the decoded notification body.</p>
+      <p><code>event(): WebhookEvent</code> rebuilds the typed event; <code>notificationId(): ?string</code> returns <code>webhookNotificationId</code>.</p>
+      <p>Dispatched on <code>webhooks.messenger.bus</code> after <code>WebhookReceivedEvent</code>, only when <code>webhooks.messenger</code> is enabled, without stamps. See <a href="messenger.html">Async with Messenger</a>.</p>
+    </div>
+  </div>
+
+  <h2 id="routes">Routes</h2>
+  <p>Import from <code>@AdobeSignBundle/config/routes.php</code> (all) or <code>@AdobeSignBundle/config/routes/oauth.php</code> / <code>routes/webhook.php</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Methods</th><th>Path</th><th>Controller</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>adobe_sign_oauth_redirect</code></td><td>GET</td><td><code>/adobe-sign/oauth/redirect</code></td><td><code>OAuthController::redirect</code></td><td>Needs a session. Protect with <code>access_control</code>.</td></tr>
+        <tr><td><code>adobe_sign_oauth_callback</code></td><td>GET</td><td><code>/adobe-sign/oauth/callback</code></td><td><code>OAuthController::callback</code></td><td>Needs a session and a signed-in user.</td></tr>
+        <tr><td><code>adobe_sign_webhook</code></td><td>GET, POST</td><td><code>/adobe-sign/webhook</code></td><td><code>WebhookController</code></td><td>Stateless. Must be public: no login, no session.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="route-responses">Responses</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Route</th><th>Status</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>redirect</td><td>302</td><td>Always (to Adobe's consent page), unless OAuth is misconfigured (500).</td></tr>
+        <tr><td>callback</td><td>302</td><td>Tokens stored; to <code>oauth.redirect_after</code>.</td></tr>
+        <tr><td>callback</td><td>400</td><td><code>STATE_MISMATCH</code>, <code>MISSING_CODE</code>, or an untrusted <code>api_access_point</code>.</td></tr>
+        <tr><td>callback</td><td>401</td><td>No signed-in user ("Sign in before connecting Acrobat Sign.").</td></tr>
+        <tr><td>callback</td><td>403</td><td>Adobe returned an error or refused the code.</td></tr>
+        <tr><td>callback</td><td>502</td><td>Adobe unreachable ("Acrobat Sign could not be reached. Please try again.").</td></tr>
+        <tr><td>webhook</td><td>200</td><td>Accepted (including duplicates): JSON <code>{"xAdobeSignClientId": "&lt;id&gt;"}</code> and header <code>X-AdobeSign-ClientId</code>.</td></tr>
+        <tr><td>webhook</td><td>400</td><td>POST body isn't a JSON object with an <code>event</code>.</td></tr>
+        <tr><td>webhook</td><td>403</td><td>Client id header missing or not allowed. Empty body.</td></tr>
+        <tr><td>webhook</td><td>500</td><td>No allow-list (<code>MisconfiguredException</code>), or a listener or the bus threw.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="commands">Console commands</h2>
+  <h3 id="command-verify">adobe-sign:verify</h3>
+  <pre><code class="language-bash">php bin/console adobe-sign:verify [--user=KEY]</code></pre>
+  <p>
+    Calls <span class="endpoint"><b>GET</b> /users/me</span> with the default client, or with
+    <code>forUser(KEY)</code> when <code>--user</code> is given, and prints the user's email, whether they are an account
+    admin, and the account id. Exit code 0 on success; 1 with the SDK's message on any <code>AdobeSignException</code>
+    (including <code>MisconfiguredException</code>). Always registered.
+  </p>
+  <h3 id="command-create-token-table">adobe-sign:create-token-table</h3>
+  <pre><code class="language-bash">php bin/console adobe-sign:create-token-table</code></pre>
+  <p>
+    Creates the token table on the configured connection if it doesn't exist ("Created table …" or "Table … already
+    exists."). Always exits 0. Registered only with <code>oauth.token_store: doctrine</code>.
+  </p>
+
+  <h2 id="config-summary">Configuration keys</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>auth</code></td><td>scalar</td><td><code>integration_key</code></td></tr>
+        <tr><td><code>integration_key</code></td><td>scalar</td><td><code>null</code></td></tr>
+        <tr><td><code>oauth.client_id</code></td><td>scalar</td><td><code>null</code></td></tr>
+        <tr><td><code>oauth.client_secret</code></td><td>scalar</td><td><code>null</code></td></tr>
+        <tr><td><code>oauth.redirect_uri</code></td><td>scalar</td><td><code>null</code> (route <code>adobe_sign_oauth_callback</code>)</td></tr>
+        <tr><td><code>oauth.scopes</code></td><td>list</td><td><code>AdobeSignBundle::DEFAULT_SCOPES</code></td></tr>
+        <tr><td><code>oauth.redirect_after</code></td><td>scalar</td><td><code>/</code></td></tr>
+        <tr><td><code>oauth.user_key_resolver</code></td><td>service id</td><td><code>null</code></td></tr>
+        <tr><td><code>oauth.token_store</code></td><td><code>cache</code> | <code>doctrine</code> | service id</td><td><code>cache</code></td></tr>
+        <tr><td><code>oauth.token_cache_pool</code></td><td>service id</td><td><code>cache.app</code></td></tr>
+        <tr><td><code>oauth.encryption_key</code></td><td>scalar</td><td><code>%kernel.secret%</code></td></tr>
+        <tr><td><code>oauth.doctrine.connection</code></td><td>scalar</td><td><code>default</code></td></tr>
+        <tr><td><code>oauth.doctrine.table</code></td><td>scalar</td><td><code>adobe_sign_tokens</code></td></tr>
+        <tr><td><code>signature_level</code></td><td>scalar</td><td><code>ses</code></td></tr>
+        <tr><td><code>qualified_issuers</code></td><td>list</td><td><code>[]</code></td></tr>
+        <tr><td><code>bootstrap_url</code></td><td>scalar</td><td><code>https://api.adobesign.com</code></td></tr>
+        <tr><td><code>base_uri_ttl</code></td><td>integer</td><td><code>86400</code></td></tr>
+        <tr><td><code>retries.max</code></td><td>integer</td><td><code>3</code></td></tr>
+        <tr><td><code>retries.max_delay_seconds</code></td><td>float</td><td><code>60.0</code></td></tr>
+        <tr><td><code>cache_pool</code></td><td>service id</td><td><code>cache.app</code></td></tr>
+        <tr><td><code>http_client</code></td><td>service id</td><td><code>null</code></td></tr>
+        <tr><td><code>webhooks.client_ids</code></td><td>list</td><td><code>[]</code> (falls back to <code>oauth.client_id</code>)</td></tr>
+        <tr><td><code>webhooks.dedupe_ttl</code></td><td>integer</td><td><code>259200</code></td></tr>
+        <tr><td><code>webhooks.messenger.enabled</code></td><td>boolean</td><td><code>false</code></td></tr>
+        <tr><td><code>webhooks.messenger.bus</code></td><td>service id</td><td><code>messenger.default_bus</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Effects and examples: <a href="configuration.html">Configuration</a>.</p>
+
+  <h2 id="exceptions">Exceptions</h2>
+  <h3 id="misconfigured-exception">MisconfiguredException</h3>
+  <p>The message always names the setting. The complete list:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Message</th><th>Thrown by</th></tr></thead>
+      <tbody>
+        <tr><td>Set adobe_sign.integration_key (usually "%env(ADOBE_SIGN_INTEGRATION_KEY)%"), or adobe_sign.auth: oauth.</td><td><code>client()</code></td></tr>
+        <tr><td>adobe_sign.auth is "oauth" but no user is signed in; use AdobeSignManager::forUser($user).</td><td><code>client()</code></td></tr>
+        <tr><td>adobe_sign.auth must be "integration_key" or "oauth"; got "…".</td><td><code>client()</code></td></tr>
+        <tr><td>Set adobe_sign.oauth.client_id and client_secret to use OAuth.</td><td><code>oauth()</code>, so also <code>forUser()</code>, the OAuth routes</td></tr>
+        <tr><td>Set adobe_sign.oauth.redirect_uri: the router is not available to build it.</td><td><code>oauth()</code></td></tr>
+        <tr><td>Set adobe_sign.webhooks.client_ids (or adobe_sign.oauth.client_id) to receive webhooks.</td><td><code>webhookHandler()</code>, so the webhook route</td></tr>
+        <tr><td>adobe_sign.signature_level must be ses, aes or qes; got "…".</td><td><code>signatureLevel()</code>, and every client creation</td></tr>
+        <tr><td>adobe_sign.oauth.encryption_key is empty; set it or kernel.secret (APP_SECRET).</td><td><code>TokenEncryptor</code>, on first encrypt or decrypt</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 id="core-exceptions">Core exceptions you will meet</h3>
+  <p>
+    Everything else comes from the core and implements <code>Conceptlz\AdobeSign\Exception\AdobeSignException</code>:
+    <code>ApiException</code> and its subclasses (<code>AuthenticationException</code>, <code>OAuthException</code>,
+    <code>NotFoundException</code>, <code>ValidationException</code>, <code>AccountCapabilityException</code>,
+    <code>PreconditionFailedException</code>, <code>RateLimitException</code>), plus <code>TransportException</code>,
+    <code>InvalidArgumentException</code> and <code>WebhookException</code>. See the core's
+    <a href="https://conceptlz.github.io/adobe-sign/errors.html">errors page</a>.
+  </p>
+
+  <h2 id="reference-questions">Common questions</h2>
+  <div class="faq">
+    <details id="reference-decorate-manager">
+      <summary>Can I decorate or extend AdobeSignManager?</summary>
+      <div class="faq-answer"><p>It isn't final, so you can, and Symfony's <code>#[AsDecorator(AdobeSignManager::class)]</code> works. Its constructor is marked internal, though, so prefer wrapping it in your own service over subclassing; the constructor may change between minor versions.</p></div>
+    </details>
+    <details id="reference-private-store">
+      <summary>Why can't I autowire CacheTokenStore?</summary>
+      <div class="faq-answer"><p>It is registered under <code>adobe_sign.token_store.cache</code> without a class alias. Autowire <code>Conceptlz\AdobeSign\Auth\TokenStore</code>, or call <code>$manager-&gt;tokens()</code> and check <code>instanceof CacheTokenStore</code> when you need <code>forget()</code>.</p></div>
+    </details>
+    <details id="reference-event-priority">
+      <summary>In which order do listeners for WebhookReceivedEvent run?</summary>
+      <div class="faq-answer"><p>By priority, like any Symfony listener: <code>#[AsEventListener(priority: 10)]</code> runs before the default 0. <code>stopPropagation()</code> stops later listeners but not the Messenger message, which is dispatched afterwards regardless.</p></div>
+    </details>
+    <details id="reference-routes-own">
+      <summary>Can I point my own routes at the bundle's controllers?</summary>
+      <div class="faq-answer"><p>Yes. The controllers are public services tagged <code>controller.service_arguments</code>; define a route with <code>controller: Conceptlz\AdobeSign\Symfony\Controller\WebhookController</code> (or <code>OAuthController::callback</code>). Keep the webhook route stateless and the default redirect URI in mind: it is generated from <code>adobe_sign_oauth_callback</code>, so set <code>oauth.redirect_uri</code> if you rename the callback.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="testing.html"><strong>Testing your application</strong><span>Use these services and routes from WebTestCase.</span></a></li>
+    <li><a href="troubleshooting.html"><strong>Troubleshooting</strong><span>What each error means and how to fix it.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="signature-levels.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Signature levels</span></a>
+  <a class="pager-next" href="testing.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Testing your application</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

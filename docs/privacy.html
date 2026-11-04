@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Privacy policy · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="How this documentation website and the conceptlz/adobe-sign packages handle personal data: Google Analytics on the website, no telemetry in the packages, and agreement data sent only to Adobe under your control.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html" aria-current="page">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">About</p>
+    <h1>Privacy policy</h1>
+    <p class="lede">
+      This website uses Google Analytics to understand how the documentation is read. It has no advertising
+      and no forms, and the packages themselves have no telemetry. This policy explains what Google
+      Analytics and the other services behind these pages see, and where your agreement data goes when you
+      use the SDK.
+    </p>
+    <ul class="legal-meta">
+      <li><strong>Controller:</strong> Conceptualize</li>
+      <li><strong>Contact:</strong> <a href="mailto:info@conceptualize.ae">info@conceptualize.ae</a></li>
+      <li><strong>Effective:</strong> 4 November 2026</li>
+    </ul>
+  </header>
+
+  <div class="summary-box">
+    <p class="summary-box-title">At a glance</p>
+    <ul>
+      <li>The website uses <strong>Google Analytics</strong>, which sets cookies and gives Conceptualize statistics about how the pages are used: pages viewed, approximate location, device and browser. It is not used for advertising, and you can opt out.</li>
+      <li>The packages collect nothing. Conceptualize receives no data from your application or from the agreements you send.</li>
+      <li>The website is hosted on GitHub Pages and loads fonts from Google Fonts; both receive your IP address as part of serving the files.</li>
+      <li>Your theme choice (light or dark) is stored in your own browser only. Search runs in your browser.</li>
+      <li>The SDK sends data only to Adobe Acrobat Sign and to endpoints you configure, never to Conceptualize.</li>
+    </ul>
+  </div>
+
+  <h2 id="scope">Who we are and what this covers</h2>
+  <p>
+    "We" means Conceptualize, which creates and maintains the open-source packages
+    <code>conceptlz/adobe-sign</code>, <code>conceptlz/adobe-sign-laravel</code> and
+    <code>conceptlz/adobe-sign-symfony</code> and publishes this
+    documentation. This policy covers:
+  </p>
+  <ol>
+    <li>the documentation websites for all three packages (this site and its siblings), and</li>
+    <li>the behaviour of the packages themselves when you install them in your application.</li>
+  </ol>
+  <p>
+    It does not cover Adobe Acrobat Sign, GitHub, Packagist, Google Analytics or Google Fonts, which have
+    their own privacy policies (linked below), or the applications you build with the SDK, for which you are
+    responsible.
+  </p>
+
+  <h2 id="website">This documentation website</h2>
+
+  <h3 id="analytics">Analytics: Google Analytics</h3>
+  <p>
+    Every page loads Google Analytics 4 (Google tag <code>gtag.js</code>, measurement ID
+    <code>G-MEPPZRMKDP</code>), provided by Google. All three documentation sites, for the core SDK, the
+    Laravel bridge and the Symfony bundle, report to the same Analytics property. We use it only to learn which pages are read and
+    where the documentation needs improving, not for advertising.
+  </p>
+  <p>When a page loads, Google Analytics collects:</p>
+  <ul>
+    <li>the page you view, the page that referred you, and how you interact with it (time on page, scrolling, links you follow out of the site);</li>
+    <li>technical details of your device: browser, operating system, screen size and language;</li>
+    <li>your approximate location (country and city), which Google derives from your IP address. Google states that Google Analytics 4 does not log or store IP addresses.</li>
+  </ul>
+  <p>
+    To recognise repeat visits, it sets first-party cookies on <code>conceptlz.github.io</code>, named
+    <code>_ga</code> and <code>_ga_MEPPZRMKDP</code>. They hold a random identifier, not your name or email, and
+    expire after up to two years. Google processes this data under its own terms and may handle it outside
+    your country; see
+    <a href="https://policies.google.com/technologies/partner-sites">how Google uses information from sites that use its services</a>.
+    Google keeps user-level data for the retention period set in our Analytics property, at most 14 months;
+    aggregated reports, which identify no one, can be kept longer.
+  </p>
+  <p>
+    <strong>Opting out.</strong> Install the
+    <a href="https://tools.google.com/dlpage/gaoptout">Google Analytics opt-out browser add-on</a>, block
+    cookies or scripts from Google in your browser or with a content blocker, or delete the
+    <code>_ga</code> cookies. The documentation works fully without Analytics.
+  </p>
+
+  <h3 id="no-ads-or-forms">No advertising, accounts or forms</h3>
+  <p>
+    Apart from Google Analytics, the site contains no advertising scripts, no tracking pixels, no
+    social-media widgets and no embedded videos. There are no accounts, sign-ins or contact forms, so the site
+    never asks you for personal data.
+  </p>
+
+  <h3 id="hosting">Hosting: GitHub Pages</h3>
+  <p>
+    The pages are served by GitHub Pages, a service of GitHub, Inc. Like any web server, GitHub receives
+    technical information when your browser requests a page, including your IP address, the page requested,
+    and your browser's user-agent string. GitHub may log this for security and to operate the service.
+    Conceptualize has no access to these logs. See the
+    <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub General Privacy Statement</a>.
+  </p>
+
+  <h3 id="fonts">Fonts: Google Fonts</h3>
+  <p>
+    The typefaces (Gloock, Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono) are loaded from Google
+    Fonts (<code>fonts.googleapis.com</code> and <code>fonts.gstatic.com</code>). To deliver them, Google receives
+    your IP address and browser information. Google states that the Google Fonts web API does not set cookies
+    or use this data to build profiles; see the
+    <a href="https://developers.google.com/fonts/faq/privacy">Google Fonts privacy FAQ</a>. If you block these
+    requests, the site still works and falls back to fonts installed on your device.
+  </p>
+
+  <h3 id="local-storage">Your theme preference</h3>
+  <p>
+    If you switch between light and dark mode, the site remembers your choice in your browser's
+    <code>localStorage</code> under the key <code>docs-theme</code>. It never leaves your device, and it is not a
+    cookie and not used for tracking. Clear it at any time through your browser's site-data settings; the site
+    then follows your system preference again.
+  </p>
+
+  <h3 id="search">Search</h3>
+  <p>
+    The search box looks through an index that is downloaded with the page. Your queries are processed
+    entirely in your browser and are not sent anywhere.
+  </p>
+
+  <h3 id="external-links">Links to other sites</h3>
+  <p>
+    Pages link to GitHub, Packagist, Adobe, PHP-FIG and other sites. Those sites have their own privacy
+    practices, which apply once you follow a link.
+  </p>
+
+  <h2 id="packages">The software packages</h2>
+
+  <h3 id="no-telemetry">No telemetry</h3>
+  <p>
+    None of the packages collects usage statistics, crash reports or analytics, or contacts any server
+    operated by Conceptualize. Installing them through Composer involves Packagist and GitHub, whose own
+    policies apply to those downloads.
+  </p>
+
+  <h3 id="where-data-goes">Where your data goes</h3>
+  <p>
+    The SDK is a client for the Acrobat Sign REST API. It sends requests only to:
+  </p>
+  <ul>
+    <li><code>api.adobesign.com</code> (or the bootstrap URL you configure), to find your account's data centre;</li>
+    <li>your account's Acrobat Sign data centre (for example <code>api.na4.adobesign.com</code>), for every API call; and</li>
+    <li>during OAuth, Adobe's authorization and token endpoints.</li>
+  </ul>
+  <p>
+    Those requests can contain personal data you choose to send: documents, agreement names and messages,
+    and the names, email addresses and phone numbers of signers. Adobe processes that data under
+    <em>your</em> agreement with Adobe; see the <a href="https://www.adobe.com/privacy.html">Adobe Privacy Center</a>.
+    For data you send through the SDK, you (or your organisation) are normally the controller; Conceptualize is
+    not involved and never receives it.
+  </p>
+  <p>
+    Every request carries a <code>User-Agent</code> header of the form
+    <code>conceptlz-adobe-sign-php/0.4.0</code>, which tells Adobe the SDK name and version and nothing about you.
+    You can change it with <code>ClientOptions::$userAgent</code>.
+  </p>
+
+  <h3 id="what-is-stored">What the packages store, and where</h3>
+  <p>Everything the packages keep is stored in infrastructure you control:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Data</th><th>Where</th><th>Package</th></tr></thead>
+      <tbody>
+        <tr><td>Your account's API base URIs</td><td>Your PSR-16 cache (default 24 hours)</td><td>Core</td></tr>
+        <tr><td>OAuth access and refresh tokens, expiry and data centre</td><td>The <code>TokenStore</code> you provide (in memory by default)</td><td>Core</td></tr>
+        <tr><td>OAuth tokens, keyed by your user id</td><td>The <code>adobe_sign_tokens</code> database table, with both tokens encrypted using your <code>APP_KEY</code></td><td>Laravel</td></tr>
+        <tr><td>Webhook notification ids, to ignore duplicates</td><td>Your Laravel cache store (72 hours by default)</td><td>Laravel</td></tr>
+        <tr><td>ETags of recently read resources</td><td>Memory, for the life of the client object</td><td>Core</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="logging">Logging</h3>
+  <p>
+    If you give the SDK a PSR-3 logger, it logs the method, path, status code and duration of each request,
+    and retries after rate limiting. Paths can include agreement ids. Request bodies, documents, signer
+    details and credentials are not logged. Integration Keys, access tokens and client secrets are also
+    redacted from exception messages. The Laravel webhook route logs the reason and the sender's IP
+    address when it rejects a webhook. Logs go to the logger or log channel you configure, and your own
+    retention rules apply.
+  </p>
+
+  <h3 id="examples-and-tests">Example scripts and live tests</h3>
+  <p>
+    The example scripts and the optional live test suite send real agreements, and therefore real emails, to
+    the addresses you configure. They read your credentials from your environment or a local
+    <code>.env</code> file and never transmit them anywhere except Adobe.
+  </p>
+
+  <h2 id="contacting-us">When you contact us</h2>
+  <p>
+    If you email Conceptualize, we use your email address and message to reply and to deal with your request,
+    and keep the correspondence only as long as needed for that. If you open an issue or pull request on
+    GitHub, it is public and handled under GitHub's terms; please do not post credentials, documents or other
+    people's personal data in it.
+  </p>
+
+  <h2 id="your-rights">Your rights</h2>
+  <p>
+    The only website data Conceptualize can see is Google Analytics data. It is pseudonymous: it identifies
+    a browser by a random cookie identifier, not you by name, so we usually cannot tell which data is yours.
+    You can stop it at any time by <a href="#analytics">opting out</a>; if you send us the identifier from
+    your <code>_ga</code> cookie, we can ask Google to delete the data associated with it. The packages send
+    us nothing, so there is nothing to access or delete there. For data held by GitHub, Google or Adobe,
+    contact them directly using the links above. For emails you have sent us, write to
+    <a href="mailto:info@conceptualize.ae">info@conceptualize.ae</a> to ask for access or deletion. Depending on
+    where you live, you may also have the right to complain to a data-protection authority.
+  </p>
+
+  <h2 id="children">Children</h2>
+  <p>
+    This documentation is meant for software developers. It is not directed at children and knowingly
+    collects no data from anyone.
+  </p>
+
+  <h2 id="changes">Changes to this policy</h2>
+  <p>
+    If the website or the packages change in a way that affects privacy, for example by adding a new
+    third-party service, this page is updated and its effective date changes. The history of this file is
+    public in the package's GitHub repository.
+  </p>
+
+  <h2 id="contact">Contact</h2>
+  <p>
+    Conceptualize, <a href="mailto:info@conceptualize.ae">info@conceptualize.ae</a>. Read the
+    <a href="disclaimer.html">disclaimer</a> for the project's relationship to Adobe.
+  </p>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="disclaimer.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Disclaimer</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

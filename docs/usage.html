@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Using the client · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="How to reach Acrobat Sign from Symfony code: autowiring AdobeSign versus AdobeSignManager, every manager method, the core builders in controllers and services, uploads from UploadedFile, asUser, long-running workers with kernel.reset, and the adobe_sign log channel.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html" aria-current="page">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>Using the client</h1>
+    <p class="lede">How Symfony code gets hold of an Acrobat Sign client, which of the two services to inject where, what every method on the manager does, and how the core builders look inside controllers, services and workers. By the end you can send, track and download agreements and turn SDK errors into sensible HTTP responses.</p>
+  </header>
+
+  <h2 id="two-services">Two services, two jobs</h2>
+  <p>
+    The bundle registers two autowirable services. Both are public, so you can also fetch them from the
+    container in tests.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type-hint</th><th>What you get</th><th>Inject it when…</th></tr></thead>
+      <tbody>
+        <tr><td><code>Conceptlz\AdobeSign\AdobeSign</code></td><td>The <em>default client</em>: the Integration Key, or with <code>auth: oauth</code> the signed-in user's connection. Built by <code>AdobeSignManager::client()</code>; the service is not shared, so it is resolved each time something asks for it.</td><td>A controller or request-scoped service only ever sends as "the app" (or as the current user).</td></tr>
+        <tr><td><code>Conceptlz\AdobeSign\Symfony\AdobeSignManager</code></td><td>The factory behind it: <code>client()</code>, <code>forUser()</code>, OAuth helpers, the token store, signature-level helpers. Tagged <code>kernel.reset</code>.</td><td>You choose between clients, run in a worker or console command, or need OAuth or signature-level helpers.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    If in doubt, inject the manager and call <code>client()</code> where you need it. It costs nothing (the client is
+    cached inside the manager) and it behaves correctly in every context, including long-running workers.
+  </p>
+
+  <h3 id="injecting-the-client">Injecting the client</h3>
+  <p>Into a controller action, as an argument:</p>
+  <figure class="code">
+    <figcaption>src/Controller/AgreementController.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\AdobeSign;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class AgreementController extends AbstractController
+{
+    #[Route('/agreements/{id}/status', methods: ['GET'])]
+    public function status(string $id, AdobeSign $adobeSign): JsonResponse
+    {
+        return $this-&gt;json(['status' =&gt; $adobeSign-&gt;agreements()-&gt;status($id)]);
+    }
+}</code></pre>
+  </figure>
+  <p>Or into a service constructor:</p>
+  <figure class="code">
+    <figcaption>src/Contract/ContractSender.php</figcaption>
+    <pre><code class="language-php">final class ContractSender
+{
+    public function __construct(private readonly AdobeSign $adobeSign) {}
+}</code></pre>
+  </figure>
+  <div class="callout callout-warning">
+    <p class="callout-title">With auth: oauth, the client depends on who is signed in</p>
+    <p>The <code>AdobeSign</code> service is created by calling <code>client()</code> at the moment it is injected. With <code>auth: oauth</code> that means "the user signed in right now". A shared service built before authentication (an event subscriber, a Twig extension), or one used in a worker, would get a <code>MisconfiguredException</code> instead. In OAuth mode, inject <code>AdobeSignManager</code> and call <code>client()</code> or <code>forUser()</code> inside the method.</p>
+  </div>
+
+  <h3 id="injecting-the-manager">Injecting the manager</h3>
+  <figure class="code">
+    <figcaption>src/Contract/ContractSender.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Symfony\AdobeSignManager;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+final class ContractSender
+{
+    public function __construct(private readonly AdobeSignManager $adobeSign) {}
+
+    public function send(Contract $contract, ?UserInterface $sender = null): string
+    {
+        // A connected user sends from their own account; otherwise the app's key.
+        $client = $sender !== null &amp;&amp; $this-&gt;adobeSign-&gt;isConnected($sender)
+            ? $this-&gt;adobeSign-&gt;forUser($sender)
+            : $this-&gt;adobeSign-&gt;client();
+
+        return $client-&gt;agreements()-&gt;create($contract-&gt;toAgreementInfo());
+    }
+}</code></pre>
+  </figure>
+
+  <h2 id="manager-methods">The manager's methods</h2>
+  <p>
+    <code>AdobeSignManager</code> is a small class; these are all of its public methods. Everything else you call
+    is the core client.
+  </p>
+
+  <div class="api" id="api-client">
+    <pre class="api-signature">client(): AdobeSign</pre>
+    <div class="api-body">
+      <p>The default client. With <code>auth: integration_key</code>, a client using <code>integration_key</code>, built once and cached until <code>reset()</code>. With <code>auth: oauth</code>, <code>forUser()</code> for the user in <code>security.token_storage</code>.</p>
+      <p>Throws <code>MisconfiguredException</code> when the key is empty, when <code>auth</code> is <code>oauth</code> and nobody is signed in, or when <code>auth</code> or <code>signature_level</code> has an unknown value.</p>
+    </div>
+  </div>
+  <div class="api" id="api-for-user">
+    <pre class="api-signature">forUser(UserInterface|string|int $user): AdobeSign</pre>
+    <div class="api-body">
+      <p>A client acting with the OAuth tokens stored for this user. A <code>UserInterface</code> goes through the configured <code>UserKeyResolver</code>; a string or int is used as the key directly, which is what you pass from a worker. Tokens refresh automatically shortly before they expire, and the refreshed pair is written back to the store. Clients are cached per key until <code>reset()</code>.</p>
+      <p>A user who never connected doesn't fail here but on the first API call, with <code>OAuthException</code> (<code>NO_TOKEN</code>). Check <code>isConnected()</code> first. Throws <code>MisconfiguredException</code> when the OAuth client id or secret is missing.</p>
+    </div>
+  </div>
+  <div class="api" id="api-is-connected">
+    <pre class="api-signature">isConnected(UserInterface|string|int $user): bool</pre>
+    <div class="api-body"><p>Whether a token is stored under the user's key. It doesn't call Adobe, so a stored token may still have been revoked by the user in Acrobat Sign; that shows up as an <code>OAuthException</code> on the next call.</p></div>
+  </div>
+  <div class="api" id="api-oauth">
+    <pre class="api-signature">oauth(): OAuthClient</pre>
+    <div class="api-body"><p>The core <code>Conceptlz\AdobeSign\Auth\OAuthClient</code> for the authorization-code flow, configured with your client id, secret and redirect URI (default: the absolute URL of <code>adobe_sign_oauth_callback</code>). The bundle's routes use it; you need it directly for <code>revoke()</code> or a custom connect flow. Throws <code>MisconfiguredException</code> when id or secret is missing, or when no redirect URI can be built.</p></div>
+  </div>
+  <div class="api" id="api-tokens">
+    <pre class="api-signature">tokens(): TokenStore</pre>
+    <div class="api-body"><p>The configured <code>Conceptlz\AdobeSign\Auth\TokenStore</code>: <code>CacheTokenStore</code>, <code>DoctrineDbalTokenStore</code> or your own service. The interface has <code>get()</code> and <code>put()</code>; both shipped stores add <code>forget()</code>. See <a href="token-storage.html">Token storage</a>.</p></div>
+  </div>
+  <div class="api" id="api-webhook-handler">
+    <pre class="api-signature">webhookHandler(): WebhookHandler</pre>
+    <div class="api-body"><p>A core <code>WebhookHandler</code> allow-listing <code>webhooks.client_ids</code>, or <code>oauth.client_id</code> when that list is empty. The webhook route uses it; you only need it for a custom endpoint. Throws <code>MisconfiguredException</code> when neither is set.</p></div>
+  </div>
+  <div class="api" id="api-user-key">
+    <pre class="api-signature">userKey(UserInterface|string|int $user): string</pre>
+    <div class="api-body"><p>The token-store key for a user: the resolver's answer for a <code>UserInterface</code>, the value itself (as a string) otherwise. Store it with your own records (for example on the contract) so a worker can later call <code>forUser($key)</code> without loading the user.</p></div>
+  </div>
+  <div class="api" id="api-signature-level">
+    <pre class="api-signature">signatureLevel(): SignatureLevel</pre>
+    <div class="api-body"><p>The configured <code>signature_level</code> as the core enum <code>Conceptlz\AdobeSign\Enum\SignatureLevel</code> (<code>SES</code>, <code>AES</code>, <code>QES</code>). Throws <code>MisconfiguredException</code> for any other value.</p></div>
+  </div>
+  <div class="api" id="api-qualified-issuers">
+    <pre class="api-signature">qualifiedIssuers(): list&lt;string&gt;</pre>
+    <div class="api-body"><p>The configured <code>qualified_issuers</code>.</p></div>
+  </div>
+  <div class="api" id="api-signature-shortfalls">
+    <pre class="api-signature">signatureShortfalls(string $agreementId, ?SignatureLevel $required = null): list&lt;string&gt;<span class="endpoint"><b>GET</b> /agreements/{agreementId} + members + events</span></pre>
+    <div class="api-body"><p>Fetches the agreement's signature evidence with the default client and lists, in plain English, every signer who fell short of <code>$required</code> (default: the configured level), using <code>qualified_issuers</code> for QES. Empty means everyone made it. See <a href="signature-levels.html#checking-after-signing">checking after signing</a>.</p></div>
+  </div>
+  <div class="api" id="api-reset">
+    <pre class="api-signature">reset(): void</pre>
+    <div class="api-body"><p>Drops the cached default client, the per-user clients and the OAuth client. Symfony calls it through <code>kernel.reset</code>; you rarely call it yourself. See <a href="#long-running-workers">long-running workers</a>.</p></div>
+  </div>
+
+  <h2 id="core-builders">Core builders in a Symfony app</h2>
+  <p>
+    The bundle adds no API methods. You build requests with the core's fluent builders, which validate locally
+    and throw <code>Conceptlz\AdobeSign\Exception\InvalidArgumentException</code> before anything is sent. The
+    <a href="https://conceptlz.github.io/adobe-sign/agreements.html">core agreements guide</a> lists every option;
+    here is how the common ones look in Symfony code.
+  </p>
+
+  <h3 id="upload-from-request">Upload a file from a request</h3>
+  <p>
+    <code>transientDocuments()-&gt;upload()</code> accepts a path, an <code>SplFileInfo</code>, a stream resource or a
+    PSR-7 stream. Symfony's <code>UploadedFile</code> is an <code>SplFileInfo</code>, so you can pass it directly,
+    but its path is PHP's temporary file (<code>/tmp/phpA1b2C3</code>). Pass the name Adobe should show as the
+    second argument; signers see it in emails and in the signing page.
+  </p>
+  <figure class="code">
+    <figcaption>src/Controller/UploadController.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\AdobeSign;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Attribute\MapUploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Route('/documents', methods: ['POST'])]
+public function upload(
+    AdobeSign $adobeSign,
+    #[MapUploadedFile([new Assert\File(maxSize: '20M', mimeTypes: ['application/pdf'])])]
+    UploadedFile $contract,
+): JsonResponse {
+    $documentId = $adobeSign-&gt;transientDocuments()-&gt;upload(
+        $contract,
+        $contract-&gt;getClientOriginalName(),   // the name signers see; max 255 characters
+        'application/pdf',
+    );
+
+    // A transient document lives for 7 days: create the agreement soon.
+    return $this-&gt;json(['document_id' =&gt; $documentId], 201);
+}</code></pre>
+  </figure>
+  <p>
+    The upload is streamed through a temporary file, so a large PDF is not held in memory twice. To upload
+    something you generated (a Twig-rendered PDF, a file from Flysystem), pass an open stream and a name:
+    <code>upload($stream, 'offer.pdf', 'application/pdf')</code>.
+  </p>
+
+  <h3 id="create-agreement">Create and send an agreement</h3>
+  <figure class="code">
+    <figcaption>src/Contract/ContractSender.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Builder\{AgreementInfo, FileInfo, ParticipantInfo, ParticipantSetInfo, Verification};
+use Conceptlz\AdobeSign\Enum\ReminderFrequency;
+
+$agreementId = $client-&gt;agreements()-&gt;create(
+    AgreementInfo::create('Employment contract: Jane Doe')
+        -&gt;file(FileInfo::transientDocument($documentId))
+        -&gt;participantSet(
+            ParticipantSetInfo::signer(
+                ParticipantInfo::email('jane@example.com', 'Jane Doe')-&gt;verifyWith(Verification::emailOtp()),
+            )-&gt;order(1),
+        )
+        -&gt;participantSet(ParticipantSetInfo::signer('hr-director@example.com')-&gt;order(2))
+        -&gt;cc('payroll@example.com')
+        -&gt;message('Please review and sign your contract.')
+        -&gt;externalId('contract-'.$contract-&gt;getId())
+        -&gt;reminderFrequency(ReminderFrequency::DAILY_UNTIL_SIGNED),
+);</code></pre>
+  </figure>
+  <p>
+    <code>externalId()</code> is worth setting: it ties Adobe's agreement to your record, and
+    <code>agreements()-&gt;all(externalId: ...)</code> can find it again if you ever lose the id. The project's
+    <code>signature_level</code> is applied to every signer set that doesn't set its own.
+  </p>
+
+  <h3 id="track-progress">Track progress</h3>
+  <pre><code class="language-php">$agreement = $client-&gt;agreements()-&gt;get($agreementId);
+$agreement-&gt;status;                 // "OUT_FOR_SIGNATURE", "SIGNED", "CANCELLED", ...
+$agreement-&gt;isSigned();             // status is SIGNED
+
+$client-&gt;agreements()-&gt;members($agreementId, includeNextParticipantSet: true);   // whose turn it is
+$client-&gt;agreements()-&gt;signingUrlFor($agreementId, 'jane@example.com');           // embed or redirect</code></pre>
+  <p>
+    Polling works, but webhooks are the better tool: Adobe tells you when something changes. See
+    <a href="webhooks.html">Webhooks</a>. Right after creation the agreement is briefly in
+    <code>DOCUMENTS_NOT_YET_PROCESSED</code> and some calls answer <code>AGREEMENT_NOT_EXPOSED</code>; retry after
+    a few seconds.
+  </p>
+
+  <h3 id="download-response">Stream the signed PDF to the browser</h3>
+  <p>
+    Binary endpoints return a PSR-7 stream. Copy it into a <code>StreamedResponse</code> in chunks rather than
+    reading it into a string:
+  </p>
+  <figure class="code">
+    <figcaption>src/Controller/AgreementController.php</figcaption>
+    <pre><code class="language-php">use Symfony\Component\HttpFoundation\{HeaderUtils, StreamedResponse};
+
+#[Route('/agreements/{id}/pdf', methods: ['GET'])]
+public function pdf(string $id, AdobeSign $adobeSign): StreamedResponse
+{
+    $this-&gt;denyAccessUnlessGranted('VIEW_AGREEMENT', $id);   // your own voter
+    $stream = $adobeSign-&gt;agreements()-&gt;combinedDocument($id, attachAuditReport: true);
+
+    return new StreamedResponse(static function () use ($stream): void {
+        while (!$stream-&gt;eof()) {
+            echo $stream-&gt;read(65536);
+            flush();
+        }
+    }, 200, [
+        'Content-Type' =&gt; 'application/pdf',
+        'Content-Disposition' =&gt; HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, "agreement-$id.pdf"),
+    ]);
+}</code></pre>
+  </figure>
+  <p>For storage rather than the browser, see the <a href="walkthrough.html#step-storage">walkthrough's storage step</a>.</p>
+
+  <h3 id="errors-to-responses">Turn SDK exceptions into HTTP responses</h3>
+  <p>
+    Every exception the SDK and the bundle throw implements
+    <code>Conceptlz\AdobeSign\Exception\AdobeSignException</code>. API errors are <code>ApiException</code>
+    subclasses carrying <code>$statusCode</code> and Adobe's <code>$errorCode</code>. A
+    <code>kernel.exception</code> listener can map them once for the whole app:
+  </p>
+  <figure class="code">
+    <figcaption>src/EventListener/AdobeSignExceptionListener.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Exception\{AccountCapabilityException, AdobeSignException, InvalidArgumentException,
+    NotFoundException, OAuthException, RateLimitException, TransportException, ValidationException};
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+#[AsEventListener(event: KernelEvents::EXCEPTION)]
+final class AdobeSignExceptionListener
+{
+    public function __invoke(ExceptionEvent $event): void
+    {
+        $e = $event-&gt;getThrowable();
+        if (!$e instanceof AdobeSignException) {
+            return;
+        }
+
+        [$status, $message] = match (true) {
+            $e instanceof OAuthException =&gt; [409, 'Please reconnect your Acrobat Sign account.'],
+            $e instanceof AccountCapabilityException =&gt; [422, 'Your Acrobat Sign plan or settings do not allow this.'],
+            $e instanceof ValidationException, $e instanceof InvalidArgumentException =&gt; [422, $e-&gt;getMessage()],
+            $e instanceof NotFoundException =&gt; [404, 'Agreement not found.'],
+            $e instanceof RateLimitException =&gt; [503, 'Acrobat Sign is busy. Try again shortly.'],
+            $e instanceof TransportException =&gt; [502, 'Acrobat Sign could not be reached.'],
+            default =&gt; [500, 'Acrobat Sign returned an error.'],
+        };
+
+        $response = new JsonResponse(['error' =&gt; $message], $status);
+        if ($e instanceof RateLimitException &amp;&amp; $e-&gt;retryAfter !== null) {
+            $response-&gt;headers-&gt;set('Retry-After', (string) $e-&gt;retryAfter);
+        }
+        $event-&gt;setResponse($response);
+    }
+}</code></pre>
+  </figure>
+  <p>
+    Messages from <code>ValidationException</code> come from Adobe and are safe to show to staff, less so to end
+    users; adapt to your audience. The core's <a href="https://conceptlz.github.io/adobe-sign/errors.html">errors
+    page</a> lists every class and the codes that map to it.
+  </p>
+
+  <h2 id="as-user">Acting as another user: asUser()</h2>
+  <p>
+    With an Integration Key that belongs to an account administrator, you can send as any user in the same
+    account. The core's <code>asUser()</code> returns a new client that adds the <code>x-api-user</code> header;
+    the original client is unchanged.
+  </p>
+  <pre><code class="language-php">$asSales = $manager-&gt;client()-&gt;asUser('sales@example.com');          // "email:" is added for you
+$asSales-&gt;agreements()-&gt;create($agreement);                          // sent in that user's name
+
+$manager-&gt;client()-&gt;asUser('userid:CBJCHBCAABAA...')-&gt;agreements()-&gt;all();</code></pre>
+  <p>
+    This is different from OAuth: <code>asUser()</code> stays inside <em>your</em> Acrobat Sign account and needs an
+    admin-level key; OAuth acts in the user's own account with their consent. Use <code>asUser()</code> when one
+    company sends on behalf of its staff, OAuth when customers bring their own accounts.
+  </p>
+
+  <h2 id="long-running-workers">Long-running workers and kernel.reset</h2>
+  <p>
+    In classic PHP-FPM, the container lives for one request. Messenger consumers and FrankenPHP's worker mode keep
+    it alive for many requests or messages. The manager caches clients (and the OAuth client with its redirect
+    URI), which would otherwise outlive the request they were built for. So it implements
+    <code>ResetInterface</code> and is tagged <code>kernel.reset</code>:
+  </p>
+  <ul>
+    <li><strong>Messenger</strong> resets tagged services after each handled message (unless you run <code>messenger:consume --no-reset</code>).</li>
+    <li><strong>FrankenPHP worker mode and other runtimes</strong> reset them between requests through the kernel's services resetter.</li>
+  </ul>
+  <p>
+    The reset clears the manager's cache; it can't reach a client <em>you</em> stored. A shared service that
+    received <code>AdobeSign</code> in its constructor keeps that one instance for the life of the worker. With an
+    Integration Key that client still works, but it carries state such as remembered ETags from long ago. The
+    robust pattern for anything that runs in a worker:
+  </p>
+  <figure class="code">
+    <figcaption>Prefer this in handlers, commands and other shared services</figcaption>
+    <pre><code class="language-php">public function __construct(private readonly AdobeSignManager $adobeSign) {}
+
+public function __invoke(SomeMessage $message): void
+{
+    $client = $this-&gt;adobeSign-&gt;client();     // fresh after every kernel.reset
+    // ...
+}</code></pre>
+  </figure>
+  <p>
+    The data-centre lookup is not affected by resets: it lives in <code>cache_pool</code>, so a fresh client doesn't
+    call <span class="endpoint"><b>GET</b> /baseUris</span> again.
+  </p>
+
+  <h2 id="logging">Logging</h2>
+  <p>
+    The manager and the webhook controller are tagged with the Monolog channel <code>adobe_sign</code>. With
+    MonologBundle installed, give the channel its own file and level:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/monolog.yaml</figcaption>
+    <pre><code class="language-text">monolog:
+    channels: ['adobe_sign']
+    handlers:
+        adobe_sign:
+            type: rotating_file
+            path: '%kernel.logs_dir%/adobe_sign.log'
+            level: info              # "debug" also logs every request line
+            channels: ['adobe_sign']
+        main:
+            # ...
+            channels: ['!adobe_sign']</code></pre>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Level</th><th>Message</th><th>From</th></tr></thead>
+      <tbody>
+        <tr><td>debug</td><td>Adobe Sign request</td><td>Core transport, one line per request (method, path, status)</td></tr>
+        <tr><td>warning</td><td>Adobe Sign throttled request, retrying</td><td>Core retry middleware on 429/503</td></tr>
+        <tr><td>error</td><td>Adobe Sign request failed</td><td>Core transport, when a request could not be sent at all (network failure, timeout)</td></tr>
+        <tr><td>warning</td><td>Rejected Acrobat Sign webhook</td><td>Webhook controller: missing or unknown client id, with the reason and client IP</td></tr>
+        <tr><td>error</td><td>Unreadable Acrobat Sign webhook</td><td>Webhook controller: body that isn't a JSON event</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The SDK never logs headers or bodies, so keys, tokens and document contents stay out of your logs. Without
+    MonologBundle, the messages go to Symfony's default <code>logger</code> service.
+  </p>
+
+  <h2 id="usage-questions">Common questions</h2>
+  <div class="faq">
+    <details id="usage-same-instance">
+      <summary>The AdobeSign service is "not shared". Do I get a new client every time?</summary>
+      <div class="faq-answer"><p>No. "Not shared" means the container calls <code>$manager-&gt;client()</code> each time; the manager returns its cached instance until <code>kernel.reset</code>. The point is that with <code>auth: oauth</code>, the answer can differ per signed-in user.</p></div>
+    </details>
+    <details id="usage-container-get">
+      <summary>Can I fetch the client from the container instead of injecting it?</summary>
+      <div class="faq-answer"><p>Both services are public, so <code>$container-&gt;get(AdobeSignManager::class)</code> works, which is handy in tests. In application code, inject; it keeps dependencies visible and testable.</p></div>
+    </details>
+    <details id="usage-command">
+      <summary>How do I use the client in a console command?</summary>
+      <div class="faq-answer"><p>Inject <code>AdobeSignManager</code> into the command's constructor and call <code>client()</code> (Integration Key) or <code>forUser($key)</code> (OAuth) in <code>execute()</code>. There is no signed-in user in the console, so <code>client()</code> with <code>auth: oauth</code> throws.</p></div>
+    </details>
+    <details id="usage-twig">
+      <summary>Can Twig templates call Acrobat Sign?</summary>
+      <div class="faq-answer"><p>Don't. Templates render data; fetch status or signing URLs in the controller and pass them in. An API call hidden in a template is slow, untestable and fails at render time.</p></div>
+    </details>
+    <details id="usage-flysystem-upload">
+      <summary>How do I upload a file that lives in Flysystem or S3?</summary>
+      <div class="faq-answer"><p>Open a read stream and pass it with a name: <code>upload($filesystem-&gt;readStream($path), basename($path), 'application/pdf')</code>. The SDK accepts stream resources and PSR-7 streams.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="walkthrough.html"><strong>Walkthrough: send &amp; store</strong><span>Put these pieces together into a complete signing loop.</span></a></li>
+    <li><a href="reference.html"><strong>Reference</strong><span>Every service id, event, route and command at a glance.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="configuration.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Configuration</span></a>
+  <a class="pager-next" href="walkthrough.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Walkthrough: send &amp; store</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

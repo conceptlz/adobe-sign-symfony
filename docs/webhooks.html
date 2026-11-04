@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Webhooks · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Receive Acrobat Sign webhooks in Symfony: the bundle's stateless route, keeping it out of firewalls and access_control, the client-id allow-list, the verification handshake, duplicate suppression in a cache pool, WebhookReceivedEvent listeners, the 5-second budget, registering webhooks and local tunnels.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html" aria-current="page">Webhooks</a></li>
+      <li><a href="messenger.html">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>Webhooks</h1>
+    <p class="lede">Acrobat Sign tells your app when people view, sign, decline or complete an agreement by calling a webhook. The bundle gives you a ready-made endpoint that satisfies Adobe's rules and turns each delivery into a Symfony event (and, if you like, a Messenger message), so all you write is a listener or a handler.</p>
+  </header>
+
+  <h2 id="adobe-rules">Adobe's rules, and why the route exists</h2>
+  <p>Acrobat Sign webhooks come with a contract that is easy to break by accident:</p>
+  <ul>
+    <li><strong>Verification.</strong> When you create a webhook, Adobe immediately sends a <code>GET</code> with an <code>X-AdobeSign-ClientId</code> header. Unless you answer 2xx and echo that value back (in the same header, or as <code>xAdobeSignClientId</code> in a JSON body), the webhook isn't created.</li>
+    <li><strong>Every notification needs the echo too, within 5 seconds.</strong> Without it, Adobe retries with growing intervals for up to 72 hours and then disables the webhook. Notifications for a disabled webhook are not delivered.</li>
+    <li><strong>Retries mean duplicates.</strong> A slow answer can count as a failure even though you processed it, so the same notification can arrive again.</li>
+    <li><strong>No signature.</strong> Payloads aren't signed. The documented check is that the client id belongs to your application; anything important should be confirmed through the API.</li>
+  </ul>
+  <p>
+    The bundle's <code>WebhookController</code> handles all four. Your code receives a typed, de-duplicated event,
+    and Adobe gets its answer in milliseconds.
+  </p>
+
+  <h2 id="the-route">The route</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Methods</th><th>Path</th><th>Controller</th></tr></thead>
+      <tbody>
+        <tr><td><code>adobe_sign_webhook</code></td><td>GET, POST</td><td><code>/adobe-sign/webhook</code></td><td><code>Conceptlz\AdobeSign\Symfony\Controller\WebhookController</code> (invokable)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="code">
+    <figcaption>config/routes/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign_webhook:
+    resource: '@AdobeSignBundle/config/routes/webhook.php'
+    # prefix: /integrations      # optional; the URL you register at Adobe changes with it</code></pre>
+  </figure>
+  <p>
+    The route is declared <strong>stateless</strong>: Adobe sends no cookies, so nothing should start a session
+    for it. In debug mode Symfony throws if something does, which surfaces misconfigured firewalls early. It also
+    has no CSRF protection (Adobe can't send a token) and needs no authentication.
+  </p>
+
+  <h3 id="firewall-and-access-control">Firewalls and access_control</h3>
+  <p>
+    Adobe can't log in. If a firewall or <code>access_control</code> rule requires a user for the webhook path,
+    Adobe gets a 302 to your login page or a 401, the verification fails, and existing webhooks are eventually
+    disabled. The clearest setup is a firewall of its own, listed <em>before</em> <code>main</code>:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/security.yaml</figcaption>
+    <pre><code class="language-text">security:
+    firewalls:
+        adobe_sign_webhook:
+            pattern: ^/adobe-sign/webhook$
+            security: false            # no authentication, no session, no access_control
+        main:
+            lazy: true
+            # ...
+    access_control:
+        - { path: ^/adobe-sign/oauth, roles: ROLE_USER }    # the OAuth routes, not the webhook
+        - { path: ^/admin, roles: ROLE_ADMIN }</code></pre>
+  </figure>
+  <p>
+    If you prefer to keep everything under <code>main</code>, add a public rule above any catch-all:
+    <code>- { path: ^/adobe-sign/webhook, roles: PUBLIC_ACCESS }</code>. Then make sure <code>main</code> is
+    <code>lazy</code>, so it doesn't load the session for this stateless route.
+  </p>
+
+  <h2 id="what-happens">What happens on each call</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 280" role="img" aria-label="Flow of one webhook request. First the X-AdobeSign-ClientId header is checked against the allow-list; a missing or unknown id gets 403 and a warning in the log. A GET (verification) goes straight to the 200 answer with the echo. A POST body is parsed; an unreadable body gets 400 so Adobe retries. The notification id is looked up in the cache pool; a duplicate skips dispatching but still gets 200. A new notification is recorded, WebhookReceivedEvent is dispatched and, if Messenger is enabled, an AdobeSignWebhookMessage. Every accepted request ends with 200 and the client id echoed in a header and the JSON body.">
+      <defs>
+        <marker id="arrow-wh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead" d="M0 0 10 5 0 10z"/></marker>
+        <marker id="arrow-wh-brand" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="d-arrowhead-brand" d="M0 0 10 5 0 10z"/></marker>
+      </defs>
+      <rect class="d-box-stamp" x="10" y="90" width="110" height="60" rx="8"/>
+      <text class="d-text-strong" x="65" y="116" text-anchor="middle">Adobe</text>
+      <text class="d-text-mono" x="65" y="134" text-anchor="middle">GET / POST</text>
+
+      <rect class="d-box" x="150" y="90" width="120" height="60" rx="8"/>
+      <text class="d-text-strong" x="210" y="116" text-anchor="middle">Client id</text>
+      <text class="d-text-soft" x="210" y="134" text-anchor="middle">allow-listed?</text>
+
+      <rect class="d-box" x="300" y="90" width="110" height="60" rx="8"/>
+      <text class="d-text-strong" x="355" y="116" text-anchor="middle">Parse body</text>
+      <text class="d-text-soft" x="355" y="134" text-anchor="middle">POST only</text>
+
+      <rect class="d-box" x="440" y="90" width="120" height="60" rx="8"/>
+      <text class="d-text-strong" x="500" y="116" text-anchor="middle">Seen before?</text>
+      <text class="d-text-mono" x="500" y="134" text-anchor="middle">cache_pool</text>
+
+      <rect class="d-box-brand" x="590" y="80" width="120" height="80" rx="8"/>
+      <text class="d-text-strong" x="650" y="106" text-anchor="middle">Dispatch</text>
+      <text class="d-text-mono" x="650" y="126" text-anchor="middle">WebhookReceived</text>
+      <text class="d-text-mono" x="650" y="144" text-anchor="middle">+ message (opt.)</text>
+
+      <rect class="d-box-ok" x="300" y="214" width="260" height="46" rx="8"/>
+      <text class="d-text-strong" x="430" y="242" text-anchor="middle">200 + X-AdobeSign-ClientId echo</text>
+
+      <rect class="d-box-muted" x="150" y="10" width="120" height="40" rx="8"/>
+      <text class="d-text-mono" x="210" y="35" text-anchor="middle">403 · warning</text>
+      <rect class="d-box-muted" x="300" y="10" width="110" height="40" rx="8"/>
+      <text class="d-text-mono" x="355" y="35" text-anchor="middle">400 · error</text>
+
+      <path class="d-line" d="M120 120h28" marker-end="url(#arrow-wh)"/>
+      <path class="d-line" d="M270 120h28" marker-end="url(#arrow-wh)"/>
+      <path class="d-line" d="M410 120h28" marker-end="url(#arrow-wh)"/>
+      <path class="d-line" d="M560 120h28" marker-end="url(#arrow-wh)"/>
+      <text class="d-text-soft" x="574" y="112" text-anchor="middle">new</text>
+      <path class="d-line-dashed" d="M210 90V52" marker-end="url(#arrow-wh)"/>
+      <text class="d-text-soft" x="218" y="76">unknown</text>
+      <path class="d-line-dashed" d="M355 90V52" marker-end="url(#arrow-wh)"/>
+      <text class="d-text-soft" x="363" y="76">not JSON</text>
+      <path class="d-line-brand" d="M210 150v87h88" marker-end="url(#arrow-wh-brand)"/>
+      <text class="d-text-soft" x="218" y="200">GET</text>
+      <path class="d-line" d="M500 150v62" marker-end="url(#arrow-wh)"/>
+      <text class="d-text-soft" x="508" y="186">duplicate</text>
+      <path class="d-line" d="M650 160v77h-88" marker-end="url(#arrow-wh)"/>
+    </svg>
+    <figcaption>A verification GET is answered as soon as the client id checks out. A POST is parsed, de-duplicated and dispatched; duplicates still get a 200 so Adobe stops retrying.</figcaption>
+  </figure>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Situation</th><th>Response</th><th>Logged on <code>adobe_sign</code></th><th>Dispatched</th></tr></thead>
+      <tbody>
+        <tr><td>Header missing or id not allowed</td><td>403, empty body, no echo</td><td>warning "Rejected Acrobat Sign webhook" with reason and IP</td><td>nothing</td></tr>
+        <tr><td>No allow-list configured at all</td><td>500 (<code>MisconfiguredException</code>)</td><td>by your error handler</td><td>nothing</td></tr>
+        <tr><td>Verification <code>GET</code></td><td>200, echo in header and JSON body</td><td>no</td><td>nothing</td></tr>
+        <tr><td><code>POST</code> body not a JSON object with an <code>event</code></td><td>400</td><td>error "Unreadable Acrobat Sign webhook"</td><td>nothing; Adobe retries</td></tr>
+        <tr><td><code>POST</code>, notification id seen within <code>dedupe_ttl</code></td><td>200 with echo</td><td>no</td><td>nothing</td></tr>
+        <tr><td><code>POST</code>, new notification (or no id)</td><td>200 with echo</td><td>no</td><td><code>WebhookReceivedEvent</code>, then <code>AdobeSignWebhookMessage</code> if enabled</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="allow-list">The client-id allow-list</h2>
+  <p>
+    Each delivery carries the client id of the API application whose request created the webhook. The route
+    accepts only ids in <code>webhooks.client_ids</code>, compared in constant time:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    webhooks:
+        client_ids:
+            - '%env(ADOBE_SIGN_CLIENT_ID)%'
+            - 'CBJCHBCAABAAstagingapp'        # e.g. a second application during a migration</code></pre>
+  </figure>
+  <p>
+    When the list is empty it falls back to <code>oauth.client_id</code>, which is right for apps that create webhooks
+    through their own OAuth application. If neither is set, the route can't decide whom to trust and answers 500
+    with <code>MisconfiguredException</code>. An explicit list <em>replaces</em> the fallback, so include the OAuth
+    client id in it if you need both.
+  </p>
+  <p>
+    The warning for a rejected request logs the reason and IP, not the id. If you don't know which id Adobe sends
+    (for example for webhooks created with an Integration Key), log it once with a temporary listener, put it in
+    the configuration, and remove the listener:
+  </p>
+  <figure class="code">
+    <figcaption>src/EventListener/LogAdobeSignClientId.php (temporary)</figcaption>
+    <pre><code class="language-php">use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+#[AsEventListener(priority: 0)]
+final class LogAdobeSignClientId
+{
+    public function __construct(private readonly LoggerInterface $logger) {}
+
+    public function __invoke(RequestEvent $event): void
+    {
+        if ($event-&gt;getRequest()-&gt;attributes-&gt;get('_route') === 'adobe_sign_webhook') {
+            $this-&gt;logger-&gt;info('Acrobat Sign webhook client id', [
+                'id' =&gt; $event-&gt;getRequest()-&gt;headers-&gt;get('X-AdobeSign-ClientId'),
+            ]);
+        }
+    }
+}</code></pre>
+  </figure>
+  <p>
+    Priority 0 runs after Symfony's router listener (priority 32), so <code>_route</code> is already set. The client id isn't a
+    secret in the way a key is, but it is the only authenticity check Adobe offers. That is why your handlers
+    should confirm anything important through the API rather than trusting the payload.
+  </p>
+
+  <h2 id="dedupe">Duplicate deliveries</h2>
+  <p>
+    Every notification has a <code>webhookNotificationId</code>. Before dispatching, the controller looks up
+    <code>adobe_sign.webhook.</code> plus the SHA-256 of that id in <code>cache_pool</code>. If the item exists, the
+    delivery is a retry: it is acknowledged with 200 (so Adobe stops) and nothing is dispatched. Otherwise the item
+    is saved for <code>webhooks.dedupe_ttl</code> seconds (default 259 200, Adobe's 72-hour retry window) and the
+    notification is dispatched. Notifications without an id always pass.
+  </p>
+  <ul>
+    <li><strong>Share the pool between servers.</strong> With <code>cache.app</code> on each machine's disk, a retry that lands on another server isn't recognised. Use Redis, Memcached or a database pool for <code>cache_pool</code>.</li>
+    <li><strong>Clearing the pool is safe but forgetful.</strong> It also clears the data-centre lookup (rediscovered on the next call) and lets duplicates through for a while.</li>
+    <li><strong>Deduplication is best effort.</strong> Two deliveries of the same notification arriving at the same instant on two servers can both pass the lookup. Keep your handlers idempotent anyway.</li>
+  </ul>
+
+  <h3 id="failures-after-dedupe">If a listener or the bus throws</h3>
+  <div class="callout callout-tip">
+    <p class="callout-title">A failed delivery is retried, not lost</p>
+    <p>The notification id is recorded before <code>WebhookReceivedEvent</code> and the Messenger message are dispatched, and released again if either throws: a synchronous listener fails, or the bus can't accept the message (no handler and no routing, a transport that is down). The request then answers 500 and Adobe's retry is processed as a fresh delivery. Two consequences: a listener that partly succeeded runs again on the retry, so keep listeners idempotent; and a failure that never clears makes Adobe give up after 72 hours, so fix it promptly (see <a href="messenger.html#enable">Messenger</a> for the "no handler" case). A scheduled re-check of open agreements covers long outages.</p>
+  </div>
+
+  <h2 id="webhook-received-event">The WebhookReceivedEvent</h2>
+  <p>
+    <code>Conceptlz\AdobeSign\Symfony\Event\WebhookReceivedEvent</code> has one readonly property,
+    <code>$event</code>, holding the core's typed <code>WebhookEvent</code>. Its class tells you the resource:
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Class</th><th>For events starting with</th><th>Id helper</th></tr></thead>
+      <tbody>
+        <tr><td><code>Conceptlz\AdobeSign\Webhook\AgreementEvent</code></td><td><code>AGREEMENT_</code></td><td><code>agreementId()</code>, plus <code>isWorkflowCompleted()</code> and <code>agreement()</code></td></tr>
+        <tr><td><code>MegaSignEvent</code></td><td><code>MEGASIGN_</code></td><td><code>megaSignId()</code></td></tr>
+        <tr><td><code>WidgetEvent</code></td><td><code>WIDGET_</code></td><td><code>widgetId()</code></td></tr>
+        <tr><td><code>LibraryDocumentEvent</code></td><td><code>LIBRARY_DOCUMENT_</code></td><td><code>libraryDocumentId()</code></td></tr>
+        <tr><td><code>UnknownEvent</code></td><td>anything else</td><td><code>resourceId()</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Every <code>WebhookEvent</code> has readonly properties for the common fields (<code>$event</code>,
+    <code>$subEvent</code>, <code>$notificationId</code>, <code>$eventDate</code>, <code>$participantUserEmail</code>,
+    <code>$actingUserEmail</code>, <code>$actingUserIpAddress</code>, <code>$webhookId</code>, …), the full decoded
+    payload in <code>$raw</code>, and the helpers <code>is(string ...$events)</code>, <code>resource()</code>,
+    <code>resourceId()</code>, <code>resourceName()</code> and <code>resourceStatus()</code>. Event names are constants on
+    <code>Conceptlz\AdobeSign\Webhook\EventType</code>.
+  </p>
+
+  <h2 id="writing-listeners">Writing listeners</h2>
+  <figure class="code">
+    <figcaption>src/EventListener/AgreementActivityListener.php</figcaption>
+    <pre><code class="language-php">use App\Repository\ContractRepository;
+use Conceptlz\AdobeSign\Symfony\Event\WebhookReceivedEvent;
+use Conceptlz\AdobeSign\Webhook\{AgreementEvent, EventType};
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+#[AsEventListener]
+final class AgreementActivityListener
+{
+    public function __construct(
+        private readonly ContractRepository $contracts,
+        private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger,
+    ) {
+    }
+
+    public function __invoke(WebhookReceivedEvent $received): void
+    {
+        $event = $received-&gt;event;
+        if (!$event instanceof AgreementEvent
+            || !$event-&gt;is(EventType::AGREEMENT_DOCUMENTS_VIEWED, EventType::AGREEMENT_ACTION_COMPLETED)) {
+            return;
+        }
+
+        try {
+            // Quick, local work only: one indexed lookup, one write.
+            $contract = $this-&gt;contracts-&gt;findOneBy(['agreementId' =&gt; $event-&gt;agreementId()]);
+            $contract?-&gt;recordActivity($event-&gt;event, $event-&gt;participantUserEmail, $event-&gt;eventDate);
+            $this-&gt;em-&gt;flush();
+        } catch (\Throwable $e) {
+            // Throwing would answer 500 and make Adobe retry the whole notification; for
+            // non-essential bookkeeping, logging is the better choice.
+            $this-&gt;logger-&gt;error('Could not record Acrobat Sign activity', ['exception' =&gt; $e]);
+        }
+    }
+}</code></pre>
+  </figure>
+  <p>
+    Listeners run synchronously, in the webhook request, in priority order like any Symfony listener. Several
+    listeners can handle the same event. For anything that calls Adobe or touches files, use a Messenger handler
+    instead; that is what <a href="messenger.html">Async with Messenger</a> is for.
+  </p>
+
+  <h3 id="five-second-budget">The 5-second budget</h3>
+  <p>
+    Everything between Adobe's request and your response counts: kernel boot, the firewall, the cache lookup,
+    your listeners, dispatching the message. The bundle's own part takes milliseconds. Budget your listeners
+    accordingly:
+  </p>
+  <ul>
+    <li><strong>Fine in a listener:</strong> a database update, a cache write, dispatching your own message.</li>
+    <li><strong>Not fine:</strong> downloading the signed PDF, calling Adobe's API, sending email synchronously, calling a slow third party. A cold cache after deploy can make the first requests slower than you expect.</li>
+  </ul>
+
+  <h2 id="registering-webhooks">Registering webhooks with Adobe</h2>
+  <p>
+    The route only receives. You tell Adobe about it with the core's <code>WebhookInfo</code> builder and
+    <code>webhooks()-&gt;create()</code>. Adobe verifies the URL during that call, so the route must already be
+    reachable from the internet over HTTPS.
+  </p>
+
+  <h3 id="per-agreement-webhook">One webhook per agreement (recommended)</h3>
+  <pre><code class="language-php">use Conceptlz\AdobeSign\Builder\WebhookInfo;
+use Conceptlz\AdobeSign\Webhook\EventType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+$url = $urlGenerator-&gt;generate('adobe_sign_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+$client-&gt;webhooks()-&gt;create(
+    WebhookInfo::forAgreement("Agreement $agreementId", $url, $agreementId)
+        -&gt;events(EventType::AGREEMENT_ALL)
+        -&gt;agreementPayload(detailed: true, participants: true),
+);</code></pre>
+  <p>
+    Created right after the agreement, it delivers only that agreement's events. If deliveries fail for long
+    enough that Adobe disables it, only that agreement is affected. <code>agreementPayload()</code> controls how much
+    detail the notification carries; without it, Adobe sends its default payload for the event.
+  </p>
+
+  <h3 id="account-webhook">One webhook for the whole account</h3>
+  <pre><code class="language-php">$client-&gt;webhooks()-&gt;create(
+    WebhookInfo::forAccount('All agreements', $url)
+        -&gt;events(EventType::AGREEMENT_WORKFLOW_COMPLETED, EventType::AGREEMENT_REJECTED)
+        -&gt;notifyOnProblems('ops@example.com'),
+);</code></pre>
+  <p>
+    Created once (from a console command or a migration), by an account administrator. Simpler to manage, but a
+    disabled account webhook silences every agreement. <code>forGroup()</code> and <code>forUser()</code> sit in between.
+    <code>notifyOnProblems()</code> asks Adobe to email those users when deliveries start failing.
+  </p>
+
+  <h3 id="managing-webhooks">Listing, re-enabling and deleting</h3>
+  <pre><code class="language-php">foreach ($client-&gt;webhooks()-&gt;all(showInActiveWebhooks: true) as $webhook) {
+    // $webhook-&gt;getId(), getName(), getStatus(), getScope(), ...
+}
+$client-&gt;webhooks()-&gt;updateState($webhookId, 'ACTIVE');   // re-enable after an outage
+$client-&gt;webhooks()-&gt;delete($webhookId);</code></pre>
+
+  <h3 id="https-and-proxies">HTTPS and the generated URL</h3>
+  <ul>
+    <li><strong>HTTPS only.</strong> The builder throws <code>InvalidArgumentException</code> ("Acrobat Sign only delivers webhooks to HTTPS URLs.") before any request if the URL starts with <code>http://</code>.</li>
+    <li><strong>Behind a proxy or load balancer,</strong> configure <code>framework.trusted_proxies</code> and <code>trusted_headers</code> so <code>generate(..., ABSOLUTE_URL)</code> sees <code>https</code> and the public host.</li>
+    <li><strong>From the console or a worker,</strong> there is no request; the router uses <code>framework.router.default_uri</code> (for example <code>https://app.example.com</code>). Set it, or the URL becomes <code>http://localhost/adobe-sign/webhook</code>.</li>
+  </ul>
+
+  <h2 id="local-development">Local development with a tunnel</h2>
+  <p>
+    Adobe must reach your machine from the internet. Run a tunnel (any HTTPS tunnelling tool works) that forwards a
+    public HTTPS address to your local server, then:
+  </p>
+  <ol class="steps">
+    <li><span class="step-title">Make Symfony generate the public URL</span><p>Open the app through the tunnel's address, or set <code>framework.router.default_uri</code> to it in <code>config/packages/dev/</code>. Trust the tunnel's forwarding headers with <code>framework.trusted_proxies</code> if it terminates TLS.</p></li>
+    <li><span class="step-title">Allow your client id</span><p>Put the id in <code>webhooks.client_ids</code> (or <code>oauth.client_id</code>) in <code>.env.local</code>.</p></li>
+    <li><span class="step-title">Register a webhook pointing at the tunnel</span><p>Create an agreement and its webhook as usual. Watch the <code>adobe_sign</code> log and your web server log for the verification <code>GET</code>.</p></li>
+    <li><span class="step-title">Clean up</span><p>Tunnel addresses change. Delete webhooks that point at old tunnels, or Adobe keeps retrying them and eventually emails your problem contacts.</p></li>
+  </ol>
+
+  <h3 id="simulating-deliveries">Simulating a delivery without Adobe</h3>
+  <pre><code class="language-bash"># Verification
+curl -i https://localhost:8000/adobe-sign/webhook -H 'X-AdobeSign-ClientId: CBJCHBCAABAAyourclientid'
+
+# A notification (give each test a new webhookNotificationId, or it is dropped as a duplicate)
+curl -i https://localhost:8000/adobe-sign/webhook \
+  -H 'X-AdobeSign-ClientId: CBJCHBCAABAAyourclientid' -H 'Content-Type: application/json' \
+  -d '{"event":"AGREEMENT_WORKFLOW_COMPLETED","webhookNotificationId":"local-1","agreement":{"id":"CBJCHBCAABAA...","status":"SIGNED"}}'</code></pre>
+  <p>
+    Expect <code>HTTP/1.1 200</code> with <code>X-AdobeSign-ClientId</code> in the response and
+    <code>{"xAdobeSignClientId":"..."}</code> as the body. Automated versions of these checks are in
+    <a href="testing.html#testing-webhooks">Testing webhooks</a>.
+  </p>
+
+  <h2 id="deploys">Deploys and downtime</h2>
+  <p>
+    Adobe retries failed deliveries for up to 72 hours, so a few minutes of downtime during a deploy loses nothing:
+    notifications arrive again when you're back. What does lose notifications is a webhook that Adobe disabled
+    after a long outage, or a deploy that leaves the route behind a login. After an incident, list webhooks with
+    <code>showInActiveWebhooks: true</code> and re-enable the ones you need.
+  </p>
+
+  <h2 id="webhooks-questions">Common questions</h2>
+  <div class="faq">
+    <details id="webhooks-custom-path">
+      <summary>Can I change the webhook path?</summary>
+      <div class="faq-answer"><p>Yes: add <code>prefix:</code> to the route import, or skip the import and define your own route pointing at <code>Conceptlz\AdobeSign\Symfony\Controller\WebhookController</code>. Webhooks already registered at Adobe keep the old URL; create new ones.</p></div>
+    </details>
+    <details id="webhooks-signed-payload">
+      <summary>Can I verify that a payload really comes from Adobe?</summary>
+      <div class="faq-answer"><p>Not cryptographically: Adobe doesn't sign webhook payloads. The client-id check is the documented control. Treat the payload as a hint, confirm important facts through the API, and, if you want a second layer, restrict the path at your proxy to the IP ranges Adobe documents for Acrobat Sign.</p></div>
+    </details>
+    <details id="webhooks-multiple-apps">
+      <summary>Two Symfony apps share one Acrobat Sign account. Do they see each other's webhooks?</summary>
+      <div class="faq-answer"><p>Only if their webhooks overlap. Per-agreement webhooks point at the app that created them. With account-wide webhooks, each app receives everything and should ignore agreements it doesn't know, which the walkthrough's handler does.</p></div>
+    </details>
+    <details id="webhooks-order">
+      <summary>Do notifications arrive in order?</summary>
+      <div class="faq-answer"><p>Not guaranteed, especially with retries. Don't build state machines on arrival order; read the current status through the API when it matters, and compare <code>$eventDate</code> if you store a history.</p></div>
+    </details>
+    <details id="webhooks-signed-documents-payload">
+      <summary>Should I ask Adobe to include the signed PDF in the payload?</summary>
+      <div class="faq-answer"><p>Usually not. <code>agreementPayload(signedDocuments: true)</code> puts the base64 PDF in the notification, which makes requests large and slow inside the 5-second window, and the bundle would carry it into your Messenger message. Download it in a handler instead.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="messenger.html"><strong>Async with Messenger</strong><span>Do the real work in a worker, with retries and a failure transport.</span></a></li>
+    <li><a href="troubleshooting.html#webhook-problems"><strong>Troubleshooting webhooks</strong><span>403s, redirects to login, duplicates and silent failures.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="token-storage.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Token storage &amp; Doctrine</span></a>
+  <a class="pager-next" href="messenger.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Async with Messenger</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "access_token": "3AAABLblqZhAccessTokenFromCodeExchange*",
+  "refresh_token": "3AAABLblqZhRefreshToken*",
+  "expires_in": 3600,
+  "token_type": "Bearer",
+  "api_access_point": "https://api.eu1.adobesign.com/",
+  "web_access_point": "https://secure.eu1.adobesign.com/"
+}

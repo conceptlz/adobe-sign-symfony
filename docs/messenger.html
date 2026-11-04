@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- docs:head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js): one GA4 property for all sites on conceptlz.github.io; see privacy.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPPZRMKDP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MEPPZRMKDP');
+</script>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem('docs-theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Gloock&display=swap">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<!-- /docs:head -->
+<title>Async with Messenger · conceptlz/adobe-sign-symfony</title>
+<meta name="description" content="Handle Acrobat Sign webhooks asynchronously with Symfony Messenger: enabling webhooks.messenger, choosing the bus, the AdobeSignWebhookMessage, routing to a transport, writing handlers, retries and the failure transport, idempotency, running workers with kernel.reset, and testing with the in-memory transport.">
+</head>
+<body>
+<!-- docs:topbar -->
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+  <button class="icon-button menu-button" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
+  <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="1.5 2"/>
+      <path d="M9.5 24.5c3.2-1.2 5.4-7.6 7.1-11.3 1-2.1 2.4-1.4 1.6 1.2-1.2 3.9-2.8 8.4-1.4 9.3 1.5 1 3.4-4.4 4.6-4.1 1.1.3-.3 3.3.8 3.5 1.3.2 2.6-2.4 3.8-2.2 1 .2.6 1.8 1.6 1.9 1 .1 2.1-.8 3-1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 28.5h20" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+    </svg>
+    <span class="brand-text"><span class="brand-name">Adobe Sign for Symfony</span><span class="brand-package">conceptlz/adobe-sign-symfony</span></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="search-input" id="docs-search" type="search" placeholder="Search docs" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="docs-search-results" aria-autocomplete="list">
+    <kbd class="search-key">/</kbd>
+    <ul class="search-results" id="docs-search-results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <a class="topbar-link" href="https://github.com/conceptlz/adobe-sign-symfony">GitHub</a>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+  </button>
+</header>
+<!-- /docs:topbar -->
+<div class="layout">
+<!-- docs:sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  <div class="nav-group">
+    <p class="nav-group-title">Start here</p>
+    <ul class="nav-list">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Guides</p>
+    <ul class="nav-list">
+      <li><a href="usage.html">Using the client</a></li>
+      <li><a href="walkthrough.html">Walkthrough: send &amp; store</a></li>
+      <li><a href="oauth.html">OAuth: connect user accounts</a></li>
+      <li><a href="token-storage.html">Token storage &amp; Doctrine</a></li>
+      <li><a href="webhooks.html">Webhooks</a></li>
+      <li><a href="messenger.html" aria-current="page">Async with Messenger</a></li>
+      <li><a href="signature-levels.html">Signature levels</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Reference</p>
+    <ul class="nav-list">
+      <li><a href="reference.html">Services, events, routes &amp; commands</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">Help</p>
+    <ul class="nav-list">
+      <li><a href="testing.html">Testing your application</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <p class="nav-group-title">About</p>
+    <ul class="nav-list">
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+    </ul>
+  </div>
+  <p class="sidebar-other">Need the full API reference?<br><a href="https://conceptlz.github.io/adobe-sign/">Core SDK docs →</a></p>
+  <p class="sidebar-other">Using Laravel instead?<br><a href="https://conceptlz.github.io/adobe-sign-laravel/">Laravel bridge docs →</a></p>
+</nav>
+<div class="nav-backdrop" hidden></div>
+<!-- /docs:sidebar -->
+<main id="content" class="content">
+<article class="doc">
+  <header class="doc-header">
+    <p class="eyebrow">Guides</p>
+    <h1>Async with Messenger</h1>
+    <p class="lede">Adobe gives your webhook 5 seconds. Downloading a signed PDF, calling the API or emailing your team doesn't fit in that, and shouldn't be retried by Adobe if it fails. Switch on Messenger dispatch and the bundle puts every new notification on your bus as a plain message, which a worker handles with Messenger's retries, failure transport and monitoring.</p>
+  </header>
+
+  <h2 id="why-messenger">Why a message, and not only an event</h2>
+  <p>
+    The webhook route always dispatches <code>WebhookReceivedEvent</code> synchronously, inside Adobe's request. That
+    is the right place for small, local work. Everything else belongs in a worker, for three reasons:
+  </p>
+  <ul>
+    <li><strong>Time.</strong> A worker has minutes, not seconds. Adobe gets its 200 immediately.</li>
+    <li><strong>Retries you control.</strong> If your handler fails, Messenger retries it on your schedule and parks it in a failure transport; Adobe isn't involved, and its retry of a delivery you already acknowledged would be dropped as a duplicate anyway.</li>
+    <li><strong>Isolation.</strong> A slow or broken handler can't make Adobe disable your webhook.</li>
+  </ul>
+
+  <h2 id="enable">Enabling it</h2>
+  <pre><code class="language-bash">composer require symfony/messenger</code></pre>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    webhooks:
+        messenger: true            # shorthand for { enabled: true, bus: messenger.default_bus }</code></pre>
+  </figure>
+  <p>
+    From now on, for every <em>new</em> notification (not for the verification <code>GET</code>, not for duplicates),
+    the webhook controller dispatches <code>WebhookReceivedEvent</code> first and then an
+    <code>AdobeSignWebhookMessage</code> on the bus. With Messenger not installed, the container build fails with a
+    missing <code>messenger.default_bus</code> service, so you can't think it's on when it isn't.
+  </p>
+  <div class="callout callout-danger">
+    <p class="callout-title">Route it or handle it, before you enable it</p>
+    <p>A message with no routing runs its handlers synchronously, inside the webhook request. A message with no routing <em>and</em> no handler makes Messenger throw <code>NoHandlerForMessageException</code>: the webhook answers 500 to every delivery until you deploy a handler. Nothing is lost while Adobe keeps retrying (the bundle doesn't record a notification it failed to handle), but Adobe gives up after 72 hours. Deploy the routing and at least one handler together with <code>messenger: true</code>.</p>
+  </div>
+
+  <h3 id="choose-bus">Choosing the bus</h3>
+  <p>
+    The default is <code>messenger.default_bus</code>. If your app has several buses, name the one to use; setting
+    <code>bus</code> also enables the feature:
+  </p>
+  <figure class="code">
+    <figcaption>config/packages/adobe_sign.yaml and messenger.yaml</figcaption>
+    <pre><code class="language-text">adobe_sign:
+    webhooks:
+        messenger:
+            bus: event.bus
+
+framework:
+    messenger:
+        default_bus: command.bus
+        buses:
+            command.bus: ~
+            event.bus:
+                default_middleware:
+                    enabled: true
+                    allow_no_handlers: true    # an event with no subscriber is not an error</code></pre>
+  </figure>
+  <p>
+    An event bus with <code>allow_no_handlers</code> fits the semantics (a notification is an event; zero or more
+    handlers may care) and removes the "no handler" failure mode above.
+  </p>
+
+  <h2 id="the-message">The message</h2>
+  <p>
+    <code>Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage</code> deliberately carries only plain data, so
+    every transport and serializer can carry it:
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Member</th><th>Returns</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>$payload</code></td><td><code>array</code></td><td>The notification body exactly as Adobe sent it, decoded from JSON (readonly).</td></tr>
+        <tr><td><code>event()</code></td><td><code>WebhookEvent</code></td><td>Rebuilds the typed core event (<code>AgreementEvent</code>, <code>MegaSignEvent</code>, …) from the payload. Cheap; call it in the handler.</td></tr>
+        <tr><td><code>notificationId()</code></td><td><code>?string</code></td><td>Adobe's <code>webhookNotificationId</code>, unique per notification. Useful as an idempotency key.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Why not put the typed event object in the message? Because the core's events are rich PHP objects tied to SDK
+    classes. A plain array survives PHP serialisation, JSON serialisation with Symfony's Serializer, a transport
+    shared with another language, and SDK upgrades between dispatch and handling. The bundle's own test serialises
+    and unserialises the message and checks that <code>event()</code> still produces the same typed event.
+  </p>
+
+  <h2 id="routing">Routing to an async transport</h2>
+  <figure class="code">
+    <figcaption>config/packages/messenger.yaml</figcaption>
+    <pre><code class="language-text">framework:
+    messenger:
+        failure_transport: failed
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'     # doctrine://default, redis://..., amqp://...
+                retry_strategy:
+                    max_retries: 5
+                    delay: 10000
+                    multiplier: 3
+                    max_delay: 3600000
+            failed: 'doctrine://default?queue_name=failed'
+        routing:
+            Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage: async</code></pre>
+  </figure>
+  <p>
+    Dispatching to the transport is part of the webhook request, so choose a transport that is reliably up: if
+    <code>send()</code> fails, the webhook answers 500 and Adobe delivers the notification again later (see
+    <a href="webhooks.html#failures-after-dedupe">Webhooks</a>). The Doctrine transport in your main database is a
+    sensible default: if it is down, so is the rest of your app. Check the routing with
+    <code>php bin/console debug:messenger</code>.
+  </p>
+
+  <h2 id="writing-handlers">Writing handlers</h2>
+  <figure class="code">
+    <figcaption>src/MessageHandler/NotifySalesOnRejection.php</figcaption>
+    <pre><code class="language-php">use App\Repository\ContractRepository;
+use Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage;
+use Conceptlz\AdobeSign\Webhook\{AgreementEvent, EventType};
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+final class NotifySalesOnRejection
+{
+    public function __construct(
+        private readonly ContractRepository $contracts,
+        private readonly MailerInterface $mailer,
+    ) {
+    }
+
+    public function __invoke(AdobeSignWebhookMessage $message): void
+    {
+        $event = $message-&gt;event();
+        if (!$event instanceof AgreementEvent || !$event-&gt;is(EventType::AGREEMENT_REJECTED)) {
+            return;
+        }
+
+        $contract = $this-&gt;contracts-&gt;findOneBy(['agreementId' =&gt; $event-&gt;agreementId()]);
+        if ($contract === null) {
+            return;
+        }
+
+        $this-&gt;mailer-&gt;send((new TemplatedEmail())
+            -&gt;to($contract-&gt;getOwnerEmail())
+            -&gt;subject("{$contract-&gt;getTitle()} was declined")
+            -&gt;htmlTemplate('emails/contract_rejected.html.twig')
+            -&gt;context(['contract' =&gt; $contract, 'by' =&gt; $event-&gt;actingUserEmail]));
+    }
+}</code></pre>
+  </figure>
+  <ul>
+    <li><strong>One message, many handlers.</strong> Every <code>#[AsMessageHandler]</code> for <code>AdobeSignWebhookMessage</code> runs for every notification. Filter by event type and return early; it keeps each handler small and independently testable.</li>
+    <li><strong>Unknown agreements are normal.</strong> Account-wide webhooks deliver agreements created outside your app. Return quietly.</li>
+    <li><strong>Confirm with the API before acting on money or files.</strong> Payloads aren't signed. The <a href="walkthrough.html#step-handler">walkthrough's handler</a> re-reads the agreement before downloading.</li>
+    <li><strong>Inject <code>AdobeSignManager</code></strong>, not <code>AdobeSign</code>, in handlers that call Adobe, and call <code>client()</code> inside <code>__invoke()</code>; see <a href="#kernel-reset">kernel.reset</a>.</li>
+  </ul>
+
+  <h3 id="oauth-in-handlers">OAuth in handlers</h3>
+  <p>
+    A worker has no signed-in user, so <code>client()</code> with <code>auth: oauth</code> throws. Find out who owns the
+    agreement from your own records, then act as them:
+  </p>
+  <pre><code class="language-php">$contract = $this-&gt;contracts-&gt;findOneBy(['agreementId' =&gt; $event-&gt;agreementId()]);
+$client = $this-&gt;adobeSign-&gt;forUser($contract-&gt;getSenderKey());   // stored from userKey() when sending</code></pre>
+  <p>
+    The payload also names the sender (<code>$event-&gt;applicableUsers</code>, <code>$event-&gt;initiatingUserEmail</code>),
+    but those are Adobe's identities, not your token keys, and payloads aren't signed; your own record is the
+    trustworthy link.
+  </p>
+
+  <h2 id="retries-and-failures">Retries and the failure transport</h2>
+  <p>What happens when a handler throws depends on what it throws:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Situation</th><th>Do this</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Adobe is briefly unavailable, a timeout (<code>TransportException</code>), a 5xx</td><td>Let it throw.</td><td>Retried per <code>retry_strategy</code>, then moved to <code>failed</code>.</td></tr>
+        <tr><td><code>RateLimitException</code> with a long <code>retryAfter</code></td><td>Re-dispatch with <code>new DelayStamp($e-&gt;retryAfter * 1000)</code> and return.</td><td>Comes back when Adobe allows, without using a retry.</td></tr>
+        <tr><td><code>NotFoundException</code> (agreement deleted), <code>AccountCapabilityException</code>, a bug in the payload</td><td>Wrap in <code>UnrecoverableMessageHandlingException</code>.</td><td>No retries; straight to <code>failed</code> for a human to look at.</td></tr>
+        <tr><td><code>OAuthException</code> in an OAuth handler</td><td>Mark the connection broken in your app, notify the user, return.</td><td>Retrying can't fix a revoked token.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="code">
+    <figcaption>Classifying exceptions in a handler</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Exception\{AccountCapabilityException, NotFoundException, RateLimitException};
+use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
+
+try {
+    $this-&gt;process($message);
+} catch (RateLimitException $e) {
+    $this-&gt;bus-&gt;dispatch($message, [new DelayStamp(($e-&gt;retryAfter ?? 60) * 1000)]);
+} catch (NotFoundException|AccountCapabilityException $e) {
+    throw new UnrecoverableMessageHandlingException($e-&gt;getMessage(), 0, $e);
+}</code></pre>
+  </figure>
+  <pre><code class="language-bash">php bin/console messenger:failed:show            # what failed, with the exception
+php bin/console messenger:failed:retry           # after fixing the cause</code></pre>
+
+  <h2 id="idempotency">Idempotency</h2>
+  <p>
+    The bundle drops duplicate <em>deliveries</em> at the route. Messenger itself is at-least-once: a worker can crash
+    after doing the work but before acknowledging the message, and you can replay messages from the failure
+    transport. So a handler must be safe to run twice for the same notification:
+  </p>
+  <ul>
+    <li><strong>Check state first.</strong> "Is this contract already signed?" turns a second run into a no-op. This is the simplest and usually sufficient pattern.</li>
+    <li><strong>Make writes idempotent.</strong> Writing the same file to the same path twice is harmless; inserting a second row is not. Use unique constraints (for example on <code>notificationId()</code> in an audit table).</li>
+    <li><strong>Guard one-off side effects.</strong> For emails or billing, record that you did it in the same transaction, or take a lock with the Lock component keyed on <code>notificationId()</code>.</li>
+  </ul>
+
+  <h2 id="running-workers">Running workers</h2>
+  <pre><code class="language-bash">php bin/console messenger:consume async --time-limit=3600 --memory-limit=256M -vv</code></pre>
+  <figure class="code">
+    <figcaption>/etc/supervisor/conf.d/messenger.conf</figcaption>
+    <pre><code class="language-text">[program:messenger-async]
+command=php /var/www/app/bin/console messenger:consume async --time-limit=3600 --memory-limit=256M
+user=www-data
+numprocs=2
+process_name=%(program_name)s_%(process_num)02d
+autostart=true
+autorestart=true
+startsecs=0</code></pre>
+  </figure>
+  <p>
+    On every deploy, run <code>php bin/console messenger:stop-workers</code> after switching code; the supervisor starts
+    new workers with the new code and configuration. Workers started before a configuration change keep the old
+    values until they restart.
+  </p>
+
+  <h3 id="kernel-reset">How kernel.reset keeps clients fresh</h3>
+  <p>
+    A worker is one long-lived container. After each message, Messenger resets every service tagged
+    <code>kernel.reset</code> (unless you pass <code>--no-reset</code>). <code>AdobeSignManager</code> is one of them: its
+    <code>reset()</code> drops the cached default client, all <code>forUser()</code> clients and the OAuth client. The next
+    message gets new clients that read the token store again, so a token refreshed by another process is picked up,
+    and state from one message (such as remembered ETags) doesn't leak into the next. The
+    data-centre lookup lives in <code>cache_pool</code> and survives the reset, so fresh clients don't call
+    <span class="endpoint"><b>GET</b> /baseUris</span> again.
+  </p>
+  <p>
+    The reset can only clear what the manager holds. A handler that received <code>AdobeSign</code> in its constructor
+    keeps that one instance for the worker's lifetime. That's why handlers should inject the manager and ask it for
+    a client per message.
+  </p>
+
+  <h2 id="testing-messenger">Testing with the in-memory transport</h2>
+  <figure class="code">
+    <figcaption>config/packages/messenger.yaml</figcaption>
+    <pre><code class="language-text">when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'</code></pre>
+  </figure>
+  <figure class="code">
+    <figcaption>tests/Functional/WebhookMessengerTest.php</figcaption>
+    <pre><code class="language-php">use Conceptlz\AdobeSign\Symfony\Message\AdobeSignWebhookMessage;
+use Conceptlz\AdobeSign\Webhook\AgreementEvent;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
+
+final class WebhookMessengerTest extends WebTestCase
+{
+    public function test_a_notification_becomes_one_message(): void
+    {
+        $client = static::createClient();
+        $client-&gt;disableReboot();
+
+        $client-&gt;request('POST', '/adobe-sign/webhook', server: [
+            'HTTP_X_ADOBESIGN_CLIENTID' =&gt; 'test-client-id',
+            'CONTENT_TYPE' =&gt; 'application/json',
+        ], content: json_encode([
+            'event' =&gt; 'AGREEMENT_WORKFLOW_COMPLETED',
+            'webhookNotificationId' =&gt; 'n-1',
+            'agreement' =&gt; ['id' =&gt; 'agr-1', 'status' =&gt; 'SIGNED'],
+        ]));
+        self::assertResponseIsSuccessful();
+
+        /** @var InMemoryTransport $transport */
+        $transport = static::getContainer()-&gt;get('messenger.transport.async');
+        $sent = $transport-&gt;getSent();
+        self::assertCount(1, $sent);
+
+        $message = $sent[0]-&gt;getMessage();
+        self::assertInstanceOf(AdobeSignWebhookMessage::class, $message);
+        self::assertSame('n-1', $message-&gt;notificationId());
+        self::assertInstanceOf(AgreementEvent::class, $message-&gt;event());
+    }
+}</code></pre>
+  </figure>
+  <p>
+    Assert right after the request: the in-memory transport is reset between requests like other resettable
+    services. To run handlers inline instead, use <code>'sync://'</code> as the test transport. For handler unit tests,
+    construct the message yourself (<code>new AdobeSignWebhookMessage($payload)</code>) and call the handler; see
+    <a href="testing.html#testing-handlers">testing your own handlers</a>.
+  </p>
+
+  <h2 id="messenger-questions">Common questions</h2>
+  <div class="faq">
+    <details id="messenger-event-and-message">
+      <summary>Do the event and the message both fire? In which order?</summary>
+      <div class="faq-answer"><p>Yes, both, once per new notification: <code>WebhookReceivedEvent</code> first (synchronously), then the message. Use the event for tiny, local work and the message for everything else, or ignore the event entirely.</p></div>
+    </details>
+    <details id="messenger-sync-transport">
+      <summary>Can I enable Messenger without an async transport?</summary>
+      <div class="faq-answer"><p>Technically yes (handlers run inside the webhook request), but then you gain nothing over a listener and keep the 5-second limit. Route the message to an async transport.</p></div>
+    </details>
+    <details id="messenger-serializer">
+      <summary>Can I use a JSON serializer for the transport?</summary>
+      <div class="faq-answer"><p>Yes. The message holds only a readonly array named <code>payload</code>, which Symfony's Serializer can normalise and rebuild through the constructor. The default PHP serializer works as well.</p></div>
+    </details>
+    <details id="messenger-replay">
+      <summary>Can I replay old notifications?</summary>
+      <div class="faq-answer"><p>From the failure transport, yes (<code>messenger:failed:retry</code>). Adobe doesn't offer a replay of past deliveries, so if you need history, store <code>$message-&gt;payload</code> in your own table in a handler.</p></div>
+    </details>
+    <details id="messenger-scheduler">
+      <summary>How do I catch notifications that never arrived?</summary>
+      <div class="faq-answer"><p>Add a scheduled task (Symfony Scheduler or cron) that lists your contracts still "sent" after a day or two and checks their status with <code>agreements()-&gt;get()</code>. It covers disabled webhooks, outages longer than 72 hours, and the rare dropped notification.</p></div>
+    </details>
+  </div>
+  <ul class="next-links">
+    <li><a href="walkthrough.html"><strong>Walkthrough: send &amp; store</strong><span>A complete handler that downloads and stores the signed PDF.</span></a></li>
+    <li><a href="testing.html"><strong>Testing your application</strong><span>Mock the HTTP client, post webhooks and assert on transports.</span></a></li>
+  </ul>
+</article>
+<!-- docs:pager -->
+<nav class="pager" aria-label="Previous and next pages">
+  <a class="pager-prev" href="webhooks.html" rel="prev"><span class="pager-label">Previous</span><span class="pager-title">Webhooks</span></a>
+  <a class="pager-next" href="signature-levels.html" rel="next"><span class="pager-label">Next</span><span class="pager-title">Signature levels</span></a>
+</nav>
+<!-- /docs:pager -->
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+<!-- docs:footer -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p class="site-footer-legal">conceptlz/adobe-sign-symfony is an independent, MIT-licensed project created and maintained by <a href="credits.html">Conceptualize</a>. It is not affiliated with, endorsed by or sponsored by Adobe; Adobe and Acrobat Sign are trademarks of Adobe Inc. <a href="disclaimer.html">Read the full disclaimer</a>.</p>
+    <ul class="footer-links">
+      <li><a href="disclaimer.html">Disclaimer</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="credits.html">Credits</a></li>
+      <li><a href="https://github.com/conceptlz/adobe-sign-symfony">Source on GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/docs.js"></script>
+<!-- /docs:footer -->
+</body>
+</html>
