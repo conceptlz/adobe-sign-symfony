@@ -3,12 +3,23 @@
     "description": "Symfony bundle for conceptlz/adobe-sign (Adobe Acrobat Sign REST API v6).",
     "type": "symfony-bundle",
     "license": "MIT",
+    "homepage": "https://conceptlz.github.io/adobe-sign-symfony/",
     "keywords": [
         "adobe",
+        "adobe sign",
         "acrobat sign",
+        "adobe acrobat sign",
+        "echosign",
+        "esignature",
+        "e-signature",
+        "electronic signature",
+        "digital signature",
+        "eidas",
+        "pdf",
         "symfony",
+        "symfony bundle",
         "bundle",
-        "esignature"
+        "messenger"
     ],
     "authors": [
         {
@@ -17,6 +28,7 @@
         }
     ],
     "support": {
+        "docs": "https://conceptlz.github.io/adobe-sign-symfony/",
         "issues": "https://github.com/conceptlz/adobe-sign/issues",
         "source": "https://github.com/conceptlz/adobe-sign-symfony"
     },
